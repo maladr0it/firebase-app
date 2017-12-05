@@ -1,8 +1,10 @@
 // state is a list of messages
 
-const chat = (state = [], action) => {
+const chat = (state = [{text: 'hello'}, {text: 'fam'}], action) => {
   switch (action.type) {
     case 'SEND_MESSAGE':
+      console.log(action);
+      console.log(state);
       return [
         ...state,
         {
