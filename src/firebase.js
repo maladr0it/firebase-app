@@ -1,7 +1,5 @@
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
-
-console.log('loading firebase');
+import 'firebase/firestore'; // import causes necessary side-effects
 
 const config = {
   apiKey: "AIzaSyB-ceRToox5Crm6gkLbmHr75HVylUYAqy4",
@@ -12,5 +10,6 @@ const config = {
   messagingSenderId: "1035201251217"
 };
 firebase.initializeApp(config);
+console.log('firebase initialized');
 
 export default firebase;

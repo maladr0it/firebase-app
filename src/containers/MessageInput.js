@@ -1,18 +1,21 @@
 import { connect } from 'react-redux';
-import { requestSendMessage } from '../actions';
+import { sendMessage } from '../actions';
 import MessageInputForm from '../components/MessageInputForm';
 
 
-const mapDispatchToProps = dispatch => (
-  {
-    onSend: text => {
-      dispatch(requestSendMessage(text));
-    }
+const mapStateToProps = state => ({
+  userId: state.user.id,
+  chatId: state.chat.id
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSend: (chatId, userId, text) => {
+    dispatch(sendMessage(chatId, userId, text));
   }
-);
+});
 
 const MessageInput = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(MessageInputForm);
 
