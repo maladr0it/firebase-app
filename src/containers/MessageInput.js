@@ -1,34 +1,12 @@
-import React from 'react';
 import { connect } from 'react-redux';
-import { sendMessage } from '../actions';
+import { requestSendMessage } from '../actions';
+import MessageInputForm from '../components/MessageInputForm';
 
-const InputForm = ({ onSend }) => {
-  let input;
-  
-  return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        onSend(input.value);
-        input.value = '';
-      }}
-    >
-      <input
-        ref={node => {
-          input = node;
-        }}
-      />
-      <button type='submit'>
-        SEND
-      </button>
-    </form>
-  );
-}
 
 const mapDispatchToProps = dispatch => (
   {
     onSend: text => {
-      dispatch(sendMessage(text));
+      dispatch(requestSendMessage(text));
     }
   }
 );
@@ -36,6 +14,6 @@ const mapDispatchToProps = dispatch => (
 const MessageInput = connect(
   null,
   mapDispatchToProps
-)(InputForm);
+)(MessageInputForm);
 
 export default MessageInput;
