@@ -5,6 +5,9 @@ const defaultState = {
   messages: []
 };
 
+// messages should be a hash
+
+
 // store messages in a hash to access them later?
 // use key?
 // message = { text: 'hi', pending: true }
@@ -19,7 +22,6 @@ const chat = (state = defaultState, action) => {
   switch (action.type) {
     // add the message, but have it be grey
     case 'MESSAGE_SEND_REQUEST': {
-      console.log('sending...');
       return state;
     }
     // is this needed?
@@ -31,23 +33,18 @@ const chat = (state = defaultState, action) => {
       return state;
     }
     case 'ADD_MESSAGE': {
-      console.log('adding message');
-      const { message } = action.payload;
+      console.log('chat reducer: adding message');
+
+      // messy, just for testing
+      const { message, isPending } = action.payload;
+      const newMessage = Object.assign({},
+        message,
+        { isPending }
+      );
+      console.log(newMessage);
       return Object.assign({}, state, {
-        messages: state.messages.concat(message)
+        messages: state.messages.concat(newMessage)
       });
-    }
-    case 'ADD_MESSAGES': {
-      console.log('adding messages');
-      const { messages } = action.payload;
-      return Object.assign({}, state, {
-        messages: state.messages.concat(messages)
-      });
-    }
-    // consider naming here..
-    case 'FETCH_MESSAGES': {
-      console.log('requesting messages...');
-      return state;
     }
     default:
       return state;

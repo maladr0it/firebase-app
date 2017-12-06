@@ -1,14 +1,8 @@
 import * as db from '../api';
 
-export const addMessage = message => ({
+export const addMessage = (message, isPending) => ({
   type: 'ADD_MESSAGE',
-  payload: { message }
-});
-// used for adding multiple messages
-// helps rendering performance, perhaps overkill
-export const addMessages = messages => ({
-  type: 'ADD_MESSAGES',
-  payload: { messages }
+  payload: { message, isPending }
 });
 
 // add to chats, but make it grey
@@ -27,32 +21,33 @@ export const messageSendFailure = error => ({
 });
 
 export const listenToMessages = (chatId) => dispatch => {
-  db.listenToNewChatMessages(chatId, newMessage => {
-    console.log(newMessage);
-    dispatch(addMessage(newMessage));
+  db.listenToNewChatMessages(chatId, (newMessage, isPending) => {
+    // HERE
+    
+    dispatch(addMessage(newMessage, isPending));
   });
 };
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
-  dispatch(messageSendRequest(text));
+  // dispatch(messageSendRequest(text));
   try {
     await db.createMessage(chatId, userId, text);
-    dispatch(addMessage({ text }));
+    // dispatch(addMessage({ text }));
   }
   catch (e) {
     dispatch(messageSendFailure(e));
   }
 };
 
-export const fetchMessages = (chatId) => async dispatch => {
-  try {
-    const fetchedMessages = await db.fetchMessages(chatId, 100);
-    const messages = fetchedMessages.map(message => ({
-      text: message.text
-    }));
-    dispatch(addMessages(messages));
-  }
-  catch (e) {
-    console.log(e);
-  }
-};
+// export const fetchMessages = (chatId) => async dispatch => {
+//   try {
+//     const fetchedMessages = await db.fetchMessages(chatId, 100);
+//     const messages = fetchedMessages.map(message => ({
+//       text: message.text
+//     }));
+//     dispatch(addMessages(messages));
+//   }
+//   catch (e) {
+//     console.log(e);
+//   }
+// };
