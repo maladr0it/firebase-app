@@ -1,20 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages, isSending }) => {
+  console.log(isSending);
   return (
-    <ul>
-      {messages.map((message, i) => (
-        <li key={i}>{message.text}</li>
-      ))}
-    </ul>
+    <div>
+      {isSending ? 'SENDING' : 'NOT_SENDING'}
+      <ul>
+        {messages.map((message, i) => (
+          <li key={i}>{message.text}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
 const mapStateToProps = state => {
   return {
-    messages: state.chat
-    // chat is just an array of messages for now
+    isSending: state.chat.isSending,
+    messages: state.chat.messages
   };
 };
 
