@@ -1,13 +1,13 @@
 import React from 'react';
 
-const MessageInputForm = ({ onSend }) => {
+const MessageInputForm = ({ onSend, userId, chatId }) => {
   let input; // ref to input box
   
   return (
     <form
       onSubmit={e => {
         e.preventDefault();
-        onSend(input.value);
+        onSend(chatId, userId, input.value);
         input.value = '';
       }}
     >
