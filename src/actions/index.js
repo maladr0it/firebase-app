@@ -1,28 +1,37 @@
 import * as db from '../api';
 
-export const messageSendRequest = text => ({
-  type: 'MESSAGE_SEND_REQUEST',
-  payload: { text } // this isn't used rn, but can be for message preview
+export const addMessage = message => ({
+  type: 'ADD_MESSAGE',
+  payload: { message }
+});
+// used for adding multiple messages
+// helps rendering performance, perhaps overkill
+export const addMessages = messages => ({
+  type: 'ADD_MESSAGES',
+  payload: { messages }
 });
 
-// export const messageSendSuccess = () => ({
-//   type: 'MESSAGE_SEND_SUCCESS'
-// });
-
+// add to chats, but make it grey
+export const messageSendRequest = text => ({
+  type: 'MESSAGE_SEND_REQUEST',
+  payload: { text }
+});
+// flip colour of message to normal
+export const messageSendSuccess = () => ({
+  type: 'MESSAGE_SEND_SUCCESS'
+});
+// flip colour of message to red
 export const messageSendFailure = error => ({
   type: 'MESSAGE_SEND_FAILURE',
   payload: { error }
 });
 
-export const addMessage = message => ({
-  type: 'ADD_MESSAGE',
-  payload: { message }
-});
-
-export const addMessages = messages => ({
-  type: 'ADD_MESSAGES',
-  payload: { messages }
-})
+export const listenToMessages = (chatId) => dispatch => {
+  db.listenToNewChatMessages(chatId, newMessage => {
+    console.log(newMessage);
+    dispatch(addMessage(newMessage));
+  });
+};
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   dispatch(messageSendRequest(text));
@@ -37,8 +46,10 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
 
 export const fetchMessages = (chatId) => async dispatch => {
   try {
-    const snapshot = await db.fetchMessages(chatId, 100);
-    const messages = snapshot.docs.map(doc => doc.data());
+    const fetchedMessages = await db.fetchMessages(chatId, 100);
+    const messages = fetchedMessages.map(message => ({
+      text: message.text
+    }));
     dispatch(addMessages(messages));
   }
   catch (e) {

@@ -5,23 +5,19 @@ const defaultState = {
   messages: []
 };
 
+// store messages in a hash to access them later?
+// use key?
+// message = { text: 'hi', pending: true }
+
 // use this to modify the messages branch based on action
 // const messages = (state = []) => {
-//   switch (action.type) {
-//     case 'ADD_MESSAGE': {
-//       return state.concat(action.payload.message);
-//     }
-//     case 'ADD_MESSAGES': {
-//       return [
-//         ...state,
-
-//       ]
-//     }
-//   }
+//   
 // };
+//
 
 const chat = (state = defaultState, action) => {
   switch (action.type) {
+    // add the message, but have it be grey
     case 'MESSAGE_SEND_REQUEST': {
       console.log('sending...');
       return state;
