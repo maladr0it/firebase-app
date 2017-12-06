@@ -37,9 +37,13 @@ export const listenToNewChatMessages = (chatId, callback) => {
   db.collection(`chats/${chatId}/messages`)
   .orderBy('createdAt', 'desc').limit(5)
   .onSnapshot(snapshot => {
-    snapshot.docChanges.forEach(change => {
+    console.log(`changes in chat ${chatId} detected.`);
+    // reversed so that earlier changes are processed first
+    snapshot.docChanges.reverse().forEach(change => {
       if (change.type === 'added') {
-        callback(change.doc.data());
+        const newMessage = change.doc.data();
+        const isPending = change.doc.metadata.hasPendingWrites;
+        callback(newMessage, isPending);
       }
     })
   });

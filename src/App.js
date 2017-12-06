@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  fetchMessages,
+  // fetchMessages,
   listenToMessages
 } from './actions';
 
@@ -30,9 +30,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchMessages: chatId => {
-    dispatch(fetchMessages(chatId));
-  },
+  // fetchMessages: chatId => {
+  //   dispatch(fetchMessages(chatId));
+  // },
   listenToMessages: chatId => {
     dispatch(listenToMessages(chatId));
   }
