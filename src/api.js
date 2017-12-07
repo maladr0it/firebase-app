@@ -27,13 +27,19 @@ export const createMessage = async (chatId, userId, text) => {
   }
 };
 
+// consider listening AFTER initial fetch? see inner comment
 export const listenToNewChatMessages = (chatId, callback) => {
   console.log(`creating listener for chat ${chatId}`);
   db.collection(`chats/${chatId}/messages`)
-  .orderBy('createdAt', 'desc').limit(5)
+  // luckily, null dates are 0, so they are included in this range..
+  // TODO: consider a safer way.
+  // possibly checking whole collection
+  .orderBy('createdAt', 'desc').limit(5) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
+      console.log(change);
+      console.log(change.doc.data());
       if (change.type === 'added') {
         const id = change.doc.id;
         const newMessage = change.doc.data();
