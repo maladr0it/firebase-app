@@ -8,14 +8,20 @@ console.log('db api loaded');
 export const createMessage = async (chatId, userId, text) => {
   const timestamp = firebase.firestore.FieldValue.serverTimestamp();
   try {
-    await db.collection(`chats/${chatId}/messages`)
-    .add({
-      author: userId,
-      createdAt: timestamp,
-      text
-    });
+    const messageRef = await db.collection(`chats/${chatId}/messages`)
+      .add({
+        author: userId,
+        createdAt: timestamp,
+        text
+      })
     console.log(`db: user ${userId} added message "${text}" to chat ${chatId}`);
-    // return db.collection(`chats/${chatId}/messages`)
+
+    const createdMessage = await messageRef.get()
+    // this won't have createdAt property. careful
+    return {
+      id: messageRef.id,
+      message: createdMessage.data()
+    };
   } catch (e) {
     console.log(e);
   }
@@ -24,12 +30,10 @@ export const createMessage = async (chatId, userId, text) => {
 export const listenToNewChatMessages = (chatId, callback) => {
   console.log(`creating listener for chat ${chatId}`);
   db.collection(`chats/${chatId}/messages`)
-  .orderBy('createdAt', 'desc').limit(25)
+  .orderBy('createdAt', 'desc').limit(5)
   .onSnapshot(snapshot => {
-    console.log(`changes in chat ${chatId} detected.`);
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
-      // console.log(change.type);
       if (change.type === 'added') {
         const id = change.doc.id;
         const newMessage = change.doc.data();
