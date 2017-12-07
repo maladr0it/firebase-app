@@ -5,7 +5,8 @@ const defaultState = {
   messages: {}
 };
 
-// consider a list of messages
+// consider reducer for messages
+// consider reducer for message (overkill probs)
 
 const chat = (state = defaultState, action) => {
   switch (action.type) {
@@ -29,8 +30,6 @@ const chat = (state = defaultState, action) => {
     // overwrite it with what the server sent back
     // aka newMessage
     case 'MESSAGE_SEND_SUCCEEDED': {
-      console.log('///');
-      console.log(action.payload.sentMessage);
       const { id, sentMessage } = action.payload;
       const updatedMessage = {
         ...sentMessage,
