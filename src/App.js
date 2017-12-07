@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  // fetchMessages,
-  listenToMessages
+  listenToMessages,
 } from './actions';
 
 import ChatMessages from './containers/ChatMessages';
@@ -11,8 +10,8 @@ import MessageInput from './containers/MessageInput';
 
 class App extends Component {
   componentDidMount() {
-    // this.props.fetchMessages(this.props.chatId); // for now..
     this.props.listenToMessages(this.props.chatId); // for now..
+    this.props.listenTo
   }
 
   render() {
@@ -30,9 +29,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // fetchMessages: chatId => {
-  //   dispatch(fetchMessages(chatId));
-  // },
   listenToMessages: chatId => {
     dispatch(listenToMessages(chatId));
   }
