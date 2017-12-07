@@ -1,48 +1,37 @@
 import * as db from '../api';
 
-export const addMessage = (id, message, isPending) => ({
-  type: 'ADD_MESSAGE',
+export const messageAdded = (id, message, isPending) => ({
+  type: 'MESSAGE_ADDED',
   payload: { id, message, isPending }
 });
-// add to chats, but make it grey
-export const messageSendRequest = text => ({
-  type: 'MESSAGE_SEND_REQUEST',
-  payload: { text }
-});
-// flip colour of message to normal
-export const messageSendSuccess = messageId => ({
-  type: 'MESSAGE_SEND_SUCCESS',
-  payload: { messageId }
+export const messageSendSucceeded = (id, sentMessage) => ({
+  type: 'MESSAGE_SEND_SUCCEEDED',
+  payload: { id, sentMessage }
 });
 // flip colour of message to red
-export const messageSendFailure = error => ({
-  type: 'MESSAGE_SEND_FAILURE',
-  payload: { error }
-});
+// export const messageSendFailure = error => ({
+//   type: 'MESSAGE_SEND_FAILED',
+//   payload: { error }
+// });
 
 export const listenToMessages = chatId => dispatch => {
   db.listenToNewChatMessages(chatId, (id, newMessage, isPending) => {
-    // only add messages that are recognised by the server
-    // ignore pending messages.
-    // they will be added from the sendMessage action,
-    // flagged as pending
-    dispatch(addMessage(id, newMessage, isPending));
+    // ideally this is fired again
+    // for when the message is actually added
+    // but can't figure out how to do so
+    dispatch(messageAdded(id, newMessage, isPending));
   });
 };
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
-  // dispatch(messageSendRequest(text));
-  // adds a ghost message to screen
   try {
-    await db.createMessage(chatId, userId, text);
-    // WE NEED MESSAGE ID TO BE RETURNED FROM CREATEMESSAGE!
-
-    // HERE
-    // dispatch(messageSendSuccess(messageId));
-    // flips message to not-pending
+    const { id, message } = await db.createMessage(chatId, userId, text);
+    dispatch(messageSendSucceeded(id, message));
   }
   catch (e) {
-    dispatch(messageSendFailure(e));
+    console.log(e);
+    // TODO: add proper error handling
+    // dispatch(messageSendFailure(e));
   }
 };
 

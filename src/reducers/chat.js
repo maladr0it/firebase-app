@@ -5,9 +5,12 @@ const defaultState = {
   messages: {}
 };
 
+// consider a list of messages
+
 const chat = (state = defaultState, action) => {
   switch (action.type) {
-    case 'ADD_MESSAGE': {
+    // add new message data, and append its ID to the list
+    case 'MESSAGE_ADDED': {
       // little hard to follow
       const { id, message, isPending } = action.payload;
       // adding meta isPending
@@ -17,29 +20,70 @@ const chat = (state = defaultState, action) => {
       }
       return Object.assign({}, state, {
         messageIds: [...state.messageIds, id],
-        messages: {...state.messages, [id]: newMessage}
+        messages: {
+          ...state.messages,
+          [id]: newMessage}
       });
     }
-    // remember the alamo
-    case 'MESSAGE_SENT': {
-
+    // mark specified message as sent
+    // overwrite it with what the server sent back
+    // aka newMessage
+    case 'MESSAGE_SEND_SUCCEEDED': {
+      console.log('///');
+      console.log(action.payload.sentMessage);
+      const { id, sentMessage } = action.payload;
+      const updatedMessage = {
+        ...sentMessage,
+        isPending: false
+      }
+      return Object.assign({}, state, {
+        messages: {
+          ...state.messages,
+          [id]: updatedMessage
+        }
+      });
     }
     default:
       return state;
   }
 };
 
-export default chat;
 
-// messages should be a hash!
+// const messages = (state = defaultState.messages) => {
+//   switch (action.type) {
+//     case 'ADD_MESSAGE': {
+//       return
+//     }
+//     case 'MESSAGE_SEND_SUCCESS': {
+//       const { messageId } = action.payload;
+      
+//       return Object.assign({}, state, {
+//         messageId: 
+//       })
+//       // mark message as isPending: false
+//     }
+//   }
+// }
 
 
-// store messages in a hash to access them later?
-// use key?
-// message = { text: 'hi', pending: true }
+// const message = (message, action) => {
+//   switch (action.type) {
+//     case 'MESSAGE_ADDED': {
+//       const { isPending } = action.payload;
+//       return Object.assign({}, message, {
+//         isPending
+//       })
+//     }
+//   }
 
-// use this to modify the messages branch based on action
-// const messages = (state = []) => {
-//   
+//   switch (action.type) {
+//     case 'MESSAGE_SEND_SUCCESS': {
+//       const { sentMessage } = action.payload;
+//       return Object.assign({}, sentMessage, {
+//         isPending: false
+//       });
+//     }
+//   }
 // };
-//
+
+export default chat;
