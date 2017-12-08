@@ -1,14 +1,21 @@
-// reconsider naming
-
 import { connect } from 'react-redux';
+import { chatSelected } from '../actions';
 import ChatList from '../components/ChatList';
 
 const mapStateToProps = state => ({
-  selectedChatId: state.view.selectedChatId
+  selectedChatId: state.chatApp.selectedChatId,
+  chatIds: state.chatApp.chatIds,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSelectChat: (chatId) => {
+    dispatch(chatSelected(chatId));
+  }
 });
 
 const ChatListContainer = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ChatList);
 
 export default ChatListContainer;

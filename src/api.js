@@ -39,10 +39,10 @@ export const listenToNewChatMessages = (chatId, callback) => {
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
       if (change.type === 'added') {
-        const id = change.doc.id;
+        const messageId = change.doc.id;
         const messageData = change.doc.data();
         const isPending = change.doc.metadata.hasPendingWrites;
-        callback(id, messageData, isPending);
+        callback(messageId, messageData, isPending);
       }
     })
   });

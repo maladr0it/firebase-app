@@ -5,7 +5,7 @@ import MessageInput from '../components/MessageInput';
 
 const mapStateToProps = state => ({
   userId: state.user.id,
-  chatId: state.chat.id
+  chatId: state.chatApp.selectedChatId
 });
 
 const mapDispatchToProps = dispatch => ({

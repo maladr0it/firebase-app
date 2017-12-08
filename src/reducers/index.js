@@ -1,16 +1,14 @@
 import { combineReducers } from 'redux';
-import chat from './chat';
-// import chats from './chats';
-import view from './view'
 import user from './user';
+import chatApp from './chatApp';
+import chats from './chats';
 import messages from './messages';
 
-const chatApp = combineReducers({
-  messages,
-  chat,
-  // chats,
-  view,
-  user
+const app = combineReducers({
+  user,
+  chatApp,
+  chats,
+  messages
 });
 
-export default chatApp;
+export default app;

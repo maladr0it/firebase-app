@@ -11,7 +11,9 @@ import ChatListContainer from './containers/ChatListContainer'
 
 class App extends Component {
   componentDidMount() {
-    this.props.listenToMessages(this.props.chatId); // for now..
+    // temporary
+    // eventually put in messageList when loaded?
+    this.props.listenToMessages(this.props.listenToChatId);
   }
 
   render() {
@@ -26,7 +28,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  chatId: '6PVhc2zNVm7AVpK3yEEg'
+  listenToChatId: state.chatApp.selectedChatId
+  // selectedChatId: state.view.selectedChatId,
   // chatId: state.chat.id
 });
 

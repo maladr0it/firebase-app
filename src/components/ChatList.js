@@ -1,9 +1,18 @@
 import React from 'react';
 
-const ChatList = (props) => {
+const ChatList = ({ onSelectChat, selectedChatId, chatIds }) => {
+  const chats = chatIds.map((chatId, i) => (
+    <li
+      key={i}
+      onClick={() => onSelectChat(chatId)}
+    >
+      CHAT: {chatId}
+    </li>
+  ));
   return (
     <div>
-      SELECTED CHAT: {props.selectedChatId}
+      <ul>{chats}</ul>
+      <div>SELECTED CHAT: {selectedChatId}</div>
     </div>
   );
 }

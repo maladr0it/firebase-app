@@ -1,11 +1,13 @@
 const defaultState = {
-  selectedChatId: '6PVhc2zNVm7AVpK3yEEg'
+  selectedChatId: '6PVhc2zNVm7AVpK3yEEg',
+  chatIds: ['6PVhc2zNVm7AVpK3yEEg', 'zzz']
 }
 
-const view = (state = defaultState, action) => {
+const chatApp = (state = defaultState, action) => {
   switch (action.type) {
-    case 'SELECT_CHAT': {
+    case 'CHAT_SELECTED': {
       const { chatId } = action.payload;
+
       return Object.assign({}, state, {
         selectedChatId: chatId
       })
@@ -15,4 +17,4 @@ const view = (state = defaultState, action) => {
   }
 };
 
-export default view;
+export default chatApp;

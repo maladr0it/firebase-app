@@ -12,10 +12,41 @@
 //   }
 // }
 
-const defaultState = {};
+const chat = (state, action) => {
+  switch(action.type) {
+    case 'MESSAGE_ADDED': {
+      const { chatId, messageId } = action.payload;
+      return Object.assign({}, state, {
+        messageIds: [...state.messageIds, messageId]
+      });
+    }
+    default:
+      return state;
+  }
+};
+
+const defaultState = {
+  '6PVhc2zNVm7AVpK3yEEg': {
+    name: 'CHAT 1',
+    messageIds: []
+  },
+  'zzz': {
+    name: 'CHAT 2',
+    messageIds: []
+  }
+};
 
 const chats = (state = defaultState, action) => {
   switch(action.type) {
-
+    case 'MESSAGE_ADDED' : {
+      const { chatId, messageId } = action.payload;
+      return Object.assign({}, state, {
+        [chatId]: chat(state[chatId], action)
+      });
+    }
+    default:
+      return state;
   }
 };
+
+export default chats;
