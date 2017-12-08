@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { sendMessage } from '../actions';
-import MessageInputForm from '../components/MessageInputForm';
+import MessageInput from '../components/MessageInput';
 
 
 const mapStateToProps = state => ({
@@ -14,9 +14,9 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const MessageInput = connect(
+const MessageInputContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MessageInputForm);
+)(MessageInput);
 
-export default MessageInput;
+export default MessageInputContainer;

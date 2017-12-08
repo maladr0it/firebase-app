@@ -8,11 +8,11 @@ export const messageSent = (id, messageData) => ({
   type: 'MESSAGE_SENT',
   payload: { id, messageData }
 });
-// flip colour of message to red
-// export const messageSendFailure = error => ({
-//   type: 'MESSAGE_SEND_FAILED',
-//   payload: { error }
-// });
+
+// get most recently updated chats
+export const listenToChats = () => dispatch => {
+
+};
 
 export const listenToMessages = chatId => dispatch => {
   db.listenToNewChatMessages(chatId, (id, messageData, isPending) => {
@@ -34,16 +34,3 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
     // dispatch(messageSendFailure(e));
   }
 };
-
-// export const fetchMessages = (chatId) => async dispatch => {
-//   try {
-//     const fetchedMessages = await db.fetchMessages(chatId, 100);
-//     const messages = fetchedMessages.map(message => ({
-//       text: message.text
-//     }));
-//     dispatch(addMessages(messages));
-//   }
-//   catch (e) {
-//     console.log(e);
-//   }
-// };

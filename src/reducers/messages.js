@@ -1,4 +1,5 @@
-// messagesState = {
+// example state
+// messages = {
 //   msg10814: { text: 'hi', isPending: false },
 //   msg10948: { text: 'howdy!, isPending: true }
 // }

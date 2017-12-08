@@ -5,27 +5,29 @@ import {
   listenToMessages,
 } from './actions';
 
-import ChatMessages from './containers/ChatMessages';
-import MessageInput from './containers/MessageInput';
+import MessageListContainer from './containers/MessageListContainer';
+import MessageInputContainer from './containers/MessageInputContainer';
+import ChatListContainer from './containers/ChatListContainer'
 
 class App extends Component {
   componentDidMount() {
     this.props.listenToMessages(this.props.chatId); // for now..
-    this.props.listenTo
   }
 
   render() {
     return (
       <div>
-        <MessageInput />
-        <ChatMessages />
+        <ChatListContainer />
+        <MessageInputContainer />
+        <MessageListContainer />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  chatId: state.chat.id
+  chatId: '6PVhc2zNVm7AVpK3yEEg'
+  // chatId: state.chat.id
 });
 
 const mapDispatchToProps = dispatch => ({
