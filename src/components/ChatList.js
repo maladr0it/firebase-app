@@ -1,6 +1,9 @@
 import React from 'react';
 
-const ChatList = ({ onSelectChat, selectedChatId, chatIds }) => {
+const ChatList = ({
+  onSelectChat, onNewChat,
+  selectedChatId, chatIds
+}) => {
   const chats = chatIds.map((chatId, i) => (
     <li
       key={i}
@@ -13,6 +16,7 @@ const ChatList = ({ onSelectChat, selectedChatId, chatIds }) => {
     <div>
       <ul>{chats}</ul>
       <div>SELECTED CHAT: {selectedChatId}</div>
+      <button onClick={() => onNewChat('NEW CHATTE')}>ADD A CHAT</button>
     </div>
   );
 }

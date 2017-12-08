@@ -24,20 +24,27 @@ const chat = (state, action) => {
       return state;
   }
 };
-
+// 6PVhc2zNVm7AVpK3yEEg
 const defaultState = {
-  '6PVhc2zNVm7AVpK3yEEg': {
-    name: 'CHAT 1',
-    messageIds: []
-  },
-  'zzz': {
-    name: 'CHAT 2',
-    messageIds: []
-  }
+  // 'cht01': {
+  //   name: 'CHAT 1',
+  //   messageIds: []
+  // },
+  // 'cht02': {
+  //   name: 'CHAT 2',
+  //   messageIds: []
+  // }
 };
 
 const chats = (state = defaultState, action) => {
   switch(action.type) {
+    case 'CHAT_ADDED' : {
+      const { chatId, chatData } = action.payload;
+      return Object.assign({}, state, {
+        // this is hacks for now
+        [chatId]: {messageIds: []}
+      });
+    }
     case 'MESSAGE_ADDED' : {
       const { chatId, messageId } = action.payload;
       return Object.assign({}, state, {

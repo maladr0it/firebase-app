@@ -16,8 +16,9 @@ const getMessages = (state, chatId) => {
 // HELPERS
 
 // select chat obj based on chat Id
+// this is a little hacky
 const selectChat = (state, chatId) => {
-  return state.chats[chatId];
+  return state.chats[chatId] || { messageIds: [] };
 }
 // select message objs based on message Ids
 const selectMessages = (state, messageIds) => {

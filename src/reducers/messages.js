@@ -11,9 +11,9 @@ const messages = (state = defaultState, action) => {
     case 'MESSAGE_ADDED': {
       const { messageId, messageData, isPending } = action.payload;
       // adding meta isPending
-      const message = { ...messageData, isPending};
+      const formattedMessage = { ...messageData, isPending};
       return  Object.assign({}, state, {
-        [messageId]: message
+        [messageId]: formattedMessage
       });
     }
     // this overwrites the original message with what the server returns

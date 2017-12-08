@@ -9,32 +9,37 @@ export const messageSent = (id, messageData) => ({
   type: 'MESSAGE_SENT',
   payload: { id, messageData }
 });
-export const chatSelected = (chatId) => ({
+export const chatSelected = chatId => ({
   type: 'CHAT_SELECTED',
   payload: { chatId }
 });
 
-// make this 
-export const chatAdded = (chatId, chatData) => {
-
-}
-
+export const chatAdded = (chatId, chatData) => ({
+  type: 'CHAT_ADDED',
+  payload: { chatId }
+});
 
 
 // THUNKS HERE
 // these should ONLY be used for DB related operations
 // sending and listening
 
-export const listenToChats = () => dispatch => {
-  // LATER
+export const listenForChats = () => dispatch => {
   // get most recently updated chats
+  // probably should add data (meta) later
+  db.listenForNewChats(chatId => {
+    // a bit gross to dispatch 2 actions?
+    dispatch(chatAdded(chatId));
+    dispatch(listenToChat(chatId));
+  });
 };
+
 
 // ideally the callback here is fired again
 // for when the message is actually added
 // but can't figure out how to do so
-export const listenToMessages = chatId => dispatch => {
-  db.listenToNewChatMessages(chatId, (messageId, messageData, isPending) => {
+export const listenToChat = chatId => dispatch => {
+  db.listenToChatForNewMessages(chatId, (messageId, messageData, isPending) => {
     dispatch(messageAdded(chatId, messageId, messageData, isPending));
   });
 };

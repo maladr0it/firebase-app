@@ -27,13 +27,19 @@ export const createMessage = async (chatId, userId, text) => {
   }
 };
 
+
+// TODO
+// consider using async with these listeners to avoid callback complexity
+
+// could instead return an array of results
+// this will result in less action:ADD_MESSAGE calls in redux, too
+
 // consider listening AFTER initial fetch? see inner comment
-export const listenToNewChatMessages = (chatId, callback) => {
+export const listenToChatForNewMessages = (chatId, callback) => {
   console.log(`creating listener for chat ${chatId}`);
   db.collection(`chats/${chatId}/messages`)
   // luckily, null dates are 0, so they are included in this range..
   // TODO: consider a safer way.
-  // possibly checking whole collection
   .orderBy('createdAt', 'desc').limit(5) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
@@ -48,30 +54,21 @@ export const listenToNewChatMessages = (chatId, callback) => {
   });
 };
 
-
-// not used for now
-// export const fetchMessages = async (chatId, limit) => {
-//   try {
-//     const snapshot = await db.collection(`chats/${chatId}/messages`)
-//     .orderBy('createdAt', 'desc').limit(limit)
-//     .get();
-//     // return snapshot.docs.map(doc => doc.data());
-//     return snapshot.docs.map(doc => doc.id);
-//   }
-//   catch (e) {
-//     console.log(e);
-//   }
-// };
-
-// export const createUser = async (name) => {
-//   const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-//   await db.collection('users')
-//   .add({
-//     name,
-//     createdAt: timestamp
-//   });
-//   console.log(`db: created new user ${name}`);
-// };
+export const listenForNewChats = (callback) => {
+  console.log(`creating listener for all chats`);
+  db.collection(`chats`)
+  .onSnapshot(snapshot => {
+    // console.log('//////  chat change detected');
+    // snapshot.docs.forEach(doc => console.log(doc.data()))
+    snapshot.docChanges.forEach(change => {
+      if (change.type == 'added') {
+        console.log('/// this chat was added!');
+        const chatId = change.doc.id;
+        callback(chatId);
+      }
+    })
+  });
+}
 
 // export const createChat = async () => {
 //   const timestamp = firebase.firestore.FieldValue.serverTimestamp();

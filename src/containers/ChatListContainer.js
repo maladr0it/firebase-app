@@ -1,5 +1,8 @@
 import { connect } from 'react-redux';
-import { chatSelected } from '../actions';
+import {
+  chatSelected,
+  chatAdded
+} from '../actions';
 import ChatList from '../components/ChatList';
 
 const mapStateToProps = state => ({
@@ -8,8 +11,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSelectChat: (chatId) => {
+  onSelectChat: chatId => {
     dispatch(chatSelected(chatId));
+  },
+  onNewChat: chatId => {
+    dispatch(chatAdded(chatId));
   }
 });
 

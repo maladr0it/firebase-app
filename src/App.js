@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  listenToMessages,
+  listenToChat,
+  listenForChats
 } from './actions';
 
 import MessageListContainer from './containers/MessageListContainer';
@@ -11,9 +12,14 @@ import ChatListContainer from './containers/ChatListContainer'
 
 class App extends Component {
   componentDidMount() {
+    // listen for all new chats
+    this.props.listenForChats();
+
     // temporary
-    // eventually put in messageList when loaded?
-    this.props.listenToMessages(this.props.listenToChatId);
+    // execute once a chat is added?
+    // this.props.chatIdsToListenTo.forEach(id => {
+    //   this.props.listenToChat(id);
+    // });
   }
 
   render() {
@@ -28,14 +34,15 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  listenToChatId: state.chatApp.selectedChatId
-  // selectedChatId: state.view.selectedChatId,
-  // chatId: state.chat.id
+  chatIdsToListenTo: state.chatApp.chatIds
 });
 
 const mapDispatchToProps = dispatch => ({
-  listenToMessages: chatId => {
-    dispatch(listenToMessages(chatId));
+  listenToChat: chatId => {
+    dispatch(listenToChat(chatId));
+  },
+  listenForChats: () => {
+    dispatch(listenForChats());
   }
 });
 
