@@ -1,12 +1,12 @@
 import * as db from '../api';
 
-export const messageAdded = (id, message, isPending) => ({
+export const messageAdded = (id, messageData, isPending) => ({
   type: 'MESSAGE_ADDED',
-  payload: { id, message, isPending }
+  payload: { id, messageData, isPending }
 });
-export const messageSendSucceeded = (id, sentMessage) => ({
-  type: 'MESSAGE_SEND_SUCCEEDED',
-  payload: { id, sentMessage }
+export const messageSent = (id, messageData) => ({
+  type: 'MESSAGE_SENT',
+  payload: { id, messageData }
 });
 // flip colour of message to red
 // export const messageSendFailure = error => ({
@@ -15,18 +15,18 @@ export const messageSendSucceeded = (id, sentMessage) => ({
 // });
 
 export const listenToMessages = chatId => dispatch => {
-  db.listenToNewChatMessages(chatId, (id, newMessage, isPending) => {
+  db.listenToNewChatMessages(chatId, (id, messageData, isPending) => {
     // ideally this is fired again
     // for when the message is actually added
     // but can't figure out how to do so
-    dispatch(messageAdded(id, newMessage, isPending));
+    dispatch(messageAdded(id, messageData, isPending));
   });
 };
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   try {
     const { id, message } = await db.createMessage(chatId, userId, text);
-    dispatch(messageSendSucceeded(id, message));
+    dispatch(messageSent(id, message));
   }
   catch (e) {
     console.log(e);
