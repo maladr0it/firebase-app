@@ -1,8 +1,6 @@
 import { connect } from 'react-redux';
 import MessageList from '../components/MessageList';
 
-
-
 // SELECTORS
 
 // select message objs based on chat Id
@@ -11,12 +9,10 @@ const getMessages = (state, chatId) => {
   const messages = selectMessages(state, chat.messageIds);
   return messages;
 }
-
-
-// HELPERS
+// helpers
 
 // select chat obj based on chat Id
-// this is a little hacky
+// TODO: this is a little hacky
 const selectChat = (state, chatId) => {
   return state.chats[chatId] || { messageIds: [] };
 }

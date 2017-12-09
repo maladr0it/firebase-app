@@ -25,16 +25,7 @@ const chat = (state, action) => {
   }
 };
 // 6PVhc2zNVm7AVpK3yEEg
-const defaultState = {
-  // 'cht01': {
-  //   name: 'CHAT 1',
-  //   messageIds: []
-  // },
-  // 'cht02': {
-  //   name: 'CHAT 2',
-  //   messageIds: []
-  // }
-};
+const defaultState = {};
 
 const chats = (state = defaultState, action) => {
   switch(action.type) {

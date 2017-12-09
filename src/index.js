@@ -5,11 +5,11 @@ import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 // import registerServiceWorker from './registerServiceWorker';
 
-import chatApp from './reducers';
+import app from './reducers';
 import App from './App';
 
 const store = createStore(
-  chatApp,
+  app,
   applyMiddleware(thunkMiddleware)
 );
 

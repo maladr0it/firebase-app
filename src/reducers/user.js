@@ -1,9 +1,16 @@
 const defaultState = {
-  id: '3isyyZt5AZEWpXDVRokV' // name: zami
+  userId: '1jjahsBIp6Z8DkXKCmZa', // name: samantha
+  // userId: '3isyyZt5AZEWpXDVRokV',  // name: zami
+
+  // userIds: ['3isyyZt5AZEWpXDVRokV', '1jjahsBIp6Z8DkXKCmZa']
+  // zami, samantha
 };
 
 const user = (state = defaultState, action) => {
   switch (action.type) {
+    case 'USER_SELECTED': {
+      return state;
+    }
     default:
       return state;
   }

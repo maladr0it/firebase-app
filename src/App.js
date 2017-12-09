@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  listenToChat,
-  listenForChats
+  listenToChatForNewMessages,
+  listenForChatUpdates
 } from './actions';
 
+import ChatListContainer from './containers/ChatListContainer';
 import MessageListContainer from './containers/MessageListContainer';
 import MessageInputContainer from './containers/MessageInputContainer';
-import ChatListContainer from './containers/ChatListContainer'
 
 class App extends Component {
   componentDidMount() {
     // listen for all new chats
-    this.props.listenForChats();
+    this.props.listenForChats(this.props.currentUserId);
 
     // temporary
     // execute once a chat is added?
@@ -34,15 +34,16 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  currentUserId: state.user.userId,
   chatIdsToListenTo: state.chatApp.chatIds
 });
 
 const mapDispatchToProps = dispatch => ({
   listenToChat: chatId => {
-    dispatch(listenToChat(chatId));
+    dispatch(listenToChatForNewMessages(chatId));
   },
-  listenForChats: () => {
-    dispatch(listenForChats());
+  listenForChats: userId => {
+    dispatch(listenForChatUpdates(userId));
   }
 });
 

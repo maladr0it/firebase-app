@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MessageInputForm = ({ onSend, userId, chatId }) => {
+const MessageInputForm = ({ onSend, chatId, userId }) => {
   let input; // ref to input box
   
   return (
