@@ -7,8 +7,7 @@ import {
 } from './actions';
 
 import ChatListContainer from './containers/ChatListContainer';
-import MessageListContainer from './containers/MessageListContainer';
-import MessageInputContainer from './containers/MessageInputContainer';
+import ChatWindowContainer from './containers/ChatWindowContainer';
 
 class App extends Component {
   componentDidMount() {
@@ -26,8 +25,7 @@ class App extends Component {
     return (
       <div>
         <ChatListContainer />
-        <MessageInputContainer />
-        <MessageListContainer />
+        <ChatWindowContainer />
       </div>
     );
   }

@@ -21,7 +21,10 @@ export const chatUpdated = chatId => ({
   type: 'CHAT_UPDATED',
   payload: { chatId }
 });
-
+export const userAddedToChat = (chatId, userId) => ({
+  type: 'USER_ADDED_TO_CHAT',
+  payload: { chatId, userId }
+})
 
 // THUNKS HERE
 // these should ONLY be used for DB related operations
@@ -29,12 +32,16 @@ export const chatUpdated = chatId => ({
 
 export const listenForChatUpdates = userId => dispatch => {
   // get most recently updated chats
-  // probably should add data (meta) later
+  // -> probably should add data (meta) later
   db.listenForUserChatUpdates(userId, (chatId, changeType) => {
     if (changeType === 'added') {
       dispatch(chatAdded(chatId));
+
+      // ideally wrap these 2 into 1
+      dispatch(listenToChatForNewUsers(chatId));
       dispatch(listenToChatForNewMessages(chatId));
       // TODO: put listener somewhere else, perhaps in componentWillMount
+      // this fires when the timestamp is updated
     } else if (changeType === 'modified') {
       dispatch(chatUpdated(chatId));
     }
@@ -48,6 +55,13 @@ export const listenToChatForNewMessages = chatId => dispatch => {
     dispatch(messageAdded(chatId, messageId, messageData, isPending));
   });
 };
+export const listenToChatForNewUsers = chatId => dispatch => {
+  db.listenToChatForNewUsers(chatId, userId => {
+    dispatch(userAddedToChat(chatId, userId));
+  });
+}
+
+
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   try {
     const { messageId, messageData } = await db.sendMessage(chatId, userId, text);
@@ -58,16 +72,11 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
     // dispatch(messageSendFailure(e));
   }
 };
-
 // create chat and add yourself as a participant, for now
 // this likely won't be used in future
 export const createChat = (userId) => async dispatch => {
   try {
-    // adding user coiuld be done in 1 api call
-    // now 2 renders are triggered
-    // one for when the chat is created
-    // one for when the participant is added
-    const { chatId, chatData } = await db.createChat();
+    const { chatId } = await db.createChat();
     await db.addChatParticipant(chatId, userId);
   } catch (e) {
     console.log(e);

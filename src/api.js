@@ -29,12 +29,16 @@ const updateUserChat = async (userId, chatId) => {
     console.log(e);
   }
 };
+
+// reconsider naming of 'chat' in user.
+// it is simply to grab recently updated quickly
+// 'chatFeed'?
 const addChatToUser = async (userId, chatId) => {
   try {
     const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
       .set({
         lastUpdated: timestamp,
-        hasUnreadMessages: false
+        // numUnreadMessages
       });
     console.log(`db: added chat ${chatId} to user ${userId}`);
     return chatRef;
@@ -59,7 +63,7 @@ const addUserToChat = async (chatId, userId) => {
 // NOW is accurate if user has just joined
 export const sendMessage = async (chatId, userId, text) => {
   try {
-    const [messageRef, chatRef] = await Promise.all([
+    const [messageRef, ] = await Promise.all([
       addMessageToChat(chatId, userId, text),
       updateUserChat(userId, chatId)
     ]);
@@ -73,12 +77,12 @@ export const sendMessage = async (chatId, userId, text) => {
   }
 };
 // naming is a little gross here?
+
+// this should do a batch write!!
 export const addChatParticipant = async (chatId, userId) => {
   try {
-    console.log('chatId: ', chatId);
-    console.log('userId: ', userId);
-    const [chatRef, userRef] = await Promise.all([
-      addChatToUser(userId, chatId),
+    await Promise.all([
+      addChatToUser(userId, chatId), // this is adding, then modifying
       addUserToChat(chatId, userId)
     ]);
     return;
@@ -88,11 +92,10 @@ export const addChatParticipant = async (chatId, userId) => {
 };
 // creates a chat on db, and returns the chatId and data
 export const createChat = async () => {
-  const timestamp = firebase.firestore.FieldValue.serverTimestamp();
   const chatRef = await db.collection('chats')
     .add({
       createdAt: timestamp,
-      lastUpdated: timestamp
+      // lastUpdated: timestamp
     });
   const chatSnapshot = await chatRef.get();
   console.log(`db: created new chat ${chatRef.id}`);
@@ -113,11 +116,11 @@ export const createChat = async () => {
 
 // consider listening AFTER initial fetch? see inner comment
 export const listenToChatForNewMessages = (chatId, callback) => {
-  console.log(`db: creating listener for chat ${chatId}`);
+  console.log(`db: creating listener for messages of chat ${chatId}`);
   db.collection(`chats/${chatId}/messages`)
   // luckily, null dates are 0, so they are included in this range..
   // TODO: consider a safer way.
-  .orderBy('createdAt', 'desc').limit(5) 
+  .orderBy('createdAt', 'desc').limit(10) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
@@ -130,18 +133,33 @@ export const listenToChatForNewMessages = (chatId, callback) => {
     })
   });
 };
-// move chat to top if it is modified/added?
+export const listenToChatForNewUsers = (chatId, callback) => {
+  console.log(`db: creating listener for users of chat ${chatId}`);
+  db.collection(`chats/${chatId}/users`)
+  // .orderBy('joinedAt')
+  .onSnapshot(snapshot => {
+    snapshot.docChanges.forEach(change => {
+      if (change.type === 'added') {
+        const userId = change.doc.id;
+        callback(userId);
+      }
+    });
+  });
+};
+
+// this needs to get chat data, not 'userChat'
 export const listenForUserChatUpdates = (userId, callback) => {
   console.log(`db: creating listener for user ${userId}'s chats`);
   db.collection(`users/${userId}/chats`)
-  .orderBy('lastUpdated', 'desc')//.limit(5)
+  // TODO: chats without lastUpdated are rendered...
+  .orderBy('lastUpdated', 'desc').limit(3)
   .onSnapshot(snapshot => {
-    snapshot.docChanges.forEach(change => {
-      if (change.type === 'added' || change.type == 'modified') {
+    snapshot.docChanges.forEach(async change => {
+      if (change.type === 'added' || change.type === 'modified') {
         const chatId = change.doc.id;
         const changeType = change.type;
         callback(chatId, changeType);
       }
-    })
+    });
   });
-}
+};

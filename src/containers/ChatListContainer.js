@@ -7,7 +7,6 @@ import ChatList from '../components/ChatList';
 
 const mapStateToProps = state => ({
   currentUserId: state.user.userId,
-  selectedChatId: state.chatApp.selectedChatId,
   chatIds: state.chatApp.chatIds,
 });
 
