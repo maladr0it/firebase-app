@@ -18,7 +18,6 @@ const messages = (state = defaultState, action) => {
     }
     // this overwrites the original message with what the server returns
     case 'MESSAGE_SENT': {
-      console.log(action.payload);
       const { messageId, messageData } = action.payload;
       // adding meta isPending
       const message = {...messageData, isPending: false}

@@ -27,11 +27,10 @@ export const chatUpdated = chatId => ({
 // these should ONLY be used for DB related operations
 // sending and listening
 
-
 export const listenForChatUpdates = userId => dispatch => {
   // get most recently updated chats
   // probably should add data (meta) later
-  db.listenForChatUpdates(userId, (chatId, changeType) => {
+  db.listenForUserChatUpdates(userId, (chatId, changeType) => {
     if (changeType === 'added') {
       dispatch(chatAdded(chatId));
       dispatch(listenToChatForNewMessages(chatId));
@@ -51,7 +50,7 @@ export const listenToChatForNewMessages = chatId => dispatch => {
 };
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   try {
-    const { messageId, messageData } = await db.createMessage(chatId, userId, text);
+    const { messageId, messageData } = await db.sendMessage(chatId, userId, text);
     dispatch(messageSent(messageId, messageData));
   } catch (e) {
     console.log(e);
@@ -61,8 +60,13 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
 };
 
 // create chat and add yourself as a participant, for now
+// this likely won't be used in future
 export const createChat = (userId) => async dispatch => {
   try {
+    // adding user coiuld be done in 1 api call
+    // now 2 renders are triggered
+    // one for when the chat is created
+    // one for when the participant is added
     const { chatId, chatData } = await db.createChat();
     await db.addChatParticipant(chatId, userId);
   } catch (e) {
