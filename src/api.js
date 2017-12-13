@@ -18,19 +18,30 @@ const addMessageToChat = async (chatId, userId, text) => {
     console.log(e);
   }
 };
+// mark chat as unread UNLESS user is viewing this chat
 const updateUserChat = async (userId, chatId) => {
   console.log(`updating user ${userId}'s chat ${chatId}`);
   try {
+    // TODO: private funcs like this should be passed
+    // actual document.data()
+    const userSnapshot = await db.collection(`users`).doc(`${userId}`)
+      .get();
+    // GROSS, clean up tomorrow even if this works
+    const userData = userSnapshot.data();
+    const isUnread = !(userData.selectedChatId === chatId);
+    console.log(`//// should this chat be marked as unread for ${userId}?`);
+    console.log(isUnread);
+
     const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
       .set({
-        lastUpdated: timestamp
+        lastUpdated: timestamp,
+        isUnread
       }, { merge: true });
     return chatRef;
   } catch (e) {
     console.log(e);
   }
 };
-
 // reconsider naming of 'chat' in user.
 // it is simply to grab recently updated quickly
 // 'chatFeed'?
@@ -124,7 +135,24 @@ export const createChat = async () => {
   };
 };
 
+export const setSelectedChatForUser = async (userId, chatId) => {
+  const userRef = await db.collection(`users`).doc(`${userId}`)
+    .set({
+      selectedChatId: chatId
+    }, { merge: true });
+  console.log(`db: user ${userId} selected chat ${chatId}`);
+  return userRef;
+};
 
+
+// hax for now.  refactor HARD tomorrow
+export const markUserChatAsRead = async (userId, chatId) => {
+  const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
+    .set({
+      isUnread: false
+    }, { merge: true });
+  return chatRef;
+};
 
 
 // TODO
@@ -139,7 +167,7 @@ export const listenToChatForNewMessages = (chatId, callback) => {
   db.collection(`chats/${chatId}/messages`)
   // luckily, null dates are 0, so they are included in this range..
   // TODO: consider a safer way.
-  .orderBy('createdAt', 'desc').limit(10) 
+  .orderBy('createdAt', 'desc').limit(5) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
@@ -173,11 +201,12 @@ export const listenForUserChatUpdates = (userId, callback) => {
   // TODO: chats without lastUpdated are rendered...
   .orderBy('lastUpdated', 'desc').limit(3)
   .onSnapshot(snapshot => {
-    snapshot.docChanges.forEach(async change => {
+    snapshot.docChanges.reverse().forEach(async change => {
       if (change.type === 'added' || change.type === 'modified') {
         const chatId = change.doc.id;
+        const chatData = change.doc.data();
         const changeType = change.type;
-        callback(chatId, changeType);
+        callback(chatId, chatData, changeType);
       }
     });
   });

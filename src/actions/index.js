@@ -13,13 +13,13 @@ export const chatSelected = chatId => ({
   type: 'CHAT_SELECTED',
   payload: { chatId }
 });
-export const chatAdded = chatId => ({
+export const chatAdded = (chatId, chatData) => ({
   type: 'CHAT_ADDED',
-  payload: { chatId }
+  payload: { chatId, chatData }
 });
-export const chatUpdated = chatId => ({
+export const chatUpdated = (chatId, chatData) => ({
   type: 'CHAT_UPDATED',
-  payload: { chatId }
+  payload: { chatId, chatData }
 });
 export const userAddedToChat = (chatId, userId) => ({
   type: 'USER_ADDED_TO_CHAT',
@@ -33,13 +33,15 @@ export const loggedIn = userId => ({
 // THUNKS HERE
 // these should ONLY be used for DB related operations
 // sending and listening
-
 export const listenForChatUpdates = userId => dispatch => {
   // get most recently updated chats
   // -> probably should add data (meta) later
-  db.listenForUserChatUpdates(userId, (chatId, changeType) => {
+
+  // HERE: pass the data into add/modify func.
+
+  db.listenForUserChatUpdates(userId, (chatId, chatData, changeType) => {
     if (changeType === 'added') {
-      dispatch(chatAdded(chatId));
+      dispatch(chatAdded(chatId, chatData));
 
       // ideally wrap these 2 into 1
       dispatch(listenToChatForNewUsers(chatId));
@@ -47,7 +49,7 @@ export const listenForChatUpdates = userId => dispatch => {
       // TODO: put listener somewhere else, perhaps in componentWillMount
       // this fires when the timestamp is updated
     } else if (changeType === 'modified') {
-      dispatch(chatUpdated(chatId));
+      dispatch(chatUpdated(chatId, chatData));
     }
   });
 };
@@ -63,6 +65,11 @@ export const listenToChatForNewUsers = chatId => dispatch => {
   db.listenToChatForNewUsers(chatId, userId => {
     dispatch(userAddedToChat(chatId, userId));
   });
+};
+// start listening for chat updates
+export const login = userId => dispatch => {
+  dispatch(listenForChatUpdates(userId));
+  dispatch(loggedIn(userId));
 };
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
@@ -85,12 +92,15 @@ export const createChat = userId => async dispatch => {
     console.log(e);
   }
 };
-
-// start listening for chat updates
-export const login = userId => async dispatch => {
-  dispatch(listenForChatUpdates(userId));
-  dispatch(loggedIn(userId));
+// sets unread messages to 0, updates your lastReadMessage,
+// sets user/:userId/selectedChatId
+export const selectChat = (userId, chatId) => async dispatch => {
+  dispatch(chatSelected(chatId));
+  await db.setSelectedChatForUser(userId, chatId);
+  await db.markUserChatAsRead(userId, chatId);
 };
+
+
 
 export const addChatParticipant = (chatId, userId) => async dispatch => {
   try {

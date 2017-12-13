@@ -2,22 +2,26 @@ import React from 'react';
 
 const ChatList = ({
   onSelectChat, onNewChat,
-  chatIds, selectedChatId, currentUserId
+  chatIds, chats, selectedChatId, currentUserId
 }) => {
-  const chats = chatIds.map(chatId => (
+  // change naming
+  // this is hacky af, but if you get this working we can
+  // refactor hard
+  const chatList = chatIds.map((chatId, i) => (
     <li
-      key={chatId}
-      onClick={() => onSelectChat(chatId)}
+      key={i}
+      onClick={() => onSelectChat(currentUserId, chatId)}
     >
-      {(selectedChatId===chatId) ? '*' : ''}
+      {(chats[i].isUnread) ? 'NEW ' : 'READ ' }
       {chatId}
+      {(selectedChatId === chatId) ? '*' : ''}
     </li>
   ));
 
   return (
     <div>
-      <ul>{chats}</ul>
-      <button onClick={() => onNewChat(currentUserId)}>ADD A CHAT</button>
+      <ul>{chatList}</ul>
+      <button onClick={() => onNewChat(currentUserId)}>NEW CHAT</button>
     </div>
   );
 };

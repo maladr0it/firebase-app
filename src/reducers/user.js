@@ -9,10 +9,7 @@ const defaultState = {
 const user = (state = defaultState, action) => {
   switch (action.type) {
     case 'LOGGED_IN': {
-      console.log('hey');
       const { userId } = action.payload;
-
-      console.log(userId);
       return Object.assign({}, state, {
         userId
       });

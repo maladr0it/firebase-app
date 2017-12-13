@@ -4,6 +4,8 @@ const defaultState = {
   chatIds: []
 };
 
+// chat Ids are in reverse order, with oldest being at the end
+
 const chatApp = (state = defaultState, action) => {
   switch (action.type) {
     case 'CHAT_SELECTED': {
@@ -15,7 +17,7 @@ const chatApp = (state = defaultState, action) => {
     case 'CHAT_ADDED': {
       const { chatId } = action.payload;
       return Object.assign({}, state, {
-        chatIds: [...state.chatIds, chatId]
+        chatIds: [chatId, ...state.chatIds]
       });
     }
     case 'CHAT_UPDATED': {

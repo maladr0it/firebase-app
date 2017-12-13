@@ -3,6 +3,7 @@
 //   chat94109810: {
 //     createdAt: 90840118,
 //     lastUpdated: 1930581,
+// !!! isUnread
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
 //     userIds: ['usr0001', 'usr0002', 'usr0003']
 //   },
@@ -28,6 +29,11 @@ const chat = (state, action) => {
         userIds: [...state.userIds, userId]
       });
     }
+    case 'CHAT_UPDATED': {
+      const { chatData } = action.payload;
+      // update meta of chat
+      return Object.assign({}, state, chatData);
+    }
     default:
       return state;
   }
@@ -38,10 +44,17 @@ const defaultState = {};
 const chats = (state = defaultState, action) => {
   switch(action.type) {
     case 'CHAT_ADDED' : {
-      const { chatId } = action.payload;
+      const { chatId, chatData } = action.payload;
       return Object.assign({}, state, {
-        // this is hacks for now
-        [chatId]: {messageIds: [], userIds: []}
+        // attach metadata along with empty collections
+        // these will be filled by the listener set up after
+        [chatId]: { ...chatData, messageIds: [], userIds: []}
+      });
+    }
+    case 'CHAT_UPDATED' : {
+      const { chatId, chatData } = action.payload;
+      return Object.assign({}, state, {
+        [chatId]: chat(state[chatId], action)
       });
     }
     case 'MESSAGE_ADDED' : {
