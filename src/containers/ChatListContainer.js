@@ -6,9 +6,11 @@ import {
 } from '../actions';
 import ChatList from '../components/ChatList';
 
+// TODO: consider naming
 const mapStateToProps = state => ({
-  currentUserId: state.user.userId,
   chatIds: state.chatApp.chatIds,
+  selectedChatId: state.chatApp.selectedChatId,
+  currentUserId: state.user.userId,
 });
 
 const mapDispatchToProps = dispatch => ({

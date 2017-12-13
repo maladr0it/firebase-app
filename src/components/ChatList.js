@@ -2,14 +2,15 @@ import React from 'react';
 
 const ChatList = ({
   onSelectChat, onNewChat,
-  chatIds, currentUserId
+  chatIds, selectedChatId, currentUserId
 }) => {
   const chats = chatIds.map(chatId => (
     <li
       key={chatId}
       onClick={() => onSelectChat(chatId)}
     >
-      CHAT: {chatId}
+      {(selectedChatId===chatId) ? '*' : ''}
+      {chatId}
     </li>
   ));
 

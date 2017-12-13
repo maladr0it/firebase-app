@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
-
+import {
+  addChatParticipant
+} from '../actions'
 import ChatWindow from '../components/ChatWindow';
 
 // SELECTORS
@@ -20,8 +22,15 @@ const mapStateToProps = state => ({
   userIds: getUserIds(state, state.chatApp.selectedChatId)
 });
 
+const mapDispatchToProps = dispatch => ({
+  onAddUser: (chatId, userId) => {
+    dispatch(addChatParticipant(chatId, userId))
+  }
+});
+
 const ChatWindowContainer = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ChatWindow);
 
 export default ChatWindowContainer;

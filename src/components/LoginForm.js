@@ -11,7 +11,7 @@ const LoginForm = ({ userId, onLogin }) => {
       }}
     >
       <input
-        defaultValue='1jjahsBIp6Z8DkXKCmZa'
+        defaultValue='sam'
         ref={node => {
           input = node;
         }}

@@ -19,6 +19,7 @@ const addMessageToChat = async (chatId, userId, text) => {
   }
 };
 const updateUserChat = async (userId, chatId) => {
+  console.log(`updating user ${userId}'s chat ${chatId}`);
   try {
     const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
       .set({
@@ -59,14 +60,31 @@ const addUserToChat = async (chatId, userId) => {
     console.log(e);
   }
 };
-// we don't use the chat's actual lastUpdated
-// NOW is accurate if user has just joined
+// this is really inefficient.
+// consider having userIds pre-filled in the sendmesssage method
+// somehow this is instantly finishing (shrug)
+const getChatUserIds = async chatId => {
+  try {
+    const chatUsersSnapshot = await db.collection(`chats/${chatId}/users`).get();
+    const userIds = [];
+    chatUsersSnapshot.forEach(doc => {
+      userIds.push(doc.id);
+    });
+    return userIds;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// has to update every user's chat feed
+// make this a transaction later
 export const sendMessage = async (chatId, userId, text) => {
   try {
-    const [messageRef, ] = await Promise.all([
-      addMessageToChat(chatId, userId, text),
-      updateUserChat(userId, chatId)
-    ]);
+    // get all the IDs of chat participants
+    // TODO: this can be done async
+    const messageRef = await addMessageToChat(chatId, userId, text);
+    const userIds = await getChatUserIds(chatId);
+    await Promise.all(userIds.map(async id => await updateUserChat(id, chatId)));
     const messageSnapshot = await messageRef.get();
     console.log(`user ${userId} sent message '${text}' to chat $${chatId}`);
     return {

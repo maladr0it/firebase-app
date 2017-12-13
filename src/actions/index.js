@@ -91,3 +91,11 @@ export const login = userId => async dispatch => {
   dispatch(listenForChatUpdates(userId));
   dispatch(loggedIn(userId));
 };
+
+export const addChatParticipant = (chatId, userId) => async dispatch => {
+  try {
+    await db.addChatParticipant(chatId, userId);
+  } catch (e) {
+    console.log(e);
+  }
+};
