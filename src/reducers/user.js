@@ -1,5 +1,5 @@
 const defaultState = {
-  userId: '1jjahsBIp6Z8DkXKCmZa', // name: samantha
+  // userId: '1jjahsBIp6Z8DkXKCmZa', // name: samantha
   // userId: '3isyyZt5AZEWpXDVRokV',  // name: zami
 
   // userIds: ['3isyyZt5AZEWpXDVRokV', '1jjahsBIp6Z8DkXKCmZa']
@@ -8,8 +8,14 @@ const defaultState = {
 
 const user = (state = defaultState, action) => {
   switch (action.type) {
-    case 'USER_SELECTED': {
-      return state;
+    case 'LOGGED_IN': {
+      console.log('hey');
+      const { userId } = action.payload;
+
+      console.log(userId);
+      return Object.assign({}, state, {
+        userId
+      });
     }
     default:
       return state;

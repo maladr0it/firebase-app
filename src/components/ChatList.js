@@ -12,6 +12,7 @@ const ChatList = ({
       CHAT: {chatId}
     </li>
   ));
+
   return (
     <div>
       <ul>{chats}</ul>

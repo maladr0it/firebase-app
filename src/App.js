@@ -6,13 +6,14 @@ import {
   listenForChatUpdates
 } from './actions';
 
+import LoginFormContainer from './containers/LoginFormContainer';
 import ChatListContainer from './containers/ChatListContainer';
 import ChatWindowContainer from './containers/ChatWindowContainer';
 
 class App extends Component {
   componentDidMount() {
     // listen for all new chats
-    this.props.listenForChats(this.props.currentUserId);
+    // this.props.listenForChats(this.props.currentUserId);
 
     // temporary
     // execute once a chat is added?
@@ -24,6 +25,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <LoginFormContainer />
         <ChatListContainer />
         <ChatWindowContainer />
       </div>

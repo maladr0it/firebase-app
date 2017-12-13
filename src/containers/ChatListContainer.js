@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import {
   chatSelected,
-  createChat
+  createChat,
+  loggedIn
 } from '../actions';
 import ChatList from '../components/ChatList';
 

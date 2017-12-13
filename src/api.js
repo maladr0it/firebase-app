@@ -68,6 +68,7 @@ export const sendMessage = async (chatId, userId, text) => {
       updateUserChat(userId, chatId)
     ]);
     const messageSnapshot = await messageRef.get();
+    console.log(`user ${userId} sent message '${text}' to chat $${chatId}`);
     return {
       messageId: messageRef.id,
       messageData: messageSnapshot.data()

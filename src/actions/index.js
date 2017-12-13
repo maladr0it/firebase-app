@@ -24,7 +24,11 @@ export const chatUpdated = chatId => ({
 export const userAddedToChat = (chatId, userId) => ({
   type: 'USER_ADDED_TO_CHAT',
   payload: { chatId, userId }
-})
+});
+export const loggedIn = userId => ({
+  type: 'LOGGED_IN',
+  payload: { userId }
+});
 
 // THUNKS HERE
 // these should ONLY be used for DB related operations
@@ -59,8 +63,7 @@ export const listenToChatForNewUsers = chatId => dispatch => {
   db.listenToChatForNewUsers(chatId, userId => {
     dispatch(userAddedToChat(chatId, userId));
   });
-}
-
+};
 
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   try {
@@ -74,11 +77,17 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
 };
 // create chat and add yourself as a participant, for now
 // this likely won't be used in future
-export const createChat = (userId) => async dispatch => {
+export const createChat = userId => async dispatch => {
   try {
     const { chatId } = await db.createChat();
     await db.addChatParticipant(chatId, userId);
   } catch (e) {
     console.log(e);
   }
+};
+
+// start listening for chat updates
+export const login = userId => async dispatch => {
+  dispatch(listenForChatUpdates(userId));
+  dispatch(loggedIn(userId));
 };
