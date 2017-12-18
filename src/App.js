@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import LoginForm from './components/LoginForm';
 import ChatList from './components/ChatList';
+import ChatWindow from './components/ChatWindow';
 
 class App extends Component {
 
   render() {
     return (
       <div>
+        <LoginForm />
         <ChatList />
-        {/* <LoginFormContainer /> */}
-        {/* <ChatListContainer /> */}
+        <ChatWindow />
         {/* <ChatWindowContainer /> */}
       </div>
     );

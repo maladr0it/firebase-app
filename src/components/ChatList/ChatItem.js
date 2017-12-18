@@ -5,11 +5,17 @@ import {
   listenToChatForNewUsers
 } from '../../actions';
 
-const ChatItemComponent = ({ chatId, onSelectChat }) => {
+const ChatItemComponent = ({ handleSelectChat, chatId, chatData }) => {
   return (
-    <li>CHAT: {chatId}</li>
+    <li
+      style={{background: '#FCF5C7'}}
+      onClick={() => handleSelectChat()}
+    >
+      {chatId} <br />
+      LAST UPDATED {chatData.lastUpdated.toString()}
+    </li>
   );
-}
+};
 
 const mapDispatchToProps = {
   messageListener: listenToChatForNewMessages,

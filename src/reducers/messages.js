@@ -11,19 +11,21 @@ const messages = (state = defaultState, action) => {
     case 'MESSAGE_ADDED': {
       const { messageId, messageData, isPending } = action.payload;
       // adding meta isPending
-      const formattedMessage = { ...messageData, isPending};
-      return  Object.assign({}, state, {
-        [messageId]: formattedMessage
-      });
+      const message = { ...messageData, isPending};
+      return {
+        ...state,
+        [messageId]: message
+      };
     }
     // this overwrites the original message with what the server returns
     case 'MESSAGE_SENT': {
       const { messageId, messageData } = action.payload;
       // adding meta isPending
       const message = {...messageData, isPending: false}
-      return Object.assign({}, state, {
+      return {
+        ...state,
         [messageId]: message
-      });
+      };
     }
     default:
       return state;

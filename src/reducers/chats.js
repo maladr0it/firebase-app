@@ -18,13 +18,24 @@ const chat = (state = {}, action) => {
   switch(action.type) {
     case 'CHAT_ADDED' : {
       const { chatData } = action.payload;
-      return chatData;
+      return {
+        ...state,
+        ...chatData,
+        messageIds: []
+      };
     }
     case 'CHAT_UPDATED': {
       const { chatData } = action.payload;
       return {
         ...state,
-        chatData
+        ...chatData
+      };
+    }
+    case 'MESSAGE_ADDED' : {
+      const { messageId } = action.payload;
+      return {
+        ...state,
+        messageIds: [...state.messageIds, messageId]
       };
     }
     default:
@@ -37,14 +48,21 @@ const defaultState = {};
 const chats = (state = defaultState, action) => {
   switch(action.type) {
     case 'CHAT_ADDED' : {
-      const { chatId, chatData } = action.payload;
+      const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat({}, action)
+        [chatId]: chat(state[chatId], action)
       };
     }
     case 'CHAT_UPDATED' : {
       const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId]: chat(state[chatId], action)
+      };
+    }
+    case 'MESSAGE_ADDED' : {
+      const { chatId, messageid } = action.payload;
       return {
         ...state,
         [chatId]: chat(state[chatId], action)

@@ -2,32 +2,38 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   listenForChatUpdates,
+  selectChat
 } from '../../actions';
 
 import ChatItem from './ChatItem';
 
-const ChatListComponent = ({ onSelectChat, chatIds, currentUserId }) => {
+const ChatListComponent = ({
+  onSelectChat,
+  chatIds, chatsData
+}) => {
   const chats = chatIds.map(chatId => (
-    <ChatItem key={chatId} chatId={chatId} />
+    <ChatItem key={chatId}
+      handleSelectChat={() => onSelectChat(chatId)}
+      chatId={chatId}
+      chatData={chatsData[chatId]}
+    />
   ));
   return (
     <div>{chats}</div>
   );
 };
 
-// TODO: look up best practices for selectors
-const getChats = (state, chatIds) => {
-  return chatIds.map(id => state.chats[id]);
-};
-// TODO: consider naming
 const mapStateToProps = state => ({
+  userId: state.user.userId,
   chatIds: state.chatApp.chatIds,
-  chats: getChats(state, state.chatApp.chatIds),
+  chatsData: state.chats
+  // passing all chats here, this could get big,
+  // consider selector/reducer
 });
-
 const mapDispatchToProps = {
   chatListener: listenForChatUpdates,
-}
+  onSelectChat: selectChat
+};
 
 const withListener = (WrappedComponent) => {
   return class extends React.Component {
@@ -35,14 +41,15 @@ const withListener = (WrappedComponent) => {
       listener: undefined
     };
     componentDidMount() {
-      console.log('mounted ');
-      this.props.chatListener(this.props.currentUserId);
+      this.setState({
+        chatListener: this.props.chatListener(this.props.userId)
+      });
     }
     componentWillUnmount() {
-      console.log('unmounting...');
+      // add destroy listener here
     }
     render() {
-      const { onListen, ...passThroughProps } = this.props;
+      const { chatListener, ...passThroughProps } = this.props;
       return <WrappedComponent {...passThroughProps} />;
     }
   }

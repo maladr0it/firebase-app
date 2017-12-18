@@ -1,6 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const MessageList = ({ messages }) => {
+const MessageListComponent = ({ messages }) => {
   return (
     <ul>
       {messages.map((message, i) => (
@@ -16,5 +17,32 @@ const MessageList = ({ messages }) => {
     </ul>
   );
 };
+
+// SELECTORS
+
+// select message objs based on chat Id
+const getMessages = (state, chatId) => {
+  const chat = selectChat(state, chatId);
+  const messages = selectMessages(state, chat.messageIds);
+  return messages;
+};
+// helpers
+
+// TODO: this is a little hacky
+const selectChat = (state, chatId) => {
+  return state.chats[chatId] || { messageIds: [] }; // TODO: hax
+};
+const selectMessages = (state, messageIds) => {
+  return messageIds.map(id => state.messages[id]);
+};
+
+
+const mapStateToProps = state => ({
+  messages: getMessages(state, state.chatApp.selectedChat)
+});
+
+const MessageList = connect(
+  mapStateToProps,
+)(MessageListComponent)
 
 export default MessageList;

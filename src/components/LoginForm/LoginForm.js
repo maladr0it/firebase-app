@@ -1,6 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+  login
+} from '../../actions';
 
-const LoginForm = ({ userId, onLogin }) => {
+const LoginFormComponent = ({ userId, onLogin }) => {
   let input;
   const form = (
     <form
@@ -23,11 +27,27 @@ const LoginForm = ({ userId, onLogin }) => {
   );
 
   return (
-    <div>
+    <div style={{background: '#79ADDC'}}>
       {form}
       LOGGED IN AS: {userId}
     </div>
   );
 };
+
+
+const mapStateToProps = state => ({
+  userId: state.user.userId
+});
+
+const mapDispatchToProps = dispatch => ({
+  onLogin: userId => {
+    dispatch(login(userId));
+  }
+});
+
+const LoginForm = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginFormComponent)
 
 export default LoginForm;

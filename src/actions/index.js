@@ -89,7 +89,7 @@ export const createChat = userId => async dispatch => {
 };
 // sets unread messages to 0, updates your lastReadMessage,
 // sets user/:userId/selectedChatId
-export const selectChat = (userId, chatId) => async dispatch => {
+export const selectChat = chatId => async dispatch => {
   dispatch(chatSelected(chatId));
   // await db.setSelectedChatForUser(userId, chatId);
   // await db.markUserChatAsRead(userId, chatId);

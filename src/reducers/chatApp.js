@@ -1,7 +1,6 @@
 const defaultState = {
-  selectedChatId: undefined,
-  // 6PVhc2zNVm7AVpK3yEEg
-  chatIds: []
+  chatIds: [],
+  selectedChat: undefined
 };
 
 // chat Ids are in reverse order, with oldest being at the end
@@ -12,7 +11,7 @@ const chatApp = (state = defaultState, action) => {
       const { chatId } = action.payload;
       return {
         ...state,
-        chatIds: [chatId, ...state.chatIds]
+        chatIds: [chatId, ...state.chatIds.filter(id => id !== chatId)]
       };
     }
     case 'CHAT_UPDATED': {
@@ -20,6 +19,13 @@ const chatApp = (state = defaultState, action) => {
       return {
         ...state,
         chatIds: [chatId, ...state.chatIds.filter(id => id !== chatId)]
+      };
+    }
+    case 'CHAT_SELECTED': {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        selectedChat: chatId
       };
     }
     default:
