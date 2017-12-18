@@ -3,37 +3,20 @@ import { connect } from 'react-redux';
 import {
   login
 } from '../../actions';
+import InputForm from '../InputForm';
 
-const LoginFormComponent = ({ userId, onLogin }) => {
-  let input;
-  const form = (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        onLogin(input.value);
-        input.value = '';
-      }}
-    >
-      <input
-        defaultValue='loki'
-        ref={node => {
-          input = node;
-        }}
-      />
-      <button type='submit'>
-        LOGIN
-      </button>
-    </form>
-  );
+const LoginFormComponent = ({ onLogin, userId }) => {
 
   return (
     <div style={{background: '#79ADDC'}}>
-      {form}
+      <InputForm
+        label='USERNAME: '
+        handleSubmit={value => onLogin(value)}
+      />
       LOGGED IN AS: {userId}
     </div>
   );
 };
-
 
 const mapStateToProps = state => ({
   userId: state.user.userId

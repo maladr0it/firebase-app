@@ -63,6 +63,7 @@ export const listenToChatForNewUsers = chatId => dispatch => {
 };
 // start listening for chat updates
 export const login = userId => dispatch => {
+  console.log('logging in as ', userId);
   // dispatch(listenForChatUpdates(userId));
   dispatch(loggedIn(userId));
 };
