@@ -14,61 +14,41 @@
 //   }
 // }
 
-const chat = (state, action) => {
+const chat = (state = {}, action) => {
   switch(action.type) {
-    case 'MESSAGE_ADDED': {
-      const { messageId } = action.payload;
-      return Object.assign({}, state, {
-        messageIds: [...state.messageIds, messageId]
-      });
-      return state;
-    }
-    case 'USER_ADDED_TO_CHAT': {
-      const { userId } = action.payload;
-      return Object.assign({}, state, {
-        userIds: [...state.userIds, userId]
-      });
+    case 'CHAT_ADDED' : {
+      const { chatData } = action.payload;
+      return chatData;
     }
     case 'CHAT_UPDATED': {
       const { chatData } = action.payload;
-      // update meta of chat
-      return Object.assign({}, state, chatData);
+      return {
+        ...state,
+        chatData
+      };
     }
     default:
       return state;
   }
 };
-// 6PVhc2zNVm7AVpK3yEEg
+
 const defaultState = {};
 
 const chats = (state = defaultState, action) => {
   switch(action.type) {
     case 'CHAT_ADDED' : {
       const { chatId, chatData } = action.payload;
-      return Object.assign({}, state, {
-        // attach metadata along with empty collections
-        // these will be filled by the listener set up after
-        [chatId]: { ...chatData, messageIds: [], userIds: []}
-      });
+      return {
+        ...state,
+        [chatId]: chat({}, action)
+      };
     }
     case 'CHAT_UPDATED' : {
-      const { chatId, chatData } = action.payload;
-      return Object.assign({}, state, {
-        [chatId]: chat(state[chatId], action)
-      });
-    }
-    case 'MESSAGE_ADDED' : {
       const { chatId } = action.payload;
-      return Object.assign({}, state, {
+      return {
+        ...state,
         [chatId]: chat(state[chatId], action)
-      });
-    }
-    case 'USER_ADDED_TO_CHAT' : {
-      const { chatId, userId } = action.payload;
-      return Object.assign({}, state, {
-        [chatId]: chat(state[chatId], action)
-      });
-      return state;
+      };
     }
     default:
       return state;

@@ -1,4 +1,5 @@
 const defaultState = {
+  userId: 'loki'
   // userId: '1jjahsBIp6Z8DkXKCmZa', // name: samantha
   // userId: '3isyyZt5AZEWpXDVRokV',  // name: zami
 

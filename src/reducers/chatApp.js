@@ -8,25 +8,19 @@ const defaultState = {
 
 const chatApp = (state = defaultState, action) => {
   switch (action.type) {
-    case 'CHAT_SELECTED': {
-      const { chatId } = action.payload;
-      return Object.assign({}, state, {
-        selectedChatId: chatId
-      });
-    }
     case 'CHAT_ADDED': {
       const { chatId } = action.payload;
-      return Object.assign({}, state, {
+      return {
+        ...state,
         chatIds: [chatId, ...state.chatIds]
-      });
+      };
     }
     case 'CHAT_UPDATED': {
       const { chatId } = action.payload;
-      // move to front.  replace with lodash func?
-      const newChatIds = [chatId].concat(state.chatIds.filter(id => id !== chatId));
-      return Object.assign({}, state, {
-        chatIds: newChatIds
-      });
+      return {
+        ...state,
+        chatIds: [chatId, ...state.chatIds.filter(id => id !== chatId)]
+      };
     }
     default:
       return state;

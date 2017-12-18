@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import MessageList from '../components/MessageList';
 
+
 // SELECTORS
 
 // select message objs based on chat Id
@@ -25,7 +26,7 @@ const mapStateToProps = state => ({
 });
 
 const MessageListContainer = connect(
-  mapStateToProps
-)(MessageList);
+  mapStateToProps,
+)(MessageList)
 
 export default MessageListContainer;

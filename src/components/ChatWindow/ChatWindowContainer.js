@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   addChatParticipant
-} from '../actions'
+} from '../actions';
 import ChatWindow from '../components/ChatWindow';
 
 // SELECTORS

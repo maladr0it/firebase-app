@@ -42,17 +42,12 @@ export const listenForChatUpdates = userId => dispatch => {
   db.listenForUserChatUpdates(userId, (chatId, chatData, changeType) => {
     if (changeType === 'added') {
       dispatch(chatAdded(chatId, chatData));
-
-      // ideally wrap these 2 into 1
-      dispatch(listenToChatForNewUsers(chatId));
-      dispatch(listenToChatForNewMessages(chatId));
-      // TODO: put listener somewhere else, perhaps in componentWillMount
-      // this fires when the timestamp is updated
     } else if (changeType === 'modified') {
       dispatch(chatUpdated(chatId, chatData));
     }
   });
 };
+
 // ideally the callback here is fired again
 // for when the message is actually added
 // but can't figure out how to do so
@@ -68,7 +63,7 @@ export const listenToChatForNewUsers = chatId => dispatch => {
 };
 // start listening for chat updates
 export const login = userId => dispatch => {
-  dispatch(listenForChatUpdates(userId));
+  // dispatch(listenForChatUpdates(userId));
   dispatch(loggedIn(userId));
 };
 
@@ -96,11 +91,9 @@ export const createChat = userId => async dispatch => {
 // sets user/:userId/selectedChatId
 export const selectChat = (userId, chatId) => async dispatch => {
   dispatch(chatSelected(chatId));
-  await db.setSelectedChatForUser(userId, chatId);
-  await db.markUserChatAsRead(userId, chatId);
+  // await db.setSelectedChatForUser(userId, chatId);
+  // await db.markUserChatAsRead(userId, chatId);
 };
-
-
 
 export const addChatParticipant = (chatId, userId) => async dispatch => {
   try {
