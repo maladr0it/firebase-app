@@ -1,6 +1,5 @@
 import * as db from '../api';
 
-
 export const messageAdded = (chatId, messageId, messageData, isPending) => ({
   type: 'MESSAGE_ADDED',
   payload: { chatId, messageId, messageData, isPending }
@@ -29,53 +28,57 @@ export const loggedIn = userId => ({
   type: 'LOGGED_IN',
   payload: { userId }
 });
+export const loggedOut = userId => ({
+  type: 'LOGGED_OUT'
+});
+export const chatsReordered = chatIds => ({
+  type: 'CHATS_REORDERED',
+  payload: { chatIds }
+});
+
 
 // THUNKS HERE
-// these should ONLY be used for DB related operations
-// sending and listening
 export const listenForChatUpdates = userId => dispatch => {
-  // get most recently updated chats
-  // -> probably should add data (meta) later
-
-  // HERE: pass the data into add/modify func.
-
-  db.listenForUserChatUpdates(userId, (chatId, chatData, changeType) => {
+  const snapshotCb = chatIds => {
+    
+    dispatch(chatsReordered(chatIds));
+  };
+  const docChangeCb = (chatId, chatData, changeType) => {
     if (changeType === 'added') {
       dispatch(chatAdded(chatId, chatData));
     } else if (changeType === 'modified') {
       dispatch(chatUpdated(chatId, chatData));
     }
-  });
+  };
+  const unsubscribe = db.listenForUserChatUpdates(userId, snapshotCb, docChangeCb);
+  return unsubscribe;
 };
-
-// ideally the callback here is fired again
-// for when the message is actually added
-// but can't figure out how to do so
-export const listenToChatForNewMessages = chatId => dispatch => {
-  db.listenToChatForNewMessages(chatId, (messageId, messageData, isPending) => {
+export const listenToChatForMessages = chatId => dispatch => {
+  const callback = (messageId, messageData, isPending) => {
     dispatch(messageAdded(chatId, messageId, messageData, isPending));
-  });
+  };
+  const unsubscribe = db.listenToChatForMessages(chatId, callback);
+  return unsubscribe;
 };
-export const listenToChatForNewUsers = chatId => dispatch => {
-  db.listenToChatForNewUsers(chatId, userId => {
+export const listenToChatForUsers = chatId => dispatch => {
+  const callback = userId => {
     dispatch(userAddedToChat(chatId, userId));
-  });
+  };
+  const unsubscribe = db.listenToChatForUsers(chatId, callback);
+  return unsubscribe;
 };
-// start listening for chat updates
 export const login = userId => dispatch => {
-  console.log('logging in as ', userId);
-  // dispatch(listenForChatUpdates(userId));
   dispatch(loggedIn(userId));
 };
-
+export const logout = () => dispatch => {
+  dispatch(loggedOut());
+}
 export const sendMessage = (chatId, userId, text) => async dispatch => {
   try {
     const { messageId, messageData } = await db.sendMessage(chatId, userId, text);
     dispatch(messageSent(messageId, messageData));
   } catch (e) {
     console.log(e);
-    // TODO: add proper error handling
-    // dispatch(messageSendFailure(e));
   }
 };
 // create chat and add yourself as a participant, for now
@@ -90,10 +93,9 @@ export const createChat = userId => async dispatch => {
 };
 // sets unread messages to 0, updates your lastReadMessage,
 // sets user/:userId/selectedChatId
-export const selectChat = chatId => async dispatch => {
+export const selectChat = (userId, chatId) => async dispatch => {
   dispatch(chatSelected(chatId));
-  // await db.setSelectedChatForUser(userId, chatId);
-  // await db.markUserChatAsRead(userId, chatId);
+  db.setSelectedChatForUser(userId, chatId);
 };
 
 export const addChatParticipant = (chatId, userId) => async dispatch => {

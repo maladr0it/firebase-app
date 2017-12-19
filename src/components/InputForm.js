@@ -17,7 +17,7 @@ class InputForm extends React.Component {
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
         <label>
-          {this.props.label}:
+          {this.props.label}
           <input type='text'
             value={this.state.value}
             onChange={e => this.handleChange(e)} />
@@ -27,5 +27,4 @@ class InputForm extends React.Component {
     );
   };
 }
-
 export default InputForm;

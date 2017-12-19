@@ -8,20 +8,24 @@ import ChatWindow from './components/ChatWindow';
 class App extends Component {
 
   render() {
-    return (
-      <div>
+    const isLoggedIn = (this.props.currentUserId);
+    if (isLoggedIn) {
+      return (
+        <div>
+          <ChatList />
+          <ChatWindow />
+        </div>
+      );
+    } else {
+      return (
         <LoginForm />
-        <ChatList />
-        <ChatWindow />
-        {/* <ChatWindowContainer /> */}
-      </div>
-    );
+      );
+    }
   }
 }
 
 const mapStateToProps = state => ({
   currentUserId: state.user.userId,
-  chatIdsToListenTo: state.chatApp.chatIds
 });
 
 export default connect(mapStateToProps)(App);

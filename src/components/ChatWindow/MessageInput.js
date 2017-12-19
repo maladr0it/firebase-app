@@ -1,26 +1,27 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { sendMessage } from '../../actions';
+import InputForm from '../InputForm';
 
-const MessageInputForm = ({ onSend, chatId, userId }) => {
-  let input; // ref to input box
-  
+const MessageInputComponent = ({ chatId, userId, onSend }) => {
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        onSend(chatId, userId, input.value);
-        input.value = '';
-      }}
-    >
-      <input
-        ref={node => {
-          input = node;
-        }}
-      />
-      <button type='submit'>
-        SEND
-      </button>
-    </form>
+    <InputForm
+      label=''
+      handleSubmit={text => onSend(chatId, userId, text)}
+    />
   );
 };
 
-export default MessageInputForm;
+const mapStateToProps = state => ({
+  userId: state.user.userId,
+  chatId: state.chatApp.selectedChat
+});
+const mapDispatchToProps = {
+  onSend: sendMessage
+};
+const MessageInput = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessageInputComponent);
+
+export default MessageInput;

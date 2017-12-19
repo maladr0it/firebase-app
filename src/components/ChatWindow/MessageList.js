@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const MessageListComponent = ({ messages }) => {
+  // TODO: refactor this
   return (
     <ul>
       {messages.map((message, i) => (
@@ -43,6 +44,6 @@ const mapStateToProps = state => ({
 
 const MessageList = connect(
   mapStateToProps,
-)(MessageListComponent)
+)(MessageListComponent);
 
 export default MessageList;

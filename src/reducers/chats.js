@@ -7,11 +7,6 @@
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
 //     userIds: ['usr0001', 'usr0002', 'usr0003']
 //   },
-//   chat49001914: {
-//     createdAt: 91901084,
-//     lastUpdated: 91019810,
-//     messageIds: ['msg91914', 'msg59101', 'msg92001']
-//   }
 // }
 
 const chat = (state = {}, action) => {
@@ -21,7 +16,8 @@ const chat = (state = {}, action) => {
       return {
         ...state,
         ...chatData,
-        messageIds: []
+        messageIds: [],
+        userIds: []
       };
     }
     case 'CHAT_UPDATED': {
@@ -36,6 +32,13 @@ const chat = (state = {}, action) => {
       return {
         ...state,
         messageIds: [...state.messageIds, messageId]
+      };
+    }
+    case 'USER_ADDED_TO_CHAT' : {
+      const { userId } = action.payload;
+      return {
+        ...state,
+        userIds: [...state.userIds, userId]
       };
     }
     default:
@@ -62,10 +65,17 @@ const chats = (state = defaultState, action) => {
       };
     }
     case 'MESSAGE_ADDED' : {
-      const { chatId, messageid } = action.payload;
+      const { chatId } = action.payload;
       return {
         ...state,
         [chatId]: chat(state[chatId], action)
+      };
+    }
+    case 'USER_ADDED_TO_CHAT' : {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId] : chat(state[chatId], action)
       };
     }
     default:

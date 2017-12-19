@@ -18,39 +18,34 @@ const addMessageToChat = async (chatId, userId, text) => {
     console.log(e);
   }
 };
-// mark chat as unread UNLESS user is viewing this chat
 const updateUserChat = async (userId, chatId) => {
-  console.log(`updating user ${userId}'s chat ${chatId}`);
-  try {
-    // TODO: private funcs like this should be passed
-    // actual document.data()
-    const userSnapshot = await db.collection(`users`).doc(`${userId}`)
-      .get();
-    // GROSS, clean up tomorrow even if this works
-    const userData = userSnapshot.data();
-    const isUnread = !(userData.selectedChatId === chatId);
-    console.log(`//// should this chat be marked as unread for ${userId}?`);
-    console.log(isUnread);
-
-    const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
-      .set({
-        lastUpdated: timestamp,
-        isUnread
-      }, { merge: true });
-    return chatRef;
-  } catch (e) {
-    console.log(e);
-  }
+  const userRef = db.collection(`users`).doc(`${userId}`);
+  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
+  db.runTransaction(async transaction => {
+    const [userDoc, chatDoc] = await Promise.all([
+      transaction.get(userRef),
+      transaction.get(chatRef)
+    ]); 
+    console.log('doing shit..');
+    // increment if user is not viewing the chat
+    let unreadCount = chatDoc.data().unreadCount || 0;
+    if (userDoc.data().selectedChatId !== chatId) {
+      unreadCount += 1;
+    }
+    transaction.update(chatRef, {
+      lastUpdated: timestamp,
+      unreadCount
+    });
+    transaction.update(userRef, {})
+    // all docs read in a transaction must be written
+  });
 };
-// reconsider naming of 'chat' in user.
-// it is simply to grab recently updated quickly
-// 'chatFeed'?
 const addChatToUser = async (userId, chatId) => {
   try {
     const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
       .set({
         lastUpdated: timestamp,
-        // numUnreadMessages
+        unreadCount: 0
       });
     console.log(`db: added chat ${chatId} to user ${userId}`);
     return chatRef;
@@ -71,33 +66,27 @@ const addUserToChat = async (chatId, userId) => {
     console.log(e);
   }
 };
-// this is really inefficient.
-// consider having userIds pre-filled in the sendmesssage method
-// somehow this is instantly finishing (shrug)
 const getChatUserIds = async chatId => {
   try {
     const chatUsersSnapshot = await db.collection(`chats/${chatId}/users`).get();
-    const userIds = [];
-    chatUsersSnapshot.forEach(doc => {
-      userIds.push(doc.id);
-    });
-    return userIds;
+    return chatUsersSnapshot.docs.map(doc => doc.id);
   } catch (e) {
     console.log(e);
   }
 };
 
 // has to update every user's chat feed
-// make this a transaction later
+// optimisations here make the code ugly
 export const sendMessage = async (chatId, userId, text) => {
   try {
-    // get all the IDs of chat participants
-    // TODO: this can be done async
-    const messageRef = await addMessageToChat(chatId, userId, text);
-    const userIds = await getChatUserIds(chatId);
-    await Promise.all(userIds.map(async id => await updateUserChat(id, chatId)));
+    const addMessageProm = addMessageToChat(chatId, userId, text);
+    const chatUserIds = await getChatUserIds(chatId)
+    // const usersToUpdate = chatUserIds.filter(id => id !== userId);
+
+    chatUserIds.forEach(userId => updateUserChat(userId, chatId));
+    const messageRef = await addMessageProm;
     const messageSnapshot = await messageRef.get();
-    console.log(`user ${userId} sent message '${text}' to chat $${chatId}`);
+    // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
     return {
       messageId: messageRef.id,
       messageData: messageSnapshot.data()
@@ -120,7 +109,6 @@ export const addChatParticipant = async (chatId, userId) => {
     console.log(e);
   }
 };
-// creates a chat on db, and returns the chatId and data
 export const createChat = async () => {
   const chatRef = await db.collection('chats')
     .add({
@@ -135,38 +123,22 @@ export const createChat = async () => {
   };
 };
 
-export const setSelectedChatForUser = async (userId, chatId) => {
-  const userRef = await db.collection(`users`).doc(`${userId}`)
+// select chat and set unread to 0
+export const setSelectedChatForUser = (userId, chatId) => {
+  db.collection(`users`).doc(`${userId}`)
     .set({
       selectedChatId: chatId
     }, { merge: true });
-  console.log(`db: user ${userId} selected chat ${chatId}`);
-  return userRef;
-};
-
-
-// hax for now.  refactor HARD tomorrow
-export const markUserChatAsRead = async (userId, chatId) => {
-  const chatRef = await db.collection(`users/${userId}/chats`).doc(`${chatId}`)
+  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
     .set({
-      isUnread: false
+      unreadCount: 0
     }, { merge: true });
-  return chatRef;
 };
 
-
-// TODO
-// consider using async with these listeners to avoid callback complexity
-
-// could instead return an array of results
-// this will result in less action:ADD_MESSAGE calls in redux, too
-
-// consider listening AFTER initial fetch? see inner comment
-export const listenToChatForNewMessages = (chatId, callback) => {
+// LISTENERS
+export const listenToChatForMessages = (chatId, callback) => {
   console.log(`db: creating listener for messages of chat ${chatId}`);
-  db.collection(`chats/${chatId}/messages`)
-  // luckily, null dates are 0, so they are included in this range..
-  // TODO: consider a safer way.
+  const unsubscribe = db.collection(`chats/${chatId}/messages`)
   .orderBy('createdAt', 'desc').limit(5) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
@@ -177,37 +149,42 @@ export const listenToChatForNewMessages = (chatId, callback) => {
         const isPending = change.doc.metadata.hasPendingWrites;
         callback(messageId, messageData, isPending);
       }
-    })
+    });
   });
+  return unsubscribe;
 };
-export const listenToChatForNewUsers = (chatId, callback) => {
+export const listenToChatForUsers = (chatId, callback) => {
   console.log(`db: creating listener for users of chat ${chatId}`);
-  db.collection(`chats/${chatId}/users`)
+  const unsubscribe = db.collection(`chats/${chatId}/users`)
   // .orderBy('joinedAt')
   .onSnapshot(snapshot => {
     snapshot.docChanges.forEach(change => {
       if (change.type === 'added') {
         const userId = change.doc.id;
-        callback(userId);
+        const userData = change.doc.data();
+        callback(userId, userData);
       }
     });
   });
+  return unsubscribe;
 };
-
-// this needs to get chat data, not 'userChat'
-export const listenForUserChatUpdates = (userId, callback) => {
+export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
   console.log(`db: creating listener for user ${userId}'s chats`);
-  db.collection(`users/${userId}/chats`)
-  // TODO: chats without lastUpdated are rendered...
+  const unsubscribe = db.collection(`users/${userId}/chats`)
   .orderBy('lastUpdated', 'desc').limit(3)
   .onSnapshot(snapshot => {
+    // for adding/modifying data in the redux store
     snapshot.docChanges.reverse().forEach(async change => {
       if (change.type === 'added' || change.type === 'modified') {
         const chatId = change.doc.id;
         const chatData = change.doc.data();
         const changeType = change.type;
-        callback(chatId, chatData, changeType);
+        docChangeCb(chatId, chatData, changeType);
       }
     });
+    // this must go second, as data may not have been added yet
+    const chatIds = snapshot.docs.map(doc => doc.id);
+    snapshotCb(chatIds);
   });
+  return unsubscribe;
 };

@@ -6,14 +6,12 @@ import {
 import InputForm from '../InputForm';
 
 const LoginFormComponent = ({ onLogin, userId }) => {
-
   return (
     <div style={{background: '#79ADDC'}}>
       <InputForm
         label='USERNAME: '
         handleSubmit={value => onLogin(value)}
       />
-      LOGGED IN AS: {userId}
     </div>
   );
 };
@@ -22,15 +20,13 @@ const mapStateToProps = state => ({
   userId: state.user.userId
 });
 
-const mapDispatchToProps = dispatch => ({
-  onLogin: userId => {
-    dispatch(login(userId));
-  }
-});
+const mapDispatchToProps = {
+  onLogin: login,
+};
 
 const LoginForm = connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginFormComponent)
+)(LoginFormComponent);
 
 export default LoginForm;

@@ -9,13 +9,12 @@ import ChatItem from './ChatItem';
 
 const ChatListComponent = ({
   onSelectChat,
-  chatIds, chatsData
+  userId, chatIds
 }) => {
   const chats = chatIds.map(chatId => (
     <ChatItem key={chatId}
-      handleSelectChat={() => onSelectChat(chatId)}
+      handleSelectChat={() => onSelectChat(userId, chatId)}
       chatId={chatId}
-      chatData={chatsData[chatId]}
     />
   ));
   return (
@@ -26,9 +25,6 @@ const ChatListComponent = ({
 const mapStateToProps = state => ({
   userId: state.user.userId,
   chatIds: state.chatApp.chatIds,
-  chatsData: state.chats
-  // passing all chats here, this could get big,
-  // consider selector/reducer
 });
 const mapDispatchToProps = {
   chatListener: listenForChatUpdates,
@@ -42,11 +38,11 @@ const withListener = (WrappedComponent) => {
     };
     componentDidMount() {
       this.setState({
-        chatListener: this.props.chatListener(this.props.userId)
+        chatUnsubscribe: this.props.chatListener(this.props.userId)
       });
     }
     componentWillUnmount() {
-      // add destroy listener here
+      this.state.chatUnsubscribe();
     }
     render() {
       const { chatListener, ...passThroughProps } = this.props;
