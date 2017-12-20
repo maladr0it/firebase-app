@@ -24,9 +24,9 @@ export const userAddedToChat = (chatId, userId) => ({
   type: 'USER_ADDED_TO_CHAT',
   payload: { chatId, userId }
 });
-export const loggedIn = userId => ({
+export const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
-  payload: { userId }
+  payload: { userId, userData }
 });
 export const loggedOut = userId => ({
   type: 'LOGGED_OUT'
@@ -67,8 +67,9 @@ export const listenToChatForUsers = chatId => dispatch => {
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;
 };
-export const login = userId => dispatch => {
-  dispatch(loggedIn(userId));
+export const login = userId => async dispatch => {
+  const userData = await db.getUser(userId);
+  dispatch(loggedIn(userId, userData));
 };
 export const logout = () => dispatch => {
   dispatch(loggedOut());

@@ -30,7 +30,6 @@ const mapDispatchToProps = {
   messageListener: listenToChatForMessages,
   userListener: listenToChatForUsers
 };
-
 const withListener = (WrappedComponent) => {
   return class extends React.Component {
     state = {
@@ -44,6 +43,7 @@ const withListener = (WrappedComponent) => {
       });
     }
     componentWillUnmount() {
+      console.log(`unsubscribing from chat ${this.props.chatId}`);
       this.state.messageUnsubscribe();
       this.state.userUnsubscribe();
     }
@@ -53,7 +53,6 @@ const withListener = (WrappedComponent) => {
     }
   }
 };
-
 const ChatContainer = connect(
   mapStateToProps, mapDispatchToProps
 )(withListener(ChatItemComponent));

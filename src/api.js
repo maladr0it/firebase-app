@@ -18,6 +18,7 @@ const addMessageToChat = async (chatId, userId, text) => {
     console.log(e);
   }
 };
+// TODO: refactor this
 const updateUserChat = async (userId, chatId) => {
   const userRef = db.collection(`users`).doc(`${userId}`);
   const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
@@ -25,8 +26,7 @@ const updateUserChat = async (userId, chatId) => {
     const [userDoc, chatDoc] = await Promise.all([
       transaction.get(userRef),
       transaction.get(chatRef)
-    ]); 
-    console.log('doing shit..');
+    ]);
     // increment if user is not viewing the chat
     let unreadCount = chatDoc.data().unreadCount || 0;
     if (userDoc.data().selectedChatId !== chatId) {
@@ -70,6 +70,14 @@ const getChatUserIds = async chatId => {
   try {
     const chatUsersSnapshot = await db.collection(`chats/${chatId}/users`).get();
     return chatUsersSnapshot.docs.map(doc => doc.id);
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const getUser = async userId => {
+  try {
+    const userDoc = await db.collection(`users`).doc(`${userId}`).get();
+    return userDoc.data();
   } catch (e) {
     console.log(e);
   }

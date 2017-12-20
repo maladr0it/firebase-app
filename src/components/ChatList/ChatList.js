@@ -42,6 +42,7 @@ const withListener = (WrappedComponent) => {
       });
     }
     componentWillUnmount() {
+      console.log(`unsubscribing from ${this.props.userId}'s chats`);
       this.state.chatUnsubscribe();
     }
     render() {

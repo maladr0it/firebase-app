@@ -7,6 +7,14 @@ const defaultState = {
 
 const chatApp = (state = defaultState, action) => {
   switch (action.type) {
+    case 'LOGGED_IN' : {
+      // restore session as it was
+      const { userData } = action.payload;
+      return {
+        ...state,
+        selectedChat: userData.selectedChatId
+      };
+    }
     // wipe list
     case 'LOGGED_OUT': {
       return {
@@ -21,20 +29,6 @@ const chatApp = (state = defaultState, action) => {
         chatIds
       };
     }
-    // case 'CHAT_ADDED': {
-    //   const { chatId } = action.payload;
-    //   return {
-    //     ...state,
-    //     chatIds: [chatId, ...state.chatIds.filter(id => id !== chatId)]
-    //   };
-    // }
-    // case 'CHAT_UPDATED': {
-    //   const { chatId } = action.payload;
-    //   return {
-    //     ...state,
-    //     chatIds: [chatId, ...state.chatIds.filter(id => id !== chatId)]
-    //   };
-    // }
     case 'CHAT_SELECTED': {
       const { chatId } = action.payload;
       return {
