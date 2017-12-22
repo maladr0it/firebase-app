@@ -7,6 +7,8 @@ import {
 
 import ChatItem from './ChatItem';
 
+// render this as a column
+
 const ChatListComponent = ({
   onSelectChat,
   userId, chatIds
@@ -18,7 +20,9 @@ const ChatListComponent = ({
     />
   ));
   return (
-    <div>{chats}</div>
+    <div>
+      {chats}
+    </div>
   );
 };
 

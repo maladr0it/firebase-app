@@ -6,10 +6,12 @@ import UserList from './UserList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 
+import './index.css';
+
 // add form to add a user by ID
 const ChatWindowComponent = ({ chatId }) => {
   return (
-    <div style={{background: '#ADF7B6'}}>
+    <div className='ChatPane'>
       NAME: {chatId}
       <AddUserForm />
       <UserList />

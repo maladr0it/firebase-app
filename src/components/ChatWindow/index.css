@@ -1,0 +1,5 @@
+.ChatPane {
+  word-break: break-word;
+  flex-grow: 1;
+  background: #E8E9F3;
+}
