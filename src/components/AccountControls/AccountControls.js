@@ -6,12 +6,12 @@ import {
 
 const AccountControlsComponent = ({ onLogout, userId }) => {
   return (
-    <div>
-      LOGGED IN AS: {userId}
+    <React.Fragment>
+      <span>LOGGED IN AS: {userId} </span>
       <button onClick={() => onLogout()}>
         LOG OUT
       </button>
-    </div>
+    </React.Fragment>
   );
 };
 const mapStateToProps = state => ({

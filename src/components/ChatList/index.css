@@ -1,4 +1,13 @@
 .ChatListPane {
-  flex-shrink: 0;  
+  display: flex;
+  flex-direction: column;
+
+  flex-shrink: 0;
   width: 15rem;
+
+  background: #E7F9A9;
+}
+
+.ChatList {
+  overflow-y: scroll;
 }

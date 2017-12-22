@@ -3,6 +3,7 @@
 //   chat94109810: {
 //     createdAt: 90840118,
 //     lastUpdated: 1930581,
+       
 // !!! isUnread
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
 //     userIds: ['usr0001', 'usr0002', 'usr0003']
@@ -15,7 +16,7 @@ const chat = (state = {}, action) => {
       const { chatData } = action.payload;
       return {
         ...state,
-        ...chatData,
+        ...chatData, // includes unreadCount, lastUpdated
         messageIds: [],
         userIds: []
       };

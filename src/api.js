@@ -147,7 +147,7 @@ export const setSelectedChatForUser = (userId, chatId) => {
 export const listenToChatForMessages = (chatId, callback) => {
   console.log(`db: creating listener for messages of chat ${chatId}`);
   const unsubscribe = db.collection(`chats/${chatId}/messages`)
-  .orderBy('createdAt', 'desc').limit(5) 
+  .orderBy('createdAt', 'desc').limit(50) 
   .onSnapshot(snapshot => {
     // reversed so that earlier changes are processed first
     snapshot.docChanges.reverse().forEach(change => {
@@ -179,7 +179,7 @@ export const listenToChatForUsers = (chatId, callback) => {
 export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
   console.log(`db: creating listener for user ${userId}'s chats`);
   const unsubscribe = db.collection(`users/${userId}/chats`)
-  .orderBy('lastUpdated', 'desc').limit(3)
+  .orderBy('lastUpdated', 'desc').limit(10)
   .onSnapshot(snapshot => {
     // for adding/modifying data in the redux store
     snapshot.docChanges.reverse().forEach(async change => {

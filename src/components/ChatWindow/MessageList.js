@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import './index.css';
+
 const MessageListComponent = ({ messages }) => {
   // TODO: refactor this
   return (
-    <ul>
+    <ul className='MessageList'>
       {messages.map((message, i) => (
-        <li key={i}>
+        <li className='Message' key={i}>
           <div>{message.author} says: </div>
           <div><b>{message.text}</b></div>
           <div>

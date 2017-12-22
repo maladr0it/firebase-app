@@ -11,10 +11,10 @@ class App extends Component {
   render() {
     const isLoggedIn = (this.props.currentUserId);
     return (
-      <div>
+      <div className="App">
         <AccountControls isLoggedIn={isLoggedIn} />
         {(isLoggedIn) ? (
-          <div className='chatPaneContainer'>
+          <div className='ChatPaneContainer'>
             <ChatList />
             <ChatWindow />
           </div>

@@ -1,0 +1,6 @@
+body {
+  /* this disables rubber-band scrolling */
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}

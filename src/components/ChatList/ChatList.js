@@ -6,8 +6,7 @@ import {
 } from '../../actions';
 
 import ChatItem from './ChatItem';
-
-// render this as a column
+import './index.css';
 
 const ChatListComponent = ({
   onSelectChat,
@@ -20,12 +19,11 @@ const ChatListComponent = ({
     />
   ));
   return (
-    <div>
+    <ul className='ChatList'>
       {chats}
-    </div>
+    </ul>
   );
 };
-
 const mapStateToProps = state => ({
   userId: state.user.userId,
   chatIds: state.chatApp.chatIds,
@@ -34,7 +32,6 @@ const mapDispatchToProps = {
   chatListener: listenForChatUpdates,
   onSelectChat: selectChat
 };
-
 const withListener = (WrappedComponent) => {
   return class extends React.Component {
     state = {
@@ -55,7 +52,6 @@ const withListener = (WrappedComponent) => {
     }
   }
 };
-
 const ChatList = connect(
   mapStateToProps, mapDispatchToProps
 )(withListener(ChatListComponent));

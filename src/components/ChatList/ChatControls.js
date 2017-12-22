@@ -6,7 +6,7 @@ import {
 
 const ChatControlsComponent = ({ onAdd, onLogout, userId }) => {
   return (
-    <div style={{background: '#C1A5A9'}}>
+    <div>
       <button onClick={() => onAdd(userId)}>
         NEW CHANNEL
       </button>
