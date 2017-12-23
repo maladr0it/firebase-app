@@ -5,19 +5,21 @@ import {
   listenToChatForUsers
 } from '../../actions';
 
+import './index.css';
+
 const ChatItemComponent = ({ handleSelectChat,
-  chatId, chatData
+  chatId, chatData, isSelected
 }) => {
-  const backgroundColor = (chatData.unreadCount) ? '#FFC09F' : '#FCF5C7'
+  const readStatus = (chatData.unreadCount) ? 'Unread' : 'Read';
+  const selectedStatus = (isSelected) ? 'Selected' : ''
   const users = chatData.userIds.map(id => <span key={id}>{id} </span>)
   return (
     <li
-      style={{background: backgroundColor}}
+      className={`ChatItem ${readStatus} ${selectedStatus}`}
       onClick={() => handleSelectChat()}
     >
       ID: {chatId} <br />
       USERS: {users} <br />
-      LAST UPDATED: {(chatData.lastUpdated) ? chatData.lastUpdated.toString() : '...'} <br />
       UNREAD: {chatData.unreadCount}
     </li>
   );

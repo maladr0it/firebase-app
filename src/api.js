@@ -76,6 +76,7 @@ const getChatUserIds = async chatId => {
 };
 export const getUser = async userId => {
   try {
+    console.log(`Getting user ${userId}'s data`);
     const userDoc = await db.collection(`users`).doc(`${userId}`).get();
     return userDoc.data();
   } catch (e) {

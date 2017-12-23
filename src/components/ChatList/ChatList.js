@@ -10,12 +10,13 @@ import './index.css';
 
 const ChatListComponent = ({
   onSelectChat,
-  userId, chatIds
+  userId, chatIds, selectedChat
 }) => {
   const chats = chatIds.map(chatId => (
     <ChatItem key={chatId}
       handleSelectChat={() => onSelectChat(userId, chatId)}
       chatId={chatId}
+      isSelected={(chatId === selectedChat)}
     />
   ));
   return (
@@ -26,6 +27,7 @@ const ChatListComponent = ({
 };
 const mapStateToProps = state => ({
   userId: state.user.userId,
+  selectedChat: state.chatApp.selectedChat,
   chatIds: state.chatApp.chatIds,
 });
 const mapDispatchToProps = {

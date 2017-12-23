@@ -15,7 +15,7 @@ const ChatWindowComponent = ({ chatId }) => {
       NAME: {chatId}
       <AddUserForm />
       <UserList />
-      <MessageList />
+      <MessageList chatId={chatId} />
       <MessageInput />
     </div>
   );

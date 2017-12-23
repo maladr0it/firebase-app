@@ -12,7 +12,6 @@ class InputForm extends React.Component {
     this.setState({ value: '' });
     e.preventDefault();
   }
-
   render() {
     return (
       <form onSubmit={e => this.handleSubmit(e)}>

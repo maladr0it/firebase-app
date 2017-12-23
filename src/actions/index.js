@@ -35,6 +35,10 @@ export const chatsReordered = chatIds => ({
   type: 'CHATS_REORDERED',
   payload: { chatIds }
 });
+export const scrollPosUpdated = (chatId, scrollPos) => ({
+  type: 'SCROLL_POS_UPDATED',
+  payload: { chatId, scrollPos }
+});
 
 
 // THUNKS HERE

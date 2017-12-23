@@ -11,12 +11,16 @@
 
 .MessageList {
   flex-grow: 1;
-  
   overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #FEFEFE;
 }
 
 .Message {
   background: #B1E5F2;
+  margin: 1rem;
 }
 
 .MessageInput {

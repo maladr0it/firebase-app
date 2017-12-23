@@ -11,7 +11,6 @@ const MessageInputComponent = ({ chatId, userId, onSend }) => {
     />
   );
 };
-
 const mapStateToProps = state => ({
   userId: state.user.userId,
   chatId: state.chatApp.selectedChat
