@@ -9,7 +9,7 @@
 //   },
 // }
 
-const defaultChat = { messageIds: [], userIds: [], scrollPos: 0 };
+const defaultChat = { messageIds: [], userIds: [], scrollPos: 0, atBottom: true };
 
 const chat = (state = defaultChat, action) => {
   switch(action.type) {
@@ -42,10 +42,11 @@ const chat = (state = defaultChat, action) => {
       };
     }
     case 'SCROLL_POS_UPDATED': {
-      const { scrollPos } = action.payload;
+      const { scrollPos, atBottom } = action.payload;
       return {
         ...state,
-        scrollPos
+        scrollPos,
+        atBottom
       };
     }
     default:

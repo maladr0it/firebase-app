@@ -3,28 +3,37 @@ import { connect } from 'react-redux';
 import {
   scrollPosUpdated
 } from '../../actions';
+import { debounce } from 'lodash';
 
 import Message from './Message';
 import './index.css';
 
 class MessageListComponent extends React.Component {
-  scrollToBottom() {
-    // this.bottomElement.scrollIntoView({ behaviour: 'smooth' })
-    this.messageListElem.scrollTop = 400;
-  };
-  componentWillUpdate(nextProps) {
-    // console.log('scrolling to bottom');
-    // // check a prop to see if chat needs to be scrolled to bot
-    // // scrollPos before, scrollPos after.
-    // // if scrollPos now and scrollPos later are different,
-    // // set scrollTop
-    // this.scrollToBottom();
+  constructor(props) {
+    super(props);
+    this.debouncedScroll = debounce(e => {
+      const scrollPos = e.target.scrollTop;
+      const scrollHeight = this.messageListElem.scrollHeight;
+      const clientHeight = this.messageListElem.clientHeight;
+      const atBottom = (scrollHeight - scrollPos === clientHeight);
+      this.props.updateScroll(this.props.chatId, scrollPos, atBottom);
+    }, 100);
   }
-  // this should be debounced
+  // bit hacky.
+  // scrolls to bottom if already at bottom
+  componentDidUpdate(prevProps) {
+    if (this.props.atBottom) {
+      this.scrollToBottom();
+    } else if (prevProps.chatId !== this.props.chatId) {
+      this.messageListElem.scrollTop = this.props.scrollPos;
+    }
+  }
+  scrollToBottom() {
+    this.bottomElement.scrollIntoView();
+  }
   handleScroll(e) {
-    console.log(this.props);
-    const scrollPos = e.target.scrollTop;
-    this.props.handleScroll(this.props.chatId, scrollPos);
+    e.persist();
+    this.debouncedScroll(e);
   }
   render() {
     const messages = this.props.messagesData.map((messageData, i) => (
@@ -38,9 +47,8 @@ class MessageListComponent extends React.Component {
         ref={el => {this.messageListElem = el}}
         onScroll={e => this.handleScroll(e)}
       >
-        <button onClick={() => this.scrollToBottom()}>TO BOT!</button>
         {messages}
-        <div ref={el => { this.bottomElement = el }} />
+        <div ref={el => {this.bottomElement = el}} />
       </ul>
     );
   }
@@ -48,32 +56,29 @@ class MessageListComponent extends React.Component {
 
 // SELECTORS
 // select message objs based on chat Id
-const getMessages = (state, chatId) => {
+const getChatData = (state, chatId) => {
   const chat = selectChat(state, chatId);
-  return selectMessages(state, chat.messageIds);
-};
-const getScrollPos = (state, chatId) => {
-  const chat = selectChat(state, chatId);
-  return chat.scrollPos;
+  return {
+    messagesData: selectMessages(state, chat.messageIds),
+    scrollPos: chat.scrollPos,
+    atBottom: chat.atBottom
+  };
 };
 // helpers
 // TODO: this is a little hacky and expensive
 const selectChat = (state, chatId) => {
-  return state.chats[chatId] || { messageIds: [], scrollPos: 0 }; // TODO: hax
+  return state.chats[chatId] || { messageIds: [], scrollPos: 0, atBottom: false };
 };
 const selectMessages = (state, messageIds) => {
   return messageIds.map(id => state.messages[id]);
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  messagesData: getMessages(state, ownProps.chatId),
-  scrollPos: getScrollPos(state, ownProps.chatId)
-});
-
+const mapStateToProps = (state, ownProps) => (
+  getChatData(state, ownProps.chatId)
+);
 const mapDispatchToProps = {
-  handleScroll: scrollPosUpdated
+  updateScroll: scrollPosUpdated
 };
-
 const MessageList = connect(
   mapStateToProps,
   mapDispatchToProps
