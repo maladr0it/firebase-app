@@ -39,7 +39,10 @@ export const scrollPosUpdated = (chatId, scrollPos, atBottom) => ({
   type: 'SCROLL_POS_UPDATED',
   payload: { chatId, scrollPos, atBottom }
 });
-
+export const draftTextUpdated = (chatId, text) => ({
+  type: 'DRAFT_TEXT_UPDATED',
+  payload: { chatId, text }
+});
 
 // THUNKS HERE
 export const listenForChatUpdates = userId => dispatch => {

@@ -3,13 +3,21 @@
 //   chat94109810: {
 //     createdAt: 90840118,
 //     lastUpdated: 1930581,
-//     scrollPos:
+//     scrollPos: 400,
+//     atBottom: true,
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
-//     userIds: ['usr0001', 'usr0002', 'usr0003']
+//     userIds: ['usr0001', 'usr0002', 'usr0003'],
+//     draftText: ''
 //   },
 // }
 
-const defaultChat = { messageIds: [], userIds: [], scrollPos: 0, atBottom: true };
+const defaultChat = {
+  messageIds: [],
+  userIds: [],
+  scrollPos: 0,
+  atBottom: true,
+  draftText: ''
+};
 
 const chat = (state = defaultChat, action) => {
   switch(action.type) {
@@ -49,6 +57,13 @@ const chat = (state = defaultChat, action) => {
         atBottom
       };
     }
+    case 'DRAFT_TEXT_UPDATED': {
+      const { text } = action.payload;
+      return {
+        ...state,
+        draftText: text
+      };
+    }
     default:
       return state;
   }
@@ -83,14 +98,21 @@ const chats = (state = defaultState, action) => {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId] : chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action)
       };
     }
     case 'SCROLL_POS_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId] : chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action)
+      };
+    }
+    case 'DRAFT_TEXT_UPDATED': {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId]: chat(state[chatId], action)
       };
     }
     default:

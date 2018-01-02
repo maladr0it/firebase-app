@@ -20,7 +20,7 @@ class MessageListComponent extends React.Component {
     }, 100);
   }
   // bit hacky.
-  // scrolls to bottom if already at bottom
+  // scrolls to bottom if flagged as atBottom
   componentDidUpdate(prevProps) {
     if (this.props.atBottom) {
       this.scrollToBottom();
