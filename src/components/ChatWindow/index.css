@@ -21,6 +21,7 @@
 .Message {
   background: #B1E5F2;
   margin: 1rem;
+  white-space: pre-wrap;
 }
 
 .MessageInput {

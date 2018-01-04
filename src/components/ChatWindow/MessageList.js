@@ -11,8 +11,7 @@ import './index.css';
 class MessageListComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.debouncedScroll = debounce(e => {
-      const scrollPos = e.target.scrollTop;
+    this.debouncedScroll = debounce(scrollPos => {
       const scrollHeight = this.messageListElem.scrollHeight;
       const clientHeight = this.messageListElem.clientHeight;
       const atBottom = (scrollHeight - scrollPos === clientHeight);
@@ -32,8 +31,7 @@ class MessageListComponent extends React.Component {
     this.bottomElement.scrollIntoView();
   }
   handleScroll(e) {
-    e.persist();
-    this.debouncedScroll(e);
+    this.debouncedScroll(e.target.scrollTop);
   }
   render() {
     const messages = this.props.messagesData.map((messageData, i) => (

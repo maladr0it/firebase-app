@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import registerServiceWorker from './registerServiceWorker';
 
 import app from './reducers';
@@ -15,7 +16,9 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MuiThemeProvider>
+      <App />
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 );

@@ -6,7 +6,7 @@ import {
 } from '../../actions';
 import { debounce } from 'lodash';
 
-import InputForm from '../InputForm';
+import TextField from 'material-ui/TextField';
 import './index.css';
 
 class MessageInputComponent extends React.Component {
@@ -18,6 +18,11 @@ class MessageInputComponent extends React.Component {
     this.debouncedChange = debounce((chatId, text) => {
       this.props.onChange(chatId, text);
     }, 250);
+  }
+  handleKeyDown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      this.handleSubmit(e);
+    }
   }
   handleChange(e) {
     const text = e.target.value;
@@ -31,20 +36,26 @@ class MessageInputComponent extends React.Component {
     this.props.onChange(this.props.chatId, '');
     e.preventDefault();
   }
-  componentDidUpdate(prevProps) {
-    // get draft 
-    if (prevProps.chatId !== this.props.chatId) {
-      this.setState({ value: this.props.draftText });
+  componentWillUpdate(nextProps) {
+    // get draft text
+    if (this.props.chatId !== nextProps.chatId) {
+      this.setState({ value: nextProps.draftText });
     }
   }
 
   render() {
     return (
       <form className='MessageInput' onSubmit={e => this.handleSubmit(e)}>
-        <textarea type='text' className='MessageTextInput'
+        <TextField
+          className='MessageTextInput'
+          hintText='Send a message...'
+          multiLine={true}
+          rows={1}
+          rowsMax={4}
+          onKeyPress={e => this.handleKeyDown(e)}
           value={this.state.value}
           onChange={e => this.handleChange(e)}
-        ></textarea>
+        />
         <input type='submit' value='SEND' />
       </form>
     );
