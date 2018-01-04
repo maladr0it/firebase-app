@@ -2,51 +2,53 @@ import * as db from '../api';
 
 export const messageAdded = (chatId, messageId, messageData, isPending) => ({
   type: 'MESSAGE_ADDED',
-  payload: { chatId, messageId, messageData, isPending }
+  payload: {
+    chatId, messageId, messageData, isPending,
+  },
 });
 export const messageSent = (messageId, messageData) => ({
   type: 'MESSAGE_SENT',
-  payload: { messageId, messageData }
+  payload: { messageId, messageData },
 });
 export const chatSelected = chatId => ({
   type: 'CHAT_SELECTED',
-  payload: { chatId }
+  payload: { chatId },
 });
 export const chatAdded = (chatId, chatData) => ({
   type: 'CHAT_ADDED',
-  payload: { chatId, chatData }
+  payload: { chatId, chatData },
 });
 export const chatUpdated = (chatId, chatData) => ({
   type: 'CHAT_UPDATED',
-  payload: { chatId, chatData }
+  payload: { chatId, chatData },
 });
 export const userAddedToChat = (chatId, userId) => ({
   type: 'USER_ADDED_TO_CHAT',
-  payload: { chatId, userId }
+  payload: { chatId, userId },
 });
 export const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
-  payload: { userId, userData }
+  payload: { userId, userData },
 });
-export const loggedOut = userId => ({
-  type: 'LOGGED_OUT'
+export const loggedOut = () => ({
+  type: 'LOGGED_OUT',
 });
 export const chatsReordered = chatIds => ({
   type: 'CHATS_REORDERED',
-  payload: { chatIds }
+  payload: { chatIds },
 });
 export const scrollPosUpdated = (chatId, scrollPos, atBottom) => ({
   type: 'SCROLL_POS_UPDATED',
-  payload: { chatId, scrollPos, atBottom }
+  payload: { chatId, scrollPos, atBottom },
 });
 export const draftTextUpdated = (chatId, text) => ({
   type: 'DRAFT_TEXT_UPDATED',
-  payload: { chatId, text }
+  payload: { chatId, text },
 });
 
 // THUNKS HERE
-export const listenForChatUpdates = userId => dispatch => {
-  const snapshotCb = chatIds => {
+export const listenForChatUpdates = userId => (dispatch) => {
+  const snapshotCb = (chatIds) => {
     dispatch(chatsReordered(chatIds));
   };
   const docChangeCb = (chatId, chatData, changeType) => {
@@ -59,28 +61,28 @@ export const listenForChatUpdates = userId => dispatch => {
   const unsubscribe = db.listenForUserChatUpdates(userId, snapshotCb, docChangeCb);
   return unsubscribe;
 };
-export const listenToChatForMessages = chatId => dispatch => {
+export const listenToChatForMessages = chatId => (dispatch) => {
   const callback = (messageId, messageData, isPending) => {
     dispatch(messageAdded(chatId, messageId, messageData, isPending));
   };
   const unsubscribe = db.listenToChatForMessages(chatId, callback);
   return unsubscribe;
 };
-export const listenToChatForUsers = chatId => dispatch => {
-  const callback = userId => {
+export const listenToChatForUsers = chatId => (dispatch) => {
+  const callback = (userId) => {
     dispatch(userAddedToChat(chatId, userId));
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;
 };
-export const login = userId => async dispatch => {
+export const login = userId => async (dispatch) => {
   const userData = await db.getUser(userId);
   dispatch(loggedIn(userId, userData));
 };
-export const logout = () => dispatch => {
+export const logout = () => (dispatch) => {
   dispatch(loggedOut());
-}
-export const sendMessage = (chatId, userId, text) => async dispatch => {
+};
+export const sendMessage = (chatId, userId, text) => async (dispatch) => {
   try {
     const { messageId, messageData } = await db.sendMessage(chatId, userId, text);
     dispatch(messageSent(messageId, messageData));
@@ -90,7 +92,7 @@ export const sendMessage = (chatId, userId, text) => async dispatch => {
 };
 // create chat and add yourself as a participant, for now
 // this likely won't be used in future
-export const createChat = userId => async dispatch => {
+export const createChat = userId => async () => {
   try {
     const { chatId } = await db.createChat();
     await db.addChatParticipant(chatId, userId);
@@ -100,14 +102,14 @@ export const createChat = userId => async dispatch => {
 };
 // sets unread messages to 0, updates your lastReadMessage,
 // sets user/:userId/selectedChatId
-export const selectChat = (userId, chatId) => async dispatch => {
+export const selectChat = (userId, chatId) => async (dispatch) => {
   dispatch(chatSelected(chatId));
   db.setSelectedChatForUser(userId, chatId);
 };
-export const startTyping = (userId, chatId) => dispatch => {
+export const startTyping = (userId, chatId) => () => {
   db.markUserAsTyping(userId, chatId);
 };
-export const addChatParticipant = (chatId, userId) => async dispatch => {
+export const addChatParticipant = (chatId, userId) => async () => {
   try {
     await db.addChatParticipant(chatId, userId);
   } catch (e) {
