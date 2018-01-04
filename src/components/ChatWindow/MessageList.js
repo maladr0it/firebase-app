@@ -6,6 +6,7 @@ import {
 import { debounce } from 'lodash';
 
 import Message from './Message';
+import { List } from 'material-ui/List';
 import './index.css';
 
 class MessageListComponent extends React.Component {
@@ -41,13 +42,15 @@ class MessageListComponent extends React.Component {
       />
     ));
     return (
-      <ul className='MessageList'
+      <div className='MessageListContainer'
         ref={el => {this.messageListElem = el}}
         onScroll={e => this.handleScroll(e)}
       >
-        {messages}
-        <div ref={el => {this.bottomElement = el}} />
-      </ul>
+        <List>
+          {messages}
+          <div ref={el => {this.bottomElement = el}} />
+        </List>
+      </div>
     );
   }
 };

@@ -36,7 +36,7 @@ const updateUserChat = async (userId, chatId) => {
       lastUpdated: timestamp,
       unreadCount
     });
-    transaction.update(userRef, {})
+    transaction.update(userRef, {});
     // all docs read in a transaction must be written
   });
 };
@@ -131,7 +131,6 @@ export const createChat = async () => {
     chatData: chatSnapshot.data()
   };
 };
-
 // select chat and set unread to 0
 export const setSelectedChatForUser = (userId, chatId) => {
   db.collection(`users`).doc(`${userId}`)
@@ -141,6 +140,13 @@ export const setSelectedChatForUser = (userId, chatId) => {
   db.collection(`users/${userId}/chats`).doc(`${chatId}`)
     .set({
       unreadCount: 0
+    }, { merge: true });
+};
+export const markUserAsTyping = (userId, chatId) => {
+  console.log(`marking ${userId} as typing in chat ${chatId}`);
+  db.collection(`chats/${chatId}/users`).doc(`${userId}`)
+    .set({
+      isTyping: true
     }, { merge: true });
 };
 
@@ -183,7 +189,7 @@ export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
   .orderBy('lastUpdated', 'desc').limit(10)
   .onSnapshot(snapshot => {
     // for adding/modifying data in the redux store
-    snapshot.docChanges.reverse().forEach(async change => {
+    snapshot.docChanges.forEach(async change => {
       if (change.type === 'added' || change.type === 'modified') {
         const chatId = change.doc.id;
         const chatData = change.doc.data();

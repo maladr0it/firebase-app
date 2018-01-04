@@ -9,12 +9,9 @@
   background: #E8E9F3;
 }
 
-.MessageList {
+.MessageListContainer {
   flex-grow: 1;
   overflow-y: scroll;
-  margin: 0;
-  padding: 0;
-  list-style: none;
   background: #FEFEFE;
 }
 
@@ -22,15 +19,17 @@
   background: #B1E5F2;
   margin: 1rem;
   white-space: pre-wrap;
+  /* allows multi-line messages to be displayed */
 }
 
-.MessageInput {
+.MessageComposer {
   display: flex;
+  align-items: center;
   /* height: 2em; */
 
   flex-shrink: 0;
 }
 
-.MessageTextInput {
+.MessageInput {
   flex-grow: 1;
 }

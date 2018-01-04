@@ -115,6 +115,9 @@ const chats = (state = defaultState, action) => {
         [chatId]: chat(state[chatId], action)
       };
     }
+    case 'LOGGED_OUT': {
+      return defaultState;
+    }
     default:
       return state;
   }

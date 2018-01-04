@@ -6,6 +6,7 @@ import {
 } from '../../actions';
 
 import ChatItem from './ChatItem';
+import { List } from 'material-ui/List'
 import './index.css';
 
 const ChatListComponent = ({
@@ -20,9 +21,9 @@ const ChatListComponent = ({
     />
   ));
   return (
-    <ul className='ChatList'>
+    <List className='ChatList'>
       {chats}
-    </ul>
+    </List>
   );
 };
 const mapStateToProps = state => ({

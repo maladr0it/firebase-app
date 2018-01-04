@@ -47,7 +47,6 @@ export const draftTextUpdated = (chatId, text) => ({
 // THUNKS HERE
 export const listenForChatUpdates = userId => dispatch => {
   const snapshotCb = chatIds => {
-    
     dispatch(chatsReordered(chatIds));
   };
   const docChangeCb = (chatId, chatData, changeType) => {
@@ -105,7 +104,9 @@ export const selectChat = (userId, chatId) => async dispatch => {
   dispatch(chatSelected(chatId));
   db.setSelectedChatForUser(userId, chatId);
 };
-
+export const startTyping = (userId, chatId) => dispatch => {
+  db.markUserAsTyping(userId, chatId);
+};
 export const addChatParticipant = (chatId, userId) => async dispatch => {
   try {
     await db.addChatParticipant(chatId, userId);

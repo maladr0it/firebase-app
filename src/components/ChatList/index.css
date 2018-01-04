@@ -7,19 +7,7 @@
 }
 
 .ChatList {
-  margin: 0;
-  padding: 0;
   overflow-y: scroll;
-  list-style: none;
-  background: #EEEEEE;
-}
-
-.ChatItem {
-  margin: 1rem;
-}
-
-.Read {
-  background: #D9E5D6;
 }
 
 .Unread {

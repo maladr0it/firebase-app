@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   sendMessage,
-  draftTextUpdated
+  draftTextUpdated,
+  startTyping
 } from '../../actions';
 import { debounce } from 'lodash';
 
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 import './index.css';
 
 class MessageInputComponent extends React.Component {
@@ -27,6 +29,7 @@ class MessageInputComponent extends React.Component {
   handleChange(e) {
     const text = e.target.value;
     this.setState({ value: text });
+    this.props.startTyping(this.props.userId, this.props.chatId);
     this.debouncedChange(this.props.chatId, text);
   }
   handleSubmit(e) {
@@ -45,9 +48,9 @@ class MessageInputComponent extends React.Component {
 
   render() {
     return (
-      <form className='MessageInput' onSubmit={e => this.handleSubmit(e)}>
+      <form className='MessageComposer' onSubmit={e => this.handleSubmit(e)}>
         <TextField
-          className='MessageTextInput'
+          className='MessageInput'
           hintText='Send a message...'
           multiLine={true}
           rows={1}
@@ -56,7 +59,7 @@ class MessageInputComponent extends React.Component {
           value={this.state.value}
           onChange={e => this.handleChange(e)}
         />
-        <input type='submit' value='SEND' />
+        <FlatButton label='SEND' type='submit' />
       </form>
     );
   }
@@ -73,7 +76,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
   onSend: sendMessage,
-  onChange: draftTextUpdated
+  onChange: draftTextUpdated,
+  startTyping,
+  // stopTyping
 };
 const MessageInput = connect(
   mapStateToProps,

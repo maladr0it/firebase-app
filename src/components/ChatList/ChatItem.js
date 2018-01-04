@@ -5,23 +5,23 @@ import {
   listenToChatForUsers
 } from '../../actions';
 
+import { ListItem } from 'material-ui/List';
 import './index.css';
 
 const ChatItemComponent = ({ handleSelectChat,
   chatId, chatData, isSelected
 }) => {
-  const readStatus = (chatData.unreadCount) ? 'Unread' : 'Read';
+  const readStatus = (chatData.unreadCount) ? 'Unread' : '';
   const selectedStatus = (isSelected) ? 'Selected' : ''
   const users = chatData.userIds.map(id => <span key={id}>{id} </span>)
   return (
-    <li
-      className={`ChatItem ${readStatus} ${selectedStatus}`}
-      onClick={() => handleSelectChat()}
-    >
-      ID: {chatId} <br />
-      USERS: {users} <br />
-      UNREAD: {chatData.unreadCount}
-    </li>
+    <div className={`${readStatus} ${selectedStatus}`}>
+      <ListItem
+        primaryText={chatId}
+        secondaryText={<p>{users} -- {chatData.undreadCount}</p>}
+        onClick={() => handleSelectChat()}
+      />
+    </div>
   );
 };
 
