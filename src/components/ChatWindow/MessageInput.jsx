@@ -1,25 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { debounce } from 'lodash';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 import {
   sendMessage,
   draftTextUpdated,
-  startTyping
+  startTyping,
 } from '../../actions';
-import { debounce } from 'lodash';
-
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 import './index.css';
 
 class MessageInputComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      value: '',
     };
     this.debouncedChange = debounce((chatId, text) => {
       this.props.onChange(chatId, text);
     }, 250);
+  }
+  componentWillReceiveProps(nextProps) {
+    // get draft text
+    // TODO: shouldn't call setState in CWU
+    if (this.props.chatId !== nextProps.chatId) {
+      this.setState({ value: nextProps.draftText });
+    }
   }
   handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -29,7 +36,7 @@ class MessageInputComponent extends React.Component {
   handleChange(e) {
     const text = e.target.value;
     this.setState({ value: text });
-    this.props.startTyping(this.props.userId, this.props.chatId);
+    this.props.onStartTyping(this.props.userId, this.props.chatId);
     this.debouncedChange(this.props.chatId, text);
   }
   handleSubmit(e) {
@@ -39,27 +46,21 @@ class MessageInputComponent extends React.Component {
     this.props.onChange(this.props.chatId, '');
     e.preventDefault();
   }
-  componentWillUpdate(nextProps) {
-    // get draft text
-    if (this.props.chatId !== nextProps.chatId) {
-      this.setState({ value: nextProps.draftText });
-    }
-  }
 
   render() {
     return (
-      <form className='MessageComposer' onSubmit={e => this.handleSubmit(e)}>
+      <form className="MessageComposer" onSubmit={e => this.handleSubmit(e)}>
         <TextField
-          className='MessageInput'
-          hintText='Send a message...'
-          multiLine={true}
+          className="MessageInput"
+          hintText="Send a message..."
+          multiLine
           rows={1}
           rowsMax={4}
           onKeyPress={e => this.handleKeyDown(e)}
           value={this.state.value}
           onChange={e => this.handleChange(e)}
         />
-        <FlatButton label='SEND' type='submit' />
+        <FlatButton label="SEND" type="submit" />
       </form>
     );
   }
@@ -72,17 +73,26 @@ const selectChat = (state, chatId) => {
 const mapStateToProps = state => ({
   userId: state.user.userId,
   chatId: state.chatApp.selectedChat,
-  draftText: selectChat(state, state.chatApp.selectedChat).draftText
+  draftText: selectChat(state, state.chatApp.selectedChat).draftText,
 });
 const mapDispatchToProps = {
   onSend: sendMessage,
   onChange: draftTextUpdated,
-  startTyping,
+  onStartTyping: startTyping,
   // stopTyping
 };
 const MessageInput = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MessageInputComponent);
 
 export default MessageInput;
+
+MessageInputComponent.propTypes = {
+  userId: PropTypes.string.isRequired,
+  chatId: PropTypes.string.isRequired,
+  draftText: PropTypes.string.isRequired,
+  onSend: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onStartTyping: PropTypes.func.isRequired,
+};

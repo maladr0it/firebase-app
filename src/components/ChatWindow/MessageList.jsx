@@ -1,20 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  scrollPosUpdated
-} from '../../actions';
 import { debounce } from 'lodash';
+import { List } from 'material-ui/List';
+import {
+  scrollPosUpdated,
+} from '../../actions';
 
 import Message from './Message';
-import { List } from 'material-ui/List';
 import './index.css';
 
 class MessageListComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.debouncedScroll = debounce(scrollPos => {
-      const scrollHeight = this.messageListElem.scrollHeight;
-      const clientHeight = this.messageListElem.clientHeight;
+    this.debouncedScroll = debounce((scrollPos) => {
+      const { scrollHeight } = this.messageListElem;
+      const { clientHeight } = this.messageListElem;
       const atBottom = (scrollHeight - scrollPos === clientHeight);
       this.props.updateScroll(this.props.chatId, scrollPos, atBottom);
     }, 100);
@@ -35,54 +36,62 @@ class MessageListComponent extends React.Component {
     this.debouncedScroll(e.target.scrollTop);
   }
   render() {
-    const messages = this.props.messagesData.map((messageData, i) => (
+    const messages = this.props.messagesData.map(messageData => (
       <Message
-        key={i} // not ideal key
-        { ...messageData }
+        key={messageData.id} // not ideal key
+        {...messageData}
       />
     ));
     return (
-      <div className='MessageListContainer'
-        ref={el => {this.messageListElem = el}}
+      <div
+        className="MessageListContainer"
+        ref={(el) => { this.messageListElem = el; }}
         onScroll={e => this.handleScroll(e)}
       >
         <List>
           {messages}
-          <div ref={el => {this.bottomElement = el}} />
+          <div ref={(el) => { this.bottomElement = el; }} />
         </List>
       </div>
     );
   }
-};
+}
 
 // SELECTORS
 // select message objs based on chat Id
+const selectMessages = (state, messageIds) => (
+  messageIds.map(id => ({ id, ...state.messages[id] }))
+);
+const selectChat = (state, chatId) => (
+  state.chats[chatId] || { messageIds: [], scrollPos: 0, atBottom: false }
+);
 const getChatData = (state, chatId) => {
   const chat = selectChat(state, chatId);
   return {
+    messageIds: chat.messageIds,
     messagesData: selectMessages(state, chat.messageIds),
     scrollPos: chat.scrollPos,
-    atBottom: chat.atBottom
+    atBottom: chat.atBottom,
   };
 };
-// helpers
-// TODO: this is a little hacky and expensive
-const selectChat = (state, chatId) => {
-  return state.chats[chatId] || { messageIds: [], scrollPos: 0, atBottom: false };
-};
-const selectMessages = (state, messageIds) => {
-  return messageIds.map(id => state.messages[id]);
-};
-
 const mapStateToProps = (state, ownProps) => (
   getChatData(state, ownProps.chatId)
 );
 const mapDispatchToProps = {
-  updateScroll: scrollPosUpdated
+  updateScroll: scrollPosUpdated,
 };
 const MessageList = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MessageListComponent);
 
 export default MessageList;
+
+MessageListComponent.propTypes = {
+  chatId: PropTypes.string.isRequired,
+  messageIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  messagesData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  scrollPos: PropTypes.number.isRequired,
+  atBottom: PropTypes.bool.isRequired,
+  updateScroll: PropTypes.func.isRequired,
+};

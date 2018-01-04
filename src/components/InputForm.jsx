@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class InputForm extends React.Component {
   state = {
-    value: ''
+    value: '',
   };
   handleChange(e) {
     this.setState({ value: e.target.value });
@@ -15,15 +16,23 @@ class InputForm extends React.Component {
   render() {
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
-        <label>
+        <label htmlFor="textInput">
           {this.props.label}
-          <input type='text'
+          <input
+            id="textInput"
+            type="text"
             value={this.state.value}
-            onChange={e => this.handleChange(e)} />
+            onChange={e => this.handleChange(e)}
+          />
         </label>
-        <input type='submit' value='OK' />
+        <input type="submit" value="OK" />
       </form>
     );
-  };
+  }
 }
 export default InputForm;
+
+InputForm.propTypes = {
+  label: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};

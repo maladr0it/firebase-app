@@ -5,7 +5,7 @@ import ChatControls from './ChatControls';
 import './index.css';
 
 export default () => (
-  <div className='ChatListPane'>
+  <div className="ChatListPane">
     <ChatControls />
     <ChatList />
   </div>
