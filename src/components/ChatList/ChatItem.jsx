@@ -10,7 +10,6 @@ import './index.css';
 
 class ChatItemComponent extends React.Component {
   componentDidMount() {
-    // TODO: don't use setState in CDM
     this.messageUnsubscribe = this.props.messageListener(this.props.chatId);
     this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
@@ -27,8 +26,9 @@ class ChatItemComponent extends React.Component {
     } = this.props;
     const readStatus = (unreadCount) ? 'Unread' : '';
     const selectedStatus = (isSelected) ? 'Selected' : '';
-    const users = userIds.map(id => <span key={id}>{id} </span>)
+    const users = userIds.map(id => <span key={id}>{id} </span>);
     return (
+      // HAX: List within a containing div to override MUI's backgroundColor
       <div className={`${readStatus} ${selectedStatus}`}>
         <ListItem
           primaryText={chatId}

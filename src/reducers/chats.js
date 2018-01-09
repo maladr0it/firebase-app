@@ -16,11 +16,11 @@ const defaultChat = {
   userIds: [],
   scrollPos: 0,
   atBottom: true,
-  draftText: ''
+  draftText: '',
 };
 
 const chat = (state = defaultChat, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'CHAT_ADDED': {
       const { chatData } = action.payload;
       return {
@@ -32,21 +32,21 @@ const chat = (state = defaultChat, action) => {
       const { chatData } = action.payload;
       return {
         ...state,
-        ...chatData
+        ...chatData,
       };
     }
     case 'MESSAGE_ADDED': {
       const { messageId } = action.payload;
       return {
         ...state,
-        messageIds: [...state.messageIds, messageId]
+        messageIds: [...state.messageIds, messageId],
       };
     }
     case 'USER_ADDED_TO_CHAT': {
       const { userId } = action.payload;
       return {
         ...state,
-        userIds: [...state.userIds, userId]
+        userIds: [...state.userIds, userId],
       };
     }
     case 'SCROLL_POS_UPDATED': {
@@ -54,14 +54,14 @@ const chat = (state = defaultChat, action) => {
       return {
         ...state,
         scrollPos,
-        atBottom
+        atBottom,
       };
     }
     case 'DRAFT_TEXT_UPDATED': {
       const { text } = action.payload;
       return {
         ...state,
-        draftText: text
+        draftText: text,
       };
     }
     default:
@@ -72,47 +72,47 @@ const chat = (state = defaultChat, action) => {
 const defaultState = {};
 
 const chats = (state = defaultState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'CHAT_ADDED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'CHAT_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'MESSAGE_ADDED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'USER_ADDED_TO_CHAT': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'SCROLL_POS_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'DRAFT_TEXT_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
-        [chatId]: chat(state[chatId], action)
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'LOGGED_OUT': {

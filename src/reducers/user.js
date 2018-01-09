@@ -1,10 +1,5 @@
 const defaultState = {
-  userId: undefined
-  // userId: '1jjahsBIp6Z8DkXKCmZa', // name: samantha
-  // userId: '3isyyZt5AZEWpXDVRokV',  // name: zami
-
-  // userIds: ['3isyyZt5AZEWpXDVRokV', '1jjahsBIp6Z8DkXKCmZa']
-  // zami, samantha
+  userId: undefined,
 };
 
 const user = (state = defaultState, action) => {
@@ -13,14 +8,11 @@ const user = (state = defaultState, action) => {
       const { userId } = action.payload;
       return {
         ...state,
-        userId
+        userId,
       };
     }
     case 'LOGGED_OUT': {
-      return {
-        ...state,
-        userId: undefined
-      };
+      return defaultState;
     }
     default:
       return state;

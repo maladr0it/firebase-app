@@ -8,7 +8,7 @@ const app = combineReducers({
   user,
   chatApp,
   chats,
-  messages
+  messages,
 });
 
 export default app;

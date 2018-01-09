@@ -6,9 +6,9 @@ const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 console.log('db api loaded');
 
 const addMessageToChat = async (chatId, userId, text) => {
-  const messageRef = await db.collection(`chats/${chatId}/messages`);
+  let messageRef;
   try {
-    messageRef.add({
+    messageRef = await db.collection(`chats/${chatId}/messages`).add({
       author: userId,
       createdAt: timestamp,
       text,
@@ -98,7 +98,6 @@ export const sendMessage = async (chatId, userId, text) => {
   try {
     const addMessageProm = addMessageToChat(chatId, userId, text);
     const chatUserIds = await getChatUserIds(chatId);
-    // const usersToUpdate = chatUserIds.filter(id => id !== userId);
 
     chatUserIds.forEach(id => updateUserChat(id, chatId));
     const messageRef = await addMessageProm;
@@ -161,7 +160,7 @@ export const markUserAsTyping = (userId, chatId) => {
 
 // LISTENERS
 export const listenToChatForMessages = (chatId, callback) => {
-  console.log(`db: creating listener for messages of chat ${chatId}`);
+  // console.log(`db: creating listener for messages of chat ${chatId}`);
   const unsubscribe = db.collection(`chats/${chatId}/messages`)
     .orderBy('createdAt', 'desc').limit(50)
     .onSnapshot((snapshot) => {
@@ -178,7 +177,7 @@ export const listenToChatForMessages = (chatId, callback) => {
   return unsubscribe;
 };
 export const listenToChatForUsers = (chatId, callback) => {
-  console.log(`db: creating listener for users of chat ${chatId}`);
+  // console.log(`db: creating listener for users of chat ${chatId}`);
   const unsubscribe = db.collection(`chats/${chatId}/users`)
   // .orderBy('joinedAt')
     .onSnapshot((snapshot) => {
@@ -193,7 +192,7 @@ export const listenToChatForUsers = (chatId, callback) => {
   return unsubscribe;
 };
 export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
-  console.log(`db: creating listener for user ${userId}'s chats`);
+  // console.log(`db: creating listener for user ${userId}'s chats`);
   const unsubscribe = db.collection(`users/${userId}/chats`)
     .orderBy('lastUpdated', 'desc').limit(10)
     .onSnapshot((snapshot) => {
