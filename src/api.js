@@ -150,11 +150,11 @@ export const setSelectedChatForUser = (userId, chatId) => {
       unreadCount: 0,
     }, { merge: true });
 };
-export const markUserAsTyping = (userId, chatId) => {
-  console.log(`marking ${userId} as typing in chat ${chatId}`);
+export const setUserTypingStatus = (userId, chatId, isTyping) => {
+  console.log(`marking ${userId} as ${isTyping} in chat ${chatId}`);
   db.collection(`chats/${chatId}/users`).doc(`${userId}`)
     .set({
-      isTyping: true,
+      isTyping,
     }, { merge: true });
 };
 
@@ -179,14 +179,13 @@ export const listenToChatForMessages = (chatId, callback) => {
 export const listenToChatForUsers = (chatId, callback) => {
   // console.log(`db: creating listener for users of chat ${chatId}`);
   const unsubscribe = db.collection(`chats/${chatId}/users`)
-  // .orderBy('joinedAt')
+    // .orderBy('joinedAt')
     .onSnapshot((snapshot) => {
       snapshot.docChanges.forEach((change) => {
-        if (change.type === 'added') {
-          const userId = change.doc.id;
-          const userData = change.doc.data();
-          callback(userId, userData);
-        }
+        const userId = change.doc.id;
+        const userData = change.doc.data();
+        const changeType = change.type;
+        callback(userId, userData, changeType);
       });
     });
   return unsubscribe;

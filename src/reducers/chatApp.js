@@ -17,10 +17,7 @@ const chatApp = (state = defaultState, action) => {
     }
     // wipe list
     case 'LOGGED_OUT': {
-      return {
-        ...state,
-        ...defaultState,
-      };
+      return defaultState;
     }
     case 'CHATS_REORDERED': {
       const { chatIds } = action.payload;

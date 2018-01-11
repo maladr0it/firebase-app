@@ -11,8 +11,8 @@ const AccountControls = props => (
 export default AccountControls;
 
 AccountControls.propTypes = {
-  isLoggedIn: PropTypes.string,
+  isLoggedIn: PropTypes.bool,
 };
 AccountControls.defaultProps = {
-  isLoggedIn: undefined,
+  isLoggedIn: false,
 };

@@ -2,32 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const UserListComponent = ({ userIds }) => {
+const UserListComponent = ({ usersData }) => {
+  const users = usersData.map(userData => (
+    <span key={userData.id}>
+      {userData.id}
+    </span>
+  ));
   return (
     <div>
-      USERS: {userIds.map(id => <span key={id}>{id} </span>)}
+      USERS: {users}
     </div>
   );
 };
 
 const selectChat = (state, chatId) => (
-  state.chats[chatId] || { userIds: [] }
+  state.chats[chatId] || { userIds: [], users: {} }
   // TODO: simply don't render until chat exists
 );
-const getUserIds = (state, chatId) => {
+const getChatData = (state, chatId) => {
   const chat = selectChat(state, chatId);
-  const { userIds } = chat;
-  return userIds;
+  return {
+    usersData: chat.userIds.map(id => ({
+      id, ...chat.users[id],
+    })),
+  };
 };
-const mapStateToProps = (state, ownProps) => ({
-  userIds: getUserIds(state, ownProps.chatId),
-});
+const mapStateToProps = (state, ownProps) => (
+  getChatData(state, ownProps.chatId)
+);
 const UserList = connect(mapStateToProps)(UserListComponent);
+
 export default UserList;
 
 UserListComponent.propTypes = {
-  userIds: PropTypes.arrayOf(PropTypes.string),
-};
-UserListComponent.defaultProps = {
-  userIds: [],
+  usersData: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

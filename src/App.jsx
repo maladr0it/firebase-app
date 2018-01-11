@@ -9,7 +9,7 @@ import ChatWindow from './components/ChatWindow';
 import './App.css';
 
 const App = ({ currentUserId }) => {
-  const isLoggedIn = (currentUserId);
+  const isLoggedIn = Boolean(currentUserId);
 
   return (
     <div className="App">

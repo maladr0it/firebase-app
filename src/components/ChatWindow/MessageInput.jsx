@@ -8,6 +8,7 @@ import {
   sendMessage,
   draftTextUpdated,
   startTyping,
+  stopTyping,
 } from '../../actions';
 import './index.css';
 
@@ -17,9 +18,12 @@ class MessageInputComponent extends React.Component {
     this.state = {
       value: '',
     };
-    this.debouncedChange = debounce((chatId, text) => {
-      this.props.onChange(chatId, text);
+    this.debouncedUpdateDraft = debounce((chatId, text) => {
+      this.props.updateDraft(chatId, text);
     }, 250);
+    this.debouncedStopTyping = debounce((userId, chatId) => {
+      this.props.onStopTyping(userId, chatId);
+    }, 2000);
   }
   componentWillReceiveProps(nextProps) {
     // get draft text
@@ -36,14 +40,17 @@ class MessageInputComponent extends React.Component {
   handleChange(e) {
     const text = e.target.value;
     this.setState({ value: text });
+    // TODO: throttle startTyping
     this.props.onStartTyping(this.props.userId, this.props.chatId);
-    this.debouncedChange(this.props.chatId, text);
+    this.debouncedUpdateDraft(this.props.chatId, text);
+    this.debouncedStopTyping(this.props.userId, this.props.chatId);
   }
   handleSubmit(e) {
     this.props.onSend(this.props.chatId, this.props.userId, this.state.value);
     this.setState({ value: '' });
     // update store to clear draft
-    this.props.onChange(this.props.chatId, '');
+    this.props.updateDraft(this.props.chatId, '');
+    this.props.onStopTyping(this.props.userId, this.props.chatId);
     e.preventDefault();
   }
 
@@ -77,9 +84,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
   onSend: sendMessage,
-  onChange: draftTextUpdated,
+  updateDraft: draftTextUpdated,
   onStartTyping: startTyping,
-  // stopTyping
+  onStopTyping: stopTyping,
 };
 const MessageInput = connect(
   mapStateToProps,
@@ -92,7 +99,8 @@ MessageInputComponent.propTypes = {
   userId: PropTypes.string.isRequired,
   chatId: PropTypes.string.isRequired,
   draftText: PropTypes.string.isRequired,
+  updateDraft: PropTypes.func.isRequired,
   onSend: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
   onStartTyping: PropTypes.func.isRequired,
+  onStopTyping: PropTypes.func.isRequired,
 };

@@ -7,6 +7,7 @@
 //     atBottom: true,
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
 //     userIds: ['usr0001', 'usr0002', 'usr0003'],
+//     users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
 //     draftText: ''
 //   },
 // }
@@ -14,6 +15,7 @@
 const defaultChat = {
   messageIds: [],
   userIds: [],
+  users: {},
   scrollPos: 0,
   atBottom: true,
   draftText: '',
@@ -43,10 +45,24 @@ const chat = (state = defaultChat, action) => {
       };
     }
     case 'USER_ADDED_TO_CHAT': {
-      const { userId } = action.payload;
+      const { userId, userData } = action.payload;
       return {
         ...state,
         userIds: [...state.userIds, userId],
+        users: {
+          ...state.users,
+          [userId]: userData,
+        },
+      };
+    }
+    case 'CHAT_USER_UPDATED': {
+      const { userId, userData } = action.payload;
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          [userId]: userData,
+        },
       };
     }
     case 'SCROLL_POS_UPDATED': {
@@ -95,6 +111,13 @@ const chats = (state = defaultState, action) => {
       };
     }
     case 'USER_ADDED_TO_CHAT': {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId]: chat(state[chatId], action),
+      };
+    }
+    case 'CHAT_USER_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,

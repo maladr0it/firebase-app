@@ -10,15 +10,17 @@ const MessageComponent = ({
 }) => {
   const timestamp = (!isPending) ? createdAt.toString() : 'sending...';
   return (
-    <ListItem
-      className="Message"
-      primaryText={text}
-      secondaryText={
-        <p>
-          <span style={{ color: darkBlack }}>{author}</span> -- {timestamp}
-        </p>
-      }
-    />
+    <div className="Message">
+      <ListItem
+        // disabled
+        primaryText={text}
+        secondaryText={
+          <p>
+            <span style={{ color: darkBlack }}>{author}</span> -- {timestamp}
+          </p>
+        }
+      />
+    </div>
   );
 };
 export default MessageComponent;

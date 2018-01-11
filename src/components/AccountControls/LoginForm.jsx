@@ -7,12 +7,12 @@ import {
 import InputForm from '../InputForm';
 
 const LoginFormComponent = ({ onLogin }) => (
-  <div>
+  <React.Fragment>
     <InputForm
       label="USERNAME: "
       handleSubmit={value => onLogin(value)}
     />
-  </div>
+  </React.Fragment>
 );
 const mapDispatchToProps = {
   onLogin: login,

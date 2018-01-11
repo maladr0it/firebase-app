@@ -22,9 +22,13 @@ export const chatUpdated = (chatId, chatData) => ({
   type: 'CHAT_UPDATED',
   payload: { chatId, chatData },
 });
-export const userAddedToChat = (chatId, userId) => ({
+export const userAddedToChat = (chatId, userId, userData) => ({
   type: 'USER_ADDED_TO_CHAT',
-  payload: { chatId, userId },
+  payload: { chatId, userId, userData },
+});
+export const chatUserUpdated = (chatId, userId, userData) => ({
+  type: 'CHAT_USER_UPDATED',
+  payload: { chatId, userId, userData },
 });
 export const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
@@ -69,8 +73,12 @@ export const listenToChatForMessages = chatId => (dispatch) => {
   return unsubscribe;
 };
 export const listenToChatForUsers = chatId => (dispatch) => {
-  const callback = (userId) => {
-    dispatch(userAddedToChat(chatId, userId));
+  const callback = (userId, userData, changeType) => {
+    if (changeType === 'added') {
+      dispatch(userAddedToChat(chatId, userId, userData));
+    } else if (changeType === 'modified') {
+      dispatch(chatUserUpdated(chatId, userId, userData));
+    }
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;
@@ -107,8 +115,12 @@ export const selectChat = (userId, chatId) => async (dispatch) => {
   db.setSelectedChatForUser(userId, chatId);
 };
 export const startTyping = (userId, chatId) => () => {
-  db.markUserAsTyping(userId, chatId);
+  db.setUserTypingStatus(userId, chatId, true);
 };
+export const stopTyping = (userId, chatId) => () => {
+  db.setUserTypingStatus(userId, chatId, false);
+};
+
 export const addChatParticipant = (chatId, userId) => async () => {
   try {
     await db.addChatParticipant(chatId, userId);
