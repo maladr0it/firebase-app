@@ -5,40 +5,29 @@ const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 console.log('db api loaded');
 
-const addMessageToChat = async (chatId, userId, text) => {
+const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
   let messageRef;
   try {
+    const readStatus = {};
+    chatUserIds.forEach((id) => {
+      readStatus[id] = null;
+    });
+    // get userIds here, add them to the readStatus as null
     messageRef = await db.collection(`chats/${chatId}/messages`).add({
       author: userId,
       createdAt: timestamp,
+      readStatus: {
+        ...readStatus,
+        [userId]: timestamp,
+      },
       text,
     });
+    console.log('///');
+    console.log(timestamp);
   } catch (e) {
     console.log(e);
   }
   return messageRef;
-};
-// TODO: refactor this
-const updateUserChat = async (userId, chatId) => {
-  const userRef = db.collection('users').doc(`${userId}`);
-  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
-  db.runTransaction(async (transaction) => {
-    const [userDoc, chatDoc] = await Promise.all([
-      transaction.get(userRef),
-      transaction.get(chatRef),
-    ]);
-    // increment if user is not viewing the chat
-    let unreadCount = chatDoc.data().unreadCount || 0;
-    if (userDoc.data().selectedChatId !== chatId) {
-      unreadCount += 1;
-    }
-    transaction.update(chatRef, {
-      lastUpdated: timestamp,
-      unreadCount,
-    });
-    transaction.update(userRef, {});
-    // all docs read in a transaction must be written
-  });
 };
 const addChatToUser = async (userId, chatId) => {
   const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
@@ -89,31 +78,7 @@ export const getUser = async (userId) => {
   }
   return userDocData;
 };
-
-// has to update every user's chat feed
-// optimisations here make the code ugly
-// TODO: refactor try/catch block
-export const sendMessage = async (chatId, userId, text) => {
-  let messagePayload = {};
-  try {
-    const addMessageProm = addMessageToChat(chatId, userId, text);
-    const chatUserIds = await getChatUserIds(chatId);
-
-    chatUserIds.forEach(id => updateUserChat(id, chatId));
-    const messageRef = await addMessageProm;
-    const messageSnapshot = await messageRef.get();
-    // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
-    messagePayload = {
-      messageId: messageRef.id,
-      messageData: messageSnapshot.data(),
-    };
-  } catch (e) {
-    console.log(e);
-  }
-  return messagePayload;
-};
 // naming is a little gross here?
-
 // this should do a batch write!!
 export const addChatParticipant = async (chatId, userId) => {
   try {
@@ -142,20 +107,81 @@ export const createChat = async () => {
 // select chat and set unread to 0
 export const setSelectedChatForUser = (userId, chatId) => {
   db.collection('users').doc(`${userId}`)
-    .set({
+    .update({
       selectedChatId: chatId,
-    }, { merge: true });
+    });
   db.collection(`users/${userId}/chats`).doc(`${chatId}`)
-    .set({
+    .update({
       unreadCount: 0,
-    }, { merge: true });
+    });
 };
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
-  console.log(`marking ${userId} as ${isTyping} in chat ${chatId}`);
   db.collection(`chats/${chatId}/users`).doc(`${userId}`)
-    .set({
+    .update({
       isTyping,
-    }, { merge: true });
+    });
+};
+
+// TRANSACTIONS/BATCHES
+export const markMessagesAsRead = async (chatId, userId) => {
+  console.log('marking as read');
+  const readStatusKey = `readStatus.${userId}`;
+  const messagesSnapshot = await db.collection(`chats/${chatId}/messages`)
+    .where(readStatusKey, '==', null)
+    .get();
+  messagesSnapshot.forEach((snap) => {
+    console.log('unread detected');
+    console.log(`modifying ${chatId}'s message ${snap.id}...`);
+    db.collection(`chats/${chatId}/messages`).doc(`${snap.id}`)
+      .update({
+        [readStatusKey]: timestamp,
+      });
+  });
+};
+// TODO: refactor this
+const updateUserChat = async (userId, chatId) => {
+  const userRef = db.collection('users').doc(`${userId}`);
+  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
+  db.runTransaction(async (transaction) => {
+    const [userDoc, chatDoc] = await Promise.all([
+      transaction.get(userRef),
+      transaction.get(chatRef),
+    ]);
+    // increment if user is not viewing the chat
+    let unreadCount = chatDoc.data().unreadCount || 0;
+    if (userDoc.data().selectedChatId !== chatId) {
+      unreadCount += 1;
+    }
+    transaction.update(chatRef, {
+      lastUpdated: timestamp,
+      unreadCount,
+    });
+    transaction.update(userRef, {});
+    // all docs read in a transaction must be written
+  });
+};
+
+// has to update every user's chat feed
+// optimisations here make the code ugly
+// TODO: refactor try/catch block
+export const sendMessage = async (chatId, userId, text) => {
+  let messagePayload = {};
+  try {
+    const chatUserIds = await getChatUserIds(chatId);
+    const addMessageProm = addMessageToChat(chatId, userId, chatUserIds, text);
+
+    chatUserIds.forEach(id => updateUserChat(id, chatId));
+    const messageRef = await addMessageProm;
+    const messageSnapshot = await messageRef.get();
+    // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
+    messagePayload = {
+      messageId: messageRef.id,
+      messageData: messageSnapshot.data(),
+    };
+  } catch (e) {
+    console.log(e);
+  }
+  return messagePayload;
 };
 
 // LISTENERS
@@ -166,12 +192,13 @@ export const listenToChatForMessages = (chatId, callback) => {
     .onSnapshot((snapshot) => {
     // reversed so that earlier changes are processed first
       snapshot.docChanges.reverse().forEach((change) => {
-        if (change.type === 'added') {
-          const messageId = change.doc.id;
-          const messageData = change.doc.data();
-          const isPending = change.doc.metadata.hasPendingWrites;
-          callback(messageId, messageData, isPending);
-        }
+        const messageId = change.doc.id;
+        const messageData = {
+          ...change.doc.data(),
+          isPending: change.doc.metadata.hasPendingWrites,
+        };
+        const changeType = change.type;
+        callback(messageId, messageData, changeType);
       });
     });
   return unsubscribe;

@@ -5,8 +5,8 @@
   flex-direction: column;
   /* justify-content: space-between; */
   /* maybe put this at root level */
-  word-break: break-word;
-  background: #E8E9F3;
+  /* word-break: break-word; */
+  background: #FFFFFF;
 }
 
 .MessageListContainer {

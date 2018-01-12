@@ -8,7 +8,7 @@ import './index.css';
 const TypingIndicatorComponent = ({ author }) => (
   <div className="TypingIndicator">
     <ListItem
-      disabled={true}
+      disabled
       primaryText="..."
       secondaryText={
         <p>

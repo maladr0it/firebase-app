@@ -9,21 +9,29 @@ const defaultState = { };
 const messages = (state = defaultState, action) => {
   switch (action.type) {
     case 'MESSAGE_ADDED': {
-      const { messageId, messageData, isPending } = action.payload;
-      // adding meta isPending
+      const { messageId, messageData } = action.payload;
       return {
         ...state,
-        [messageId]: { ...messageData, isPending },
+        [messageId]: messageData,
+      };
+    }
+    case 'MESSAGE_UPDATED': {
+      const { messageId, messageData } = action.payload;
+      console.log(messageData);
+      // TODO: clean up this logic
+      // set pending to false, so setting a message as 'read'
+      // does not require a callback
+      return {
+        ...state,
+        [messageId]: { ...messageData, isPending: false },
       };
     }
     // this overwrites the original message with what the server returns
     case 'MESSAGE_SENT': {
       const { messageId, messageData } = action.payload;
-      // adding meta isPending
-      const message = { ...messageData, isPending: false };
       return {
         ...state,
-        [messageId]: message,
+        [messageId]: { ...messageData, isPending: false },
       };
     }
     default:

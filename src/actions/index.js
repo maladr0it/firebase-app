@@ -1,13 +1,17 @@
 import * as db from '../api';
 
-export const messageAdded = (chatId, messageId, messageData, isPending) => ({
+export const messageAdded = (chatId, messageId, messageData) => ({
   type: 'MESSAGE_ADDED',
   payload: {
-    chatId, messageId, messageData, isPending,
+    chatId, messageId, messageData,
   },
 });
 export const messageSent = (messageId, messageData) => ({
   type: 'MESSAGE_SENT',
+  payload: { messageId, messageData },
+});
+export const messageUpdated = (messageId, messageData) => ({
+  type: 'MESSAGE_UPDATED',
   payload: { messageId, messageData },
 });
 export const chatSelected = chatId => ({
@@ -66,8 +70,12 @@ export const listenForChatUpdates = userId => (dispatch) => {
   return unsubscribe;
 };
 export const listenToChatForMessages = chatId => (dispatch) => {
-  const callback = (messageId, messageData, isPending) => {
-    dispatch(messageAdded(chatId, messageId, messageData, isPending));
+  const callback = (messageId, messageData, changeType) => {
+    if (changeType === 'added') {
+      dispatch(messageAdded(chatId, messageId, messageData));
+    } else if (changeType === 'modified') {
+      dispatch(messageUpdated(messageId, messageData));
+    }
   };
   const unsubscribe = db.listenToChatForMessages(chatId, callback);
   return unsubscribe;
@@ -112,6 +120,7 @@ export const createChat = userId => async () => {
 // sets user/:userId/selectedChatId
 export const selectChat = (userId, chatId) => async (dispatch) => {
   dispatch(chatSelected(chatId));
+  db.markMessagesAsRead(chatId, userId);
   db.setSelectedChatForUser(userId, chatId);
 };
 export const startTyping = (userId, chatId) => () => {

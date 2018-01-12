@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
+import { debounce, throttle } from 'lodash';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {
@@ -24,6 +24,9 @@ class MessageInputComponent extends React.Component {
     this.debouncedStopTyping = debounce((userId, chatId) => {
       this.props.onStopTyping(userId, chatId);
     }, 2000);
+    this.throttledStartTyping = throttle((userId, chatId) => {
+      this.props.onStartTyping(userId, chatId);
+    }, 2000);
   }
   componentWillReceiveProps(nextProps) {
     // get draft text
@@ -40,9 +43,9 @@ class MessageInputComponent extends React.Component {
   handleChange(e) {
     const text = e.target.value;
     this.setState({ value: text });
-    // TODO: throttle startTyping
-    this.props.onStartTyping(this.props.userId, this.props.chatId);
+    // TODO: consider checking local state for whether you are typing or not
     this.debouncedUpdateDraft(this.props.chatId, text);
+    this.throttledStartTyping(this.props.userId, this.props.chatId);
     this.debouncedStopTyping(this.props.userId, this.props.chatId);
   }
   handleSubmit(e) {
