@@ -16,19 +16,15 @@ const getChatUserIds = async (chatId) => {
 };
 const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
   let messageRef;
+  const readStatus = {};
+  chatUserIds.forEach((id) => {
+    readStatus[id] = null;
+  });
   try {
-    const readStatus = {};
-    chatUserIds.forEach((id) => {
-      readStatus[id] = null;
-    });
-    // get userIds here, add them to the readStatus as null
     messageRef = await db.collection(`chats/${chatId}/messages`).add({
       author: userId,
       createdAt: timestamp,
-      readStatus: {
-        ...readStatus,
-        [userId]: timestamp,
-      },
+      readStatus,
       text,
     });
   } catch (e) {
@@ -36,6 +32,7 @@ const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
   }
   return messageRef;
 };
+// here is where we should set the read status
 const updateUserChat = async (userId, chatId) => {
   const userRef = db.collection('users').doc(`${userId}`);
   const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
@@ -63,10 +60,8 @@ export const sendMessage = async (chatId, userId, text) => {
   let messagePayload = {};
   try {
     const chatUserIds = await getChatUserIds(chatId);
-    const addMessageProm = addMessageToChat(chatId, userId, chatUserIds, text);
-
+    const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
     chatUserIds.forEach(id => updateUserChat(id, chatId));
-    const messageRef = await addMessageProm;
     const messageSnapshot = await messageRef.get();
     // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
     messagePayload = {
@@ -79,14 +74,13 @@ export const sendMessage = async (chatId, userId, text) => {
   return messagePayload;
 };
 export const markMessagesAsRead = async (chatId, userId) => {
-  console.log('marking as read');
+  console.log('checking for unread...');
   const readStatusKey = `readStatus.${userId}`;
   const messagesSnapshot = await db.collection(`chats/${chatId}/messages`)
     .where(readStatusKey, '==', null)
     .get();
   messagesSnapshot.forEach((snap) => {
-    console.log('unread detected');
-    console.log(`modifying ${chatId}'s message ${snap.id}...`);
+    console.log('marking message as read');
     db.collection(`chats/${chatId}/messages`).doc(`${snap.id}`)
       .update({
         [readStatusKey]: timestamp,

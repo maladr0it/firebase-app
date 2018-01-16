@@ -29,6 +29,25 @@ const addUserToChat = async (chatId, userId) => {
   console.log(`db: added user ${userId} to chat ${chatId}`);
   return userRef;
 };
+const removeChatFromUser = async (userId, chatId) => {
+  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
+  try {
+    await chatRef.delete();
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(`db: removed chat ${chatId} from user ${userId}`);
+  return chatRef;
+};
+const removeUserFromChat = async (chatId, userId) => {
+  const userRef = db.collection(`chats/${chatId}/users`).doc(`${userId}`)
+  try {
+    await userRef.delete();
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(`db: removed user ${userId} from chat ${chatId}`);
+};
 
 // EXPORTS
 export const addChatParticipant = async (chatId, userId) => {
@@ -36,6 +55,17 @@ export const addChatParticipant = async (chatId, userId) => {
     await Promise.all([
       addChatToUser(userId, chatId), // this is adding, then modifying
       addUserToChat(chatId, userId),
+    ]);
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const removeChatParticipant = async (chatId, userId) => {
+  try {
+    await Promise.all([
+      removeChatFromUser(userId, chatId),
+      removeUserFromChat(chatId, userId),
     ]);
     return;
   } catch (e) {

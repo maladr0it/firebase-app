@@ -55,6 +55,14 @@ const chat = (state = defaultChat, action) => {
         },
       };
     }
+    case 'USER_REMOVED_FROM_CHAT': {
+      const { userId } = action.payload;
+      console.log('removing', userId);
+      return {
+        ...state,
+        userIds: state.userIds.filter(id => id !== userId),
+      };
+    }
     case 'CHAT_USER_UPDATED': {
       const { userId, userData } = action.payload;
       return {
@@ -111,6 +119,13 @@ const chats = (state = defaultState, action) => {
       };
     }
     case 'USER_ADDED_TO_CHAT': {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId]: chat(state[chatId], action),
+      };
+    }
+    case 'USER_REMOVED_FROM_CHAT': {
       const { chatId } = action.payload;
       return {
         ...state,

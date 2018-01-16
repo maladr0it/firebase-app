@@ -2,11 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const UserListComponent = ({ usersData }) => {
+import {
+  removeUserFromChat,
+} from '../../actions';
+
+const UserListComponent = ({ removeUser, chatId, usersData }) => {
   const users = usersData.map(userData => (
-    <span key={userData.id}>
+    <button
+      key={userData.id}
+      onClick={() => removeUser(chatId, userData.id)}
+    >
       {userData.id}
-    </span>
+    </button>
   ));
   return (
     <div>
@@ -30,10 +37,18 @@ const getChatData = (state, chatId) => {
 const mapStateToProps = (state, ownProps) => (
   getChatData(state, ownProps.chatId)
 );
-const UserList = connect(mapStateToProps)(UserListComponent);
+const mapDispatchToProps = ({
+  removeUser: removeUserFromChat,
+});
+const UserList = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UserListComponent);
 
 export default UserList;
 
 UserListComponent.propTypes = {
+  chatId: PropTypes.string.isRequired,
   usersData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  removeUser: PropTypes.func.isRequired,
 };

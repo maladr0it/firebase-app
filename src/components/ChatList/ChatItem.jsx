@@ -10,10 +10,14 @@ import './index.css';
 
 class ChatItemComponent extends React.Component {
   componentDidMount() {
-    this.messageUnsubscribe = this.props.messageListener(this.props.chatId);
+    this.messageUnsubscribe = this.props.messageListener(
+      this.props.chatId,
+      this.props.userId,
+    );
     this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
   componentWillUnmount() {
+    console.log('destroying listeners for', this.props.chatId);
     this.messageUnsubscribe();
     this.userUnsubscribe();
   }
@@ -22,7 +26,8 @@ class ChatItemComponent extends React.Component {
 
   render() {
     const {
-      handleSelectChat, chatId, userIds, unreadCount, isSelected,
+      handleSelectChat,
+      chatId, userIds, unreadCount, isSelected,
     } = this.props;
     const readStatus = (unreadCount) ? 'Unread' : '';
     const selectedStatus = (isSelected) ? 'Selected' : '';
@@ -47,6 +52,7 @@ const getChatData = (state, chatId) => {
   };
 };
 const mapStateToProps = (state, ownProps) => ({
+  userId: state.user.userId,
   ...getChatData(state, ownProps.chatId),
 });
 const mapDispatchToProps = {
@@ -61,6 +67,7 @@ const ChatContainer = connect(
 export default ChatContainer;
 
 ChatItemComponent.propTypes = {
+  userId: PropTypes.string.isRequired,
   chatId: PropTypes.string.isRequired,
   handleSelectChat: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

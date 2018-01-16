@@ -30,9 +30,14 @@ export const stopTyping = (userId, chatId) => () => {
   db.setUserTypingStatus(userId, chatId, false);
 };
 // LISTENERS
-export const listenToChatForMessages = chatId => (dispatch) => {
+export const listenToChatForMessages = (chatId, userId) => (dispatch, getState) => {
   const callback = (messageId, messageData, changeType) => {
+    // if user has this chat selected, mark it as read
     if (changeType === 'added') {
+      const state = getState();
+      if (state.chatApp.selectedChat === chatId) {
+        db.markMessagesAsRead(chatId, userId);
+      }
       dispatch(messageAdded(chatId, messageId, messageData));
     } else if (changeType === 'modified') {
       dispatch(messageUpdated(messageId, messageData));

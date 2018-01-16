@@ -17,7 +17,6 @@ const messages = (state = defaultState, action) => {
     }
     case 'MESSAGE_UPDATED': {
       const { messageId, messageData } = action.payload;
-      console.log(messageData);
       // TODO: clean up this logic
       // set pending to false, so setting a message as 'read'
       // does not require a callback
