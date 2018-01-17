@@ -92,16 +92,15 @@ export const listenToChatForMessages = (chatId, callback) => {
   const unsubscribe = db.collection(`chats/${chatId}/messages`)
     .orderBy('createdAt', 'desc').limit(50)
     .onSnapshot((snapshot) => {
-    // reversed so that earlier changes are processed first
-      snapshot.docChanges.reverse().forEach((change) => {
-        const messageId = change.doc.id;
-        const messageData = {
+      const changes = snapshot.docChanges.reverse().map(change => ({
+        type: change.type,
+        id: change.doc.id,
+        data: {
           ...change.doc.data(),
           isPending: change.doc.metadata.hasPendingWrites,
-        };
-        const changeType = change.type;
-        callback(messageId, messageData, changeType);
-      });
+        },
+      }));
+      callback(changes);
     });
   return unsubscribe;
 };

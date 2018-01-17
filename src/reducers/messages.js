@@ -8,21 +8,26 @@ const defaultState = { };
 
 const messages = (state = defaultState, action) => {
   switch (action.type) {
-    case 'MESSAGE_ADDED': {
-      const { messageId, messageData } = action.payload;
+    case 'MESSAGES_ADDED': {
+      const { newMessages } = action.payload;
+      const messagesData = newMessages.reduce((acc, messageDoc) => {
+        acc[messageDoc.id] = messageDoc.data;
+        return acc;
+      }, {});
       return {
         ...state,
-        [messageId]: messageData,
+        ...messagesData,
       };
     }
-    case 'MESSAGE_UPDATED': {
-      const { messageId, messageData } = action.payload;
-      // TODO: clean up this logic
-      // set pending to false, so setting a message as 'read'
-      // does not require a callback
+    case 'MESSAGES_UPDATED': {
+      const { updatedMessages } = action.payload;
+      const messagesData = updatedMessages.reduce((acc, messageDoc) => {
+        acc[messageDoc.id] = messageDoc.data;
+        return acc;
+      }, {});
       return {
         ...state,
-        [messageId]: { ...messageData, isPending: false },
+        ...messagesData,
       };
     }
     // this overwrites the original message with what the server returns

@@ -19,6 +19,14 @@ const chatApp = (state = defaultState, action) => {
     case 'LOGGED_OUT': {
       return defaultState;
     }
+    case 'CHATS_ADDED': {
+      const { newChats } = action.payload;
+      const newIds = newChats.map(chat => chat.id);
+      return {
+        ...state,
+        chatIds: newIds,
+      };
+    }
     case 'CHATS_REORDERED': {
       const { chatIds } = action.payload;
       return {

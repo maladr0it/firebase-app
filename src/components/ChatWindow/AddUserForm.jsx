@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addChatParticipant } from '../../actions';
+import { addUserToChat } from '../../actions';
 import InputForm from '../InputForm';
 
 const AddUserFormComponent = ({ chatId, onAdd }) => (
@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
   chatId: state.chatApp.selectedChat,
 });
 const mapDispatchToProps = {
-  onAdd: addChatParticipant,
+  onAdd: addUserToChat,
 };
 const AddUserForm = connect(
   mapStateToProps,

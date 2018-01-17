@@ -23,25 +23,19 @@ const defaultChat = {
 
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
-    case 'CHAT_ADDED': {
-      const { chatData } = action.payload;
-      return {
-        ...state,
-        ...chatData, // includes unreadCount, lastUpdated
-      };
-    }
-    case 'CHAT_UPDATED': {
-      const { chatData } = action.payload;
-      return {
-        ...state,
-        ...chatData,
-      };
-    }
     case 'MESSAGE_ADDED': {
       const { messageId } = action.payload;
       return {
         ...state,
         messageIds: [...state.messageIds, messageId],
+      };
+    }
+    case 'MESSAGES_ADDED': {
+      const { newMessages } = action.payload;
+      const newIds = newMessages.map(message => message.id);
+      return {
+        ...state,
+        messageIds: [...state.messageIds, ...newIds],
       };
     }
     case 'USER_ADDED_TO_CHAT': {
@@ -82,6 +76,7 @@ const chat = (state = defaultChat, action) => {
       };
     }
     case 'DRAFT_TEXT_UPDATED': {
+      console.log('changing draft text');
       const { text } = action.payload;
       return {
         ...state,
@@ -97,21 +92,30 @@ const defaultState = {};
 
 const chats = (state = defaultState, action) => {
   switch (action.type) {
-    case 'CHAT_ADDED': {
-      const { chatId } = action.payload;
+    case 'CHATS_ADDED': {
+      const { newChats } = action.payload;
+      const chatsData = newChats.reduce((acc, chatDoc) => {
+        acc[chatDoc.id] = { ...defaultChat, ...chatDoc.data };
+        return acc;
+      }, {});
       return {
         ...state,
-        [chatId]: chat(state[chatId], action),
+        ...chatsData,
       };
     }
-    case 'CHAT_UPDATED': {
-      const { chatId } = action.payload;
+    case 'CHATS_UPDATED': {
+      console.log('modifying chat');
+      const { updatedChats } = action.payload;
+      const chatsData = updatedChats.reduce((acc, chatDoc) => {
+        acc[chatDoc.id] = { ...state[chatDoc.id], ...chatDoc.data };
+        return acc;
+      }, {});
       return {
         ...state,
-        [chatId]: chat(state[chatId], action),
+        ...chatsData,
       };
     }
-    case 'MESSAGE_ADDED': {
+    case 'MESSAGES_ADDED': {
       const { chatId } = action.payload;
       return {
         ...state,

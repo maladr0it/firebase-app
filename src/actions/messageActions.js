@@ -1,19 +1,21 @@
 import * as db from '../api';
 
-export const messageAdded = (chatId, messageId, messageData) => ({
-  type: 'MESSAGE_ADDED',
-  payload: {
-    chatId, messageId, messageData,
-  },
+export const messagesAdded = (chatId, newMessages) => ({
+  type: 'MESSAGES_ADDED',
+  payload: { chatId, newMessages },
+});
+export const messagesUpdated = (chatId, updatedMessages) => ({
+  type: 'MESSAGES_UPDATED',
+  payload: { chatId, updatedMessages },
 });
 export const messageSent = (messageId, messageData) => ({
   type: 'MESSAGE_SENT',
   payload: { messageId, messageData },
 });
-export const messageUpdated = (messageId, messageData) => ({
-  type: 'MESSAGE_UPDATED',
-  payload: { messageId, messageData },
-});
+// export const messageUpdated = (messageId, messageData) => ({
+//   type: 'MESSAGE_UPDATED',
+//   payload: { messageId, messageData },
+// });
 // THUNKS
 export const sendMessage = (chatId, userId, text) => async (dispatch) => {
   try {
@@ -31,16 +33,20 @@ export const stopTyping = (userId, chatId) => () => {
 };
 // LISTENERS
 export const listenToChatForMessages = (chatId, userId) => (dispatch, getState) => {
-  const callback = (messageId, messageData, changeType) => {
-    // if user has this chat selected, mark it as read
-    if (changeType === 'added') {
+  const callback = (changes) => {
+    const newMessages = changes.filter(change => (change.type === 'added'));
+    const updatedMessages = changes.filter(change => (change.type === 'modified'));
+
+    if (newMessages.length > 0) {
+      dispatch(messagesAdded(chatId, newMessages));
+      // TODO: avoid using getState, consider a receiving messages action
       const state = getState();
       if (state.chatApp.selectedChat === chatId) {
         db.markMessagesAsRead(chatId, userId);
       }
-      dispatch(messageAdded(chatId, messageId, messageData));
-    } else if (changeType === 'modified') {
-      dispatch(messageUpdated(messageId, messageData));
+    }
+    if (updatedMessages.length > 0) {
+      dispatch(messagesUpdated(chatId, updatedMessages));
     }
   };
   const unsubscribe = db.listenToChatForMessages(chatId, callback);

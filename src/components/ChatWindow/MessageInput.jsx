@@ -51,6 +51,8 @@ class MessageInputComponent extends React.Component {
   handleSubmit(e) {
     this.props.onSend(this.props.chatId, this.props.userId, this.state.value);
     this.setState({ value: '' });
+    // cancel debounced draft update so it doens't overwrite the clear
+    this.debouncedUpdateDraft.cancel();
     // update store to clear draft
     this.props.updateDraft(this.props.chatId, '');
     this.props.onStopTyping(this.props.userId, this.props.chatId);

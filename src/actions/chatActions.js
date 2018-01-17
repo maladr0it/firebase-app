@@ -26,6 +26,13 @@ export const removeUserFromChat = (chatId, userId) => async (dispatch) => {
   await db.removeChatParticipant(chatId, userId);
   dispatch(userRemovedFromChat(chatId, userId));
 };
+export const addUserToChat = (chatId, userId) => async () => {
+  try {
+    await db.addChatParticipant(chatId, userId);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (userId, userData, changeType) => {

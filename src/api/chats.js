@@ -99,7 +99,7 @@ export const listenToChatForUsers = (chatId, callback) => {
     });
   return unsubscribe;
 };
-export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
+export const listenForUserChatUpdates2 = (userId, snapshotCb, docChangeCb) => {
   // console.log(`db: creating listener for user ${userId}'s chats`);
   const unsubscribe = db.collection(`users/${userId}/chats`)
     .orderBy('lastUpdated', 'desc').limit(10)
@@ -120,3 +120,16 @@ export const listenForUserChatUpdates = (userId, snapshotCb, docChangeCb) => {
   return unsubscribe;
 };
 
+export const listenForUserChatUpdates = (userId, callback) => {
+  const unsubscribe = db.collection(`users/${userId}/chats`)
+    .orderBy('lastUpdated', 'desc').limit(10)
+    .onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges.map(change => ({
+        type: change.type,
+        id: change.doc.id,
+        data: change.doc.data(),
+      }));
+      callback(changes);
+    });
+  return unsubscribe;
+};
