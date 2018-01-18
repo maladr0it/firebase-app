@@ -20,11 +20,17 @@ const chatApp = (state = defaultState, action) => {
       return defaultState;
     }
     case 'CHATS_ADDED': {
-      const { newChats } = action.payload;
-      const newIds = newChats.map(chat => chat.id);
+      const { ids } = action.payload;
       return {
         ...state,
-        chatIds: newIds,
+        chatIds: ids,
+      };
+    }
+    case 'CHATS_UPDATED': {
+      const { ids } = action.payload;
+      return {
+        ...state,
+        chatIds: ids,
       };
     }
     case 'CHATS_REORDERED': {

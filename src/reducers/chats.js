@@ -23,13 +23,6 @@ const defaultChat = {
 
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
-    case 'MESSAGE_ADDED': {
-      const { messageId } = action.payload;
-      return {
-        ...state,
-        messageIds: [...state.messageIds, messageId],
-      };
-    }
     case 'MESSAGES_ADDED': {
       const { newMessages } = action.payload;
       const newIds = newMessages.map(message => message.id);
@@ -38,33 +31,47 @@ const chat = (state = defaultChat, action) => {
         messageIds: [...state.messageIds, ...newIds],
       };
     }
-    case 'USER_ADDED_TO_CHAT': {
-      const { userId, userData } = action.payload;
+    case 'CHAT_USERS_ADDED': {
+      const { newUsers, ids } = action.payload;
+      const usersData = newUsers.reduce((acc, userDoc) => {
+        acc[userDoc.id] = userDoc.data;
+        return acc;
+      }, {});
       return {
         ...state,
-        userIds: [...state.userIds, userId],
+        userIds: ids,
         users: {
           ...state.users,
-          [userId]: userData,
+          ...usersData,
+        },
+      };
+    }
+    case 'CHAT_USERS_UPDATED': {
+      const { updatedUsers } = action.payload;
+      const usersData = updatedUsers.reduce((acc, userDoc) => {
+        acc[userDoc.id] = userDoc.data;
+        return acc;
+      }, {});
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          ...usersData,
         },
       };
     }
     case 'USER_REMOVED_FROM_CHAT': {
       const { userId } = action.payload;
-      console.log('removing', userId);
       return {
         ...state,
         userIds: state.userIds.filter(id => id !== userId),
       };
     }
-    case 'CHAT_USER_UPDATED': {
-      const { userId, userData } = action.payload;
+    case 'CHAT_USERS_REMOVED': {
+      const { ids } = action.payload;
       return {
         ...state,
-        users: {
-          ...state.users,
-          [userId]: userData,
-        },
+        userIds: ids,
       };
     }
     case 'SCROLL_POS_UPDATED': {
@@ -76,7 +83,6 @@ const chat = (state = defaultChat, action) => {
       };
     }
     case 'DRAFT_TEXT_UPDATED': {
-      console.log('changing draft text');
       const { text } = action.payload;
       return {
         ...state,
@@ -104,7 +110,6 @@ const chats = (state = defaultState, action) => {
       };
     }
     case 'CHATS_UPDATED': {
-      console.log('modifying chat');
       const { updatedChats } = action.payload;
       const chatsData = updatedChats.reduce((acc, chatDoc) => {
         acc[chatDoc.id] = { ...state[chatDoc.id], ...chatDoc.data };
@@ -122,21 +127,21 @@ const chats = (state = defaultState, action) => {
         [chatId]: chat(state[chatId], action),
       };
     }
-    case 'USER_ADDED_TO_CHAT': {
+    case 'CHAT_USERS_ADDED': {
       const { chatId } = action.payload;
       return {
         ...state,
         [chatId]: chat(state[chatId], action),
       };
     }
-    case 'USER_REMOVED_FROM_CHAT': {
+    case 'CHAT_USERS_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
         [chatId]: chat(state[chatId], action),
       };
     }
-    case 'CHAT_USER_UPDATED': {
+    case 'CHAT_USERS_REMOVED': {
       const { chatId } = action.payload;
       return {
         ...state,
@@ -164,5 +169,4 @@ const chats = (state = defaultState, action) => {
       return state;
   }
 };
-
 export default chats;

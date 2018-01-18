@@ -50,7 +50,6 @@ class MessageListComponent extends React.Component {
     const typingIndicators = usersTyping.map(userData => (
       <TypingIndicator key={userData.id} author={userData.id} />
     ));
-
     return (
       <div
         className="MessageListContainer"

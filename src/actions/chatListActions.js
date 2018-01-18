@@ -4,17 +4,17 @@ export const chatSelected = chatId => ({
   type: 'CHAT_SELECTED',
   payload: { chatId },
 });
-export const chatsAdded = newChats => ({
+export const chatsAdded = (newChats, ids) => ({
   type: 'CHATS_ADDED',
-  payload: { newChats },
+  payload: { newChats, ids },
 });
-export const chatUpdated = (chatId, chatData) => ({
-  type: 'CHAT_UPDATED',
-  payload: { chatId, chatData },
-});
-export const chatsUpdated = updatedChats => ({
+// export const chatUpdated = (chatId, chatData) => ({
+//   type: 'CHAT_UPDATED',
+//   payload: { chatId, chatData },
+// });
+export const chatsUpdated = (updatedChats, ids) => ({
   type: 'CHATS_UPDATED',
-  payload: { updatedChats },
+  payload: { updatedChats, ids },
 });
 export const chatsReordered = chatIds => ({
   type: 'CHATS_REORDERED',
@@ -39,29 +39,17 @@ export const createChat = userId => async () => {
   }
 };
 export const listenForChatUpdates = userId => (dispatch) => {
-  const callback = (changes) => {
+  const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
 
     if (newChats.length > 0) {
-      dispatch(chatsAdded(newChats));
+      dispatch(chatsAdded(newChats, ids));
     }
     if (updatedChats.length > 0) {
-      dispatch(chatsUpdated(updatedChats));
+      dispatch(chatsUpdated(updatedChats, ids));
     }
   };
   const unsubscribe = db.listenForUserChatUpdates(userId, callback);
   return unsubscribe;
 };
-
-  // const snapshotCb = (chatIds) => {
-  //   dispatch(chatsReordered(chatIds));
-  // };
-  // const docChangeCb = (chatId, chatData, changeType) => {
-  //   if (changeType === 'added') {
-  //     dispatch(chatAdded(chatId, chatData));
-  //   } else if (changeType === 'modified') {
-  //     dispatch(chatUpdated(chatId, chatData));
-  //   }
-  // };
-

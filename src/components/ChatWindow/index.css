@@ -17,6 +17,7 @@
 
 .Message {
   background: #B1E5F2;
+  border-radius: 15px;
   /* white-space: pre-wrap; */
   /* margin: 1rem; */
   /* allows multi-line messages to be displayed */

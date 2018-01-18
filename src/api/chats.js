@@ -40,7 +40,7 @@ const removeChatFromUser = async (userId, chatId) => {
   return chatRef;
 };
 const removeUserFromChat = async (chatId, userId) => {
-  const userRef = db.collection(`chats/${chatId}/users`).doc(`${userId}`)
+  const userRef = db.collection(`chats/${chatId}/users`).doc(`${userId}`);
   try {
     await userRef.delete();
   } catch (e) {
@@ -85,41 +85,6 @@ export const createChat = async () => {
     chatData: chatSnapshot.data(),
   };
 };
-export const listenToChatForUsers = (chatId, callback) => {
-  // console.log(`db: creating listener for users of chat ${chatId}`);
-  const unsubscribe = db.collection(`chats/${chatId}/users`)
-    // .orderBy('joinedAt')
-    .onSnapshot((snapshot) => {
-      snapshot.docChanges.forEach((change) => {
-        const userId = change.doc.id;
-        const userData = change.doc.data();
-        const changeType = change.type;
-        callback(userId, userData, changeType);
-      });
-    });
-  return unsubscribe;
-};
-export const listenForUserChatUpdates2 = (userId, snapshotCb, docChangeCb) => {
-  // console.log(`db: creating listener for user ${userId}'s chats`);
-  const unsubscribe = db.collection(`users/${userId}/chats`)
-    .orderBy('lastUpdated', 'desc').limit(10)
-    .onSnapshot((snapshot) => {
-      // for adding/modifying data in the redux store
-      snapshot.docChanges.forEach((change) => {
-        if (change.type === 'added' || change.type === 'modified') {
-          const chatId = change.doc.id;
-          const chatData = change.doc.data();
-          const changeType = change.type;
-          docChangeCb(chatId, chatData, changeType);
-        }
-      });
-      // this must go second, as data may not have been added yet
-      const chatIds = snapshot.docs.map(doc => doc.id);
-      snapshotCb(chatIds);
-    });
-  return unsubscribe;
-};
-
 export const listenForUserChatUpdates = (userId, callback) => {
   const unsubscribe = db.collection(`users/${userId}/chats`)
     .orderBy('lastUpdated', 'desc').limit(10)
@@ -129,7 +94,9 @@ export const listenForUserChatUpdates = (userId, callback) => {
         id: change.doc.id,
         data: change.doc.data(),
       }));
-      callback(changes);
+      // use 'ids' to quickly establish the order of chats for the view
+      const ids = snapshot.docs.map(doc => doc.id);
+      callback(changes, ids);
     });
   return unsubscribe;
 };

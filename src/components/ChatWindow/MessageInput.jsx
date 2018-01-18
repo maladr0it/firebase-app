@@ -78,9 +78,9 @@ class MessageInputComponent extends React.Component {
   }
 }
 
-const selectChat = (state, chatId) => {
-  return state.chats[chatId] || { draftText: '' };
-};
+const selectChat = (state, chatId) => (
+  state.chats[chatId] || { draftText: '' }
+);
 
 const mapStateToProps = state => ({
   userId: state.user.userId,
