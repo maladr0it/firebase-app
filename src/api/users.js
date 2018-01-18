@@ -1,9 +1,8 @@
 import firebase from './firebase';
 
 const db = firebase.firestore();
-// const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-// TODO: check this
 export const getUser = async (userId) => {
   let userDocData = {};
   try {
@@ -15,6 +14,12 @@ export const getUser = async (userId) => {
   }
   return userDocData;
 };
+export const createUser = async username => (
+  db.collection('users').add({
+    username,
+    dateJoined: timestamp,
+  })
+);
 // naming is a little gross here?
 // this should do a batch write!!
 

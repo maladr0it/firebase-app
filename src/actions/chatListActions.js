@@ -8,17 +8,13 @@ export const chatsAdded = (newChats, ids) => ({
   type: 'CHATS_ADDED',
   payload: { newChats, ids },
 });
-// export const chatUpdated = (chatId, chatData) => ({
-//   type: 'CHAT_UPDATED',
-//   payload: { chatId, chatData },
-// });
 export const chatsUpdated = (updatedChats, ids) => ({
   type: 'CHATS_UPDATED',
   payload: { updatedChats, ids },
 });
-export const chatsReordered = chatIds => ({
-  type: 'CHATS_REORDERED',
-  payload: { chatIds },
+export const chatsRemoved = (removedChats, ids) => ({
+  type: 'CHATS_REMOVED',
+  payload: { removedChats, ids },
 });
 // THUNKS
 // sets unread messages to 0, updates your lastReadMessage,

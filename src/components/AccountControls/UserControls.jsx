@@ -5,16 +5,16 @@ import {
   logout,
 } from '../../actions';
 
-const UserControlsComponent = ({ onLogout, userId }) => (
+const UserControlsComponent = ({ onLogout, username }) => (
   <React.Fragment>
-    <span>LOGGED IN AS: {userId} </span>
+    <span>LOGGED IN AS: {username} </span>
     <button onClick={() => onLogout()}>
       LOG OUT
     </button>
   </React.Fragment>
 );
 const mapStateToProps = state => ({
-  userId: state.user.userId,
+  username: state.user.username,
 });
 const mapDispatchToProps = {
   onLogout: logout,
@@ -26,6 +26,6 @@ const UserControls = connect(
 export default UserControls;
 
 UserControlsComponent.propTypes = {
-  userId: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
 };

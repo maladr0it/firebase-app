@@ -27,6 +27,8 @@ const ChatWindow = connect(mapStateToProps)(ChatWindowComponent);
 export default ChatWindow;
 
 ChatWindowComponent.propTypes = {
-  chatId: PropTypes.string.isRequired,
+  chatId: PropTypes.string,
 };
-
+ChatWindowComponent.defaultProps = {
+  chatId: '',
+};

@@ -45,16 +45,22 @@ const mapDispatchToProps = {
   chatListener: listenForChatUpdates,
   onSelectChat: selectChat,
 };
-ChatListComponent.propTypes = {
-  userId: PropTypes.string.isRequired,
-  selectedChat: PropTypes.string.isRequired,
-  chatIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  chatListener: PropTypes.func.isRequired,
-  onSelectChat: PropTypes.func.isRequired,
-};
+
 const ChatList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(ChatListComponent);
 
 export default ChatList;
+
+ChatListComponent.propTypes = {
+  userId: PropTypes.string.isRequired,
+  selectedChat: PropTypes.string,
+  chatIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  chatListener: PropTypes.func.isRequired,
+  onSelectChat: PropTypes.func.isRequired,
+};
+ChatListComponent.defaultProps = {
+  selectedChat: '',
+};
+

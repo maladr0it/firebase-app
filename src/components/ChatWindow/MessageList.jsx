@@ -15,8 +15,7 @@ class MessageListComponent extends React.Component {
   constructor(props) {
     super(props);
     this.debouncedScroll = debounce((scrollPos) => {
-      const { scrollHeight } = this.messageListElem;
-      const { clientHeight } = this.messageListElem;
+      const { scrollHeight, clientHeight } = this.messageListElem;
       const atBottom = (scrollHeight - scrollPos === clientHeight);
       this.props.updateScroll(this.props.chatId, scrollPos, atBottom);
     }, 100);
@@ -67,7 +66,7 @@ class MessageListComponent extends React.Component {
 }
 
 // SELECTORS
-// TODO: research correct selector practices
+// TODO: move these selectors to reducer
 const selectChat = (state, chatId) => (
   state.chats[chatId] ||
     {

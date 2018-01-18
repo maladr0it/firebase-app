@@ -33,11 +33,11 @@ const chatApp = (state = defaultState, action) => {
         chatIds: ids,
       };
     }
-    case 'CHATS_REORDERED': {
-      const { chatIds } = action.payload;
+    case 'CHATS_REMOVED': {
+      const { ids } = action.payload;
       return {
         ...state,
-        chatIds,
+        chatIds: ids,
       };
     }
     case 'CHAT_SELECTED': {

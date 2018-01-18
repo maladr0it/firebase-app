@@ -25,6 +25,9 @@ const AddUserForm = connect(
 export default AddUserForm;
 
 AddUserFormComponent.propTypes = {
-  chatId: PropTypes.string.isRequired,
+  chatId: PropTypes.string,
   onAdd: PropTypes.func.isRequired,
+};
+AddUserFormComponent.defaultProps = {
+  chatId: '',
 };

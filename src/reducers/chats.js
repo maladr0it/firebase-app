@@ -60,13 +60,6 @@ const chat = (state = defaultChat, action) => {
         },
       };
     }
-    case 'USER_REMOVED_FROM_CHAT': {
-      const { userId } = action.payload;
-      return {
-        ...state,
-        userIds: state.userIds.filter(id => id !== userId),
-      };
-    }
     case 'CHAT_USERS_REMOVED': {
       const { ids } = action.payload;
       return {

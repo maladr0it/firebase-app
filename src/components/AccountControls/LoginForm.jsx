@@ -3,19 +3,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   login,
+  createUser,
 } from '../../actions';
 import InputForm from '../InputForm';
 
-const LoginFormComponent = ({ onLogin }) => (
+const LoginFormComponent = ({ onLogin, onCreateUser }) => (
   <React.Fragment>
     <InputForm
       label="USERNAME: "
       handleSubmit={value => onLogin(value)}
     />
+    <button onClick={() => onCreateUser('alph')}>NEW_USER</button>
   </React.Fragment>
 );
 const mapDispatchToProps = {
   onLogin: login,
+  onCreateUser: createUser,
 };
 const LoginForm = connect(
   null,
@@ -26,4 +29,5 @@ export default LoginForm;
 
 LoginFormComponent.propTypes = {
   onLogin: PropTypes.func.isRequired,
+  onCreateUser: PropTypes.func.isRequired,
 };

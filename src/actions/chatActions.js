@@ -12,10 +12,6 @@ const chatUsersRemoved = (chatId, removedUsers, ids) => ({
   type: 'CHAT_USERS_REMOVED',
   payload: { chatId, removedUsers, ids },
 });
-// const userRemovedFromChat = (chatId, userId) => ({
-//   type: 'USER_REMOVED_FROM_CHAT',
-//   payload: { chatId, userId },
-// });
 export const scrollPosUpdated = (chatId, scrollPos, atBottom) => ({
   type: 'SCROLL_POS_UPDATED',
   payload: { chatId, scrollPos, atBottom },
