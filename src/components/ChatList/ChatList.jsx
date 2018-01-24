@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { List } from 'material-ui/List';
 import {
   listenForChatUpdates,
+  // listenForTaggedChats,
   selectChat,
 } from '../../actions';
 
@@ -12,6 +13,8 @@ import './index.css';
 
 class ChatListComponent extends React.Component {
   componentDidMount() {
+    // this.chatUnsubscribe = this.props.chatListener();
+    // this.chatUnsubscribe = this.props.chatListener('hasAgent');
     this.chatUnsubscribe = this.props.chatListener(this.props.userId);
   }
   componentWillUnmount() {
@@ -42,6 +45,7 @@ const mapStateToProps = state => ({
   chatIds: state.chatApp.chatIds,
 });
 const mapDispatchToProps = {
+  // chatListener: listenForTaggedChats,
   chatListener: listenForChatUpdates,
   onSelectChat: selectChat,
 };

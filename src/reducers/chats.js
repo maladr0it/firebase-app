@@ -32,11 +32,10 @@ const defaultChat = {
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
     case 'MESSAGES_ADDED': {
-      const { newMessages } = action.payload;
-      const newIds = newMessages.map(message => message.id);
+      const { messageIds } = action.payload;
       return {
         ...state,
-        messageIds: [...state.messageIds, ...newIds],
+        messageIds,
       };
     }
     case 'CHAT_USERS_ADDED': {

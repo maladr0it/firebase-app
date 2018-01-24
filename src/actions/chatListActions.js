@@ -39,7 +39,7 @@ export const listenForChatUpdates = userId => (dispatch) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
     const removedChats = changes.filter(change => (change.type === 'removed'));
-    
+
     if (newChats.length > 0) {
       dispatch(chatsAdded(newChats, ids));
     }
@@ -51,11 +51,25 @@ export const listenForChatUpdates = userId => (dispatch) => {
     }
   };
   const unsubscribe = db.listenForUserChatUpdates(userId, callback);
-  db.listenForTaggedChats('hasAgent');
   return unsubscribe;
 };
   // testing
-export const listenForTaggedChats = tagName => () => {
-  db.listenForTaggedChats(tagName);
+export const listenForTaggedChats = tagName => (dispatch) => {
+  const callback = (changes, ids) => {
+    const newChats = changes.filter(change => (change.type === 'added'));
+    const updatedChats = changes.filter(change => (change.type === 'modified'));
+    const removedChats = changes.filter(change => (change.type === 'removed'));
+
+    if (newChats.length > 0) {
+      dispatch(chatsAdded(newChats, ids));
+    }
+    if (updatedChats.length > 0) {
+      dispatch(chatsUpdated(updatedChats, ids));
+    }
+    if (removedChats.length > 0) {
+      dispatch(chatsRemoved(ids));
+    }
+  };
+  const unsubscribe = db.listenForTaggedChats(tagName, callback);
+  return unsubscribe;
 };
-  // db.getChatsWithAgents();

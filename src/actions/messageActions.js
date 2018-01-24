@@ -1,12 +1,12 @@
 import * as db from '../api';
 
-export const messagesAdded = (chatId, newMessages) => ({
+export const messagesAdded = (chatId, messageIds, newMessages) => ({
   type: 'MESSAGES_ADDED',
-  payload: { chatId, newMessages },
+  payload: { chatId, messageIds, newMessages },
 });
-export const messagesUpdated = (chatId, updatedMessages) => ({
+export const messagesUpdated = (chatId, messageIds, updatedMessages) => ({
   type: 'MESSAGES_UPDATED',
-  payload: { chatId, updatedMessages },
+  payload: { chatId, messageIds, updatedMessages },
 });
 export const messageSent = (messageId, messageData) => ({
   type: 'MESSAGE_SENT',
@@ -33,12 +33,12 @@ export const stopTyping = (userId, chatId) => () => {
 };
 // LISTENERS
 export const listenToChatForMessages = (chatId, userId) => (dispatch, getState) => {
-  const callback = (changes) => {
+  const callback = (changes, messageIds) => {
     const newMessages = changes.filter(change => (change.type === 'added'));
     const updatedMessages = changes.filter(change => (change.type === 'modified'));
 
     if (newMessages.length > 0) {
-      dispatch(messagesAdded(chatId, newMessages));
+      dispatch(messagesAdded(chatId, messageIds, newMessages));
       // TODO: avoid using getState, consider a receiving messages action
       const state = getState();
       if (state.chatApp.selectedChat === chatId) {
@@ -46,7 +46,7 @@ export const listenToChatForMessages = (chatId, userId) => (dispatch, getState) 
       }
     }
     if (updatedMessages.length > 0) {
-      dispatch(messagesUpdated(chatId, updatedMessages));
+      dispatch(messagesUpdated(chatId, messageIds, updatedMessages));
     }
   };
   const unsubscribe = db.listenToChatForMessages(chatId, callback);
