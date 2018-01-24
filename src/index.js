@@ -11,7 +11,7 @@ import App from './App';
 
 const store = createStore(
   app,
-  applyMiddleware(thunkMiddleware)
+  applyMiddleware(thunkMiddleware),
 );
 
 ReactDOM.render(

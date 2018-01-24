@@ -22,18 +22,13 @@ export const draftTextUpdated = (chatId, text) => ({
 });
 // THUNKS
 export const removeUserFromChat = (chatId, userId) => () => {
-  try {
-    db.removeChatParticipant(chatId, userId);
-  } catch (e) {
-    console.log(e);
-  }
+  db.removeChatParticipant(chatId, userId);
 };
 export const addUserToChat = (chatId, userId) => () => {
-  try {
-    db.addChatParticipant(chatId, userId);
-  } catch (e) {
-    console.log(e);
-  }
+  db.addChatParticipant(chatId, userId);
+};
+export const tagChat = (chatId, tagName) => () => {
+  db.tagChat(chatId, tagName);
 };
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, ids) => {

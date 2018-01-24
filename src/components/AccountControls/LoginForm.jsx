@@ -13,7 +13,10 @@ const LoginFormComponent = ({ onLogin, onCreateUser }) => (
       label="USERNAME: "
       handleSubmit={value => onLogin(value)}
     />
-    <button onClick={() => onCreateUser('alph')}>NEW_USER</button>
+    <InputForm
+      label="NEW USER: "
+      handleSubmit={value => onCreateUser(value)}
+    />
   </React.Fragment>
 );
 const mapDispatchToProps = {

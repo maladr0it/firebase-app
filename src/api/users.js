@@ -18,11 +18,12 @@ export const createUser = async username => (
   db.collection('users').add({
     username,
     dateJoined: timestamp,
+    isAgent: true,
   })
 );
+
 // naming is a little gross here?
 // this should do a batch write!!
-
 // select chat and set unread to 0
 export const setSelectedChatForUser = (userId, chatId) => {
   db.collection('users').doc(`${userId}`)

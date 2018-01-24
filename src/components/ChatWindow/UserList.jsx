@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
+  addUserToChat,
   removeUserFromChat,
 } from '../../actions';
+import InputForm from '../InputForm';
 
-const UserListComponent = ({ removeUser, chatId, usersData }) => {
+const UserListComponent = ({
+  addUser, removeUser, chatId, usersData,
+}) => {
   const users = usersData.map(userData => (
     <button
       key={userData.id}
@@ -17,6 +21,10 @@ const UserListComponent = ({ removeUser, chatId, usersData }) => {
   ));
   return (
     <div>
+      <InputForm
+        label="ADD USER: "
+        handleSubmit={userId => addUser(chatId, userId)}
+      />
       USERS: {users}
     </div>
   );
@@ -38,6 +46,7 @@ const mapStateToProps = (state, ownProps) => (
   getChatData(state, ownProps.chatId)
 );
 const mapDispatchToProps = ({
+  addUser: addUserToChat,
   removeUser: removeUserFromChat,
 });
 const UserList = connect(
@@ -50,5 +59,6 @@ export default UserList;
 UserListComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
   usersData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addUser: PropTypes.func.isRequired,
   removeUser: PropTypes.func.isRequired,
 };

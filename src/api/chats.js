@@ -4,9 +4,8 @@ const db = firebase.firestore();
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 const addChatToUser = async (userId, chatId) => {
-  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
   try {
-    await chatRef.set({
+    await db.collection(`users/${userId}/chats`).doc(`${chatId}`).set({
       lastUpdated: timestamp,
       unreadCount: 0,
     });
@@ -14,20 +13,16 @@ const addChatToUser = async (userId, chatId) => {
     console.log(e);
   }
   console.log(`db: added chat ${chatId} to user ${userId}`);
-  return chatRef;
 };
 const addUserToChat = async (chatId, userId) => {
-  const userRef = db.collection(`chats/${chatId}/users`).doc(`${userId}`);
   try {
-    await userRef.set({
-      joinedAt: timestamp, // not sure if this is needed
-      // lastMessageRead: undefined // cannot set to undefined
+    await db.collection(`chats/${chatId}/users`).doc(userId).set({
+      joinedAt: timestamp,
     });
   } catch (e) {
     console.log(e);
   }
   console.log(`db: added user ${userId} to chat ${chatId}`);
-  return userRef;
 };
 const removeChatFromUser = async (userId, chatId) => {
   const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
@@ -50,6 +45,18 @@ const removeUserFromChat = async (chatId, userId) => {
 };
 
 // EXPORTS
+
+// should globally tagging a chat be called 'flagging'?
+export const tagChat = (chatId, tagName) => {
+  try {
+    db.collection('chats').doc(chatId).update({
+      [`tags.${tagName}`]: true,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+// TODO: is async needed here?
 export const addChatParticipant = async (chatId, userId) => {
   try {
     await Promise.all([
@@ -95,6 +102,21 @@ export const listenForUserChatUpdates = (userId, callback) => {
         data: change.doc.data(),
       }));
       // use 'ids' to quickly establish the order of chats for the view
+      const ids = snapshot.docs.map(doc => doc.id);
+      callback(changes, ids);
+    });
+  return unsubscribe;
+};
+export const listenForTaggedChats = (tagName, callback) => {
+  const unsubscribe = db.collection('chats')
+    .where(`tags.${tagName}`, '==', true)
+    .orderBy('createdAt', 'desc')
+    .onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges.map(change => ({
+        type: change.type,
+        id: change.doc.id,
+        data: change.doc.data(),
+      }));
       const ids = snapshot.docs.map(doc => doc.id);
       callback(changes, ids);
     });

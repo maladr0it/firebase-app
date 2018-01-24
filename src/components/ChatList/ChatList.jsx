@@ -45,7 +45,6 @@ const mapDispatchToProps = {
   chatListener: listenForChatUpdates,
   onSelectChat: selectChat,
 };
-
 const ChatList = connect(
   mapStateToProps,
   mapDispatchToProps,
@@ -63,4 +62,3 @@ ChatListComponent.propTypes = {
 ChatListComponent.defaultProps = {
   selectedChat: '',
 };
-

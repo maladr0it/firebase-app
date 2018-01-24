@@ -1,17 +1,25 @@
 // example
-// chats = {
-//   chat94109810: {
-//     createdAt: 90840118,
-//     lastUpdated: 1930581,
-//     scrollPos: 400,
-//     atBottom: true,
-//     messageIds: ['msg29401', 'msg49081', 'mgs02821']
-//     userIds: ['usr0001', 'usr0002', 'usr0003'],
-//     users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
-//     draftText: ''
+//  chats = {
+//    chat94109810: {
+//      FROM DB
+//      createdAt: 90840118,
+//      lastUpdated: 1930581,
+//      tags: { hasAgent: true, newCustomer: true, etc... }
+//
+//      LOCAL DB
+//      messageIds: ['msg29401', 'msg49081', 'mgs02821']
+//      userIds: ['usr0001', 'usr0002', 'usr0003'],
+//      users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
+//
+//      DISPLAY
+//      scrollPos: 400,
+//      atBottom: true,
+//      draftText: '',
 //   },
 // }
 
+// TODO: might not need this if
+// defaultProps and selectors are set up correctly
 const defaultChat = {
   messageIds: [],
   userIds: [],

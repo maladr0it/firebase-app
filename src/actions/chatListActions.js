@@ -12,9 +12,9 @@ export const chatsUpdated = (updatedChats, ids) => ({
   type: 'CHATS_UPDATED',
   payload: { updatedChats, ids },
 });
-export const chatsRemoved = (removedChats, ids) => ({
+export const chatsRemoved = ids => ({
   type: 'CHATS_REMOVED',
-  payload: { removedChats, ids },
+  payload: { ids },
 });
 // THUNKS
 // sets unread messages to 0, updates your lastReadMessage,
@@ -38,14 +38,24 @@ export const listenForChatUpdates = userId => (dispatch) => {
   const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
-
+    const removedChats = changes.filter(change => (change.type === 'removed'));
+    
     if (newChats.length > 0) {
       dispatch(chatsAdded(newChats, ids));
     }
     if (updatedChats.length > 0) {
       dispatch(chatsUpdated(updatedChats, ids));
     }
+    if (removedChats.length > 0) {
+      dispatch(chatsRemoved(ids));
+    }
   };
   const unsubscribe = db.listenForUserChatUpdates(userId, callback);
+  db.listenForTaggedChats('hasAgent');
   return unsubscribe;
 };
+  // testing
+export const listenForTaggedChats = tagName => () => {
+  db.listenForTaggedChats(tagName);
+};
+  // db.getChatsWithAgents();
