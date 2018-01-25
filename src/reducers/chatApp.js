@@ -1,5 +1,10 @@
 const defaultState = {
   chatIds: [],
+  // experiment with this
+  chatIdsByFeed: {
+    inbox: [],
+    hasAgent: [],
+  },
   selectedChat: undefined,
 };
 
@@ -20,24 +25,27 @@ const chatApp = (state = defaultState, action) => {
       return defaultState;
     }
     case 'CHATS_ADDED': {
-      const { ids } = action.payload;
+      const { ids, feedName } = action.payload;
       return {
         ...state,
-        chatIds: ids,
+        chatIds: ids, // TODO: remove this eventually
+        chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
     case 'CHATS_UPDATED': {
-      const { ids } = action.payload;
+      const { ids, feedName } = action.payload;
       return {
         ...state,
         chatIds: ids,
+        chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
     case 'CHATS_REMOVED': {
-      const { ids } = action.payload;
+      const { ids, feedName } = action.payload;
       return {
         ...state,
         chatIds: ids,
+        chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
     case 'CHAT_SELECTED': {

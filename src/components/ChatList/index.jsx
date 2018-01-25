@@ -1,18 +1,46 @@
 import React from 'react';
-import ChatList from './ChatList';
-import ChatControls from './ChatControls';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   listenForChatUpdates,
   listenForTaggedChats,
 } from '../../actions';
 
+import ChatList from './ChatList';
+import ChatControls from './ChatControls';
+
 import './index.css';
 
-export default () => (
+const ChatListPaneComponent = ({
+  userId, feedListener, filterListener,
+}) => (
   <div className="ChatListPane">
     <ChatControls />
-    <ChatList didMountFunc={() => console.log('chatList1')} />
-    {/* <ChatList didMountFunc={() => console.log('chatList2')} /> */}
+    <ChatList
+      listener={() => feedListener(userId, 'inbox')}
+      feedName="inbox"
+    />
+    <ChatList
+      listener={() => filterListener('hasAgent', 'hasAgent')}
+      feedName="hasAgent"
+    />
   </div>
 );
+const mapStateToProps = state => ({
+  userId: state.user.userId,
+});
+const mapDispatchToProps = ({
+  feedListener: listenForChatUpdates,
+  filterListener: listenForTaggedChats,
+});
+const ChatListPane = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChatListPaneComponent);
+export default ChatListPane;
+
+ChatListPaneComponent.propTypes = {
+  userId: PropTypes.string.isRequired,
+  feedListener: PropTypes.func.isRequired,
+  filterListener: PropTypes.func.isRequired,
+};

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List } from 'material-ui/List';
 import {
-  listenForChatUpdates,
-  // listenForTaggedChats,
   selectChat,
 } from '../../actions';
 
@@ -13,9 +11,7 @@ import './index.css';
 
 class ChatListComponent extends React.Component {
   componentDidMount() {
-    // this.chatUnsubscribe = this.props.chatListener();
-    // this.chatUnsubscribe = this.props.chatListener('hasAgent');
-    this.chatUnsubscribe = this.props.chatListener(this.props.userId);
+    this.chatUnsubscribe = this.props.listener();
   }
   componentWillUnmount() {
     this.chatUnsubscribe();
@@ -39,28 +35,25 @@ class ChatListComponent extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   userId: state.user.userId,
   selectedChat: state.chatApp.selectedChat,
-  chatIds: state.chatApp.chatIds,
+  chatIds: state.chatApp.chatIdsByFeed[ownProps.feedName],
 });
 const mapDispatchToProps = {
-  // chatListener: listenForTaggedChats,
-  chatListener: listenForChatUpdates,
   onSelectChat: selectChat,
 };
 const ChatList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(ChatListComponent);
-
 export default ChatList;
 
 ChatListComponent.propTypes = {
   userId: PropTypes.string.isRequired,
   selectedChat: PropTypes.string,
   chatIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  chatListener: PropTypes.func.isRequired,
+  listener: PropTypes.func.isRequired,
   onSelectChat: PropTypes.func.isRequired,
 };
 ChatListComponent.defaultProps = {

@@ -4,17 +4,17 @@ export const chatSelected = chatId => ({
   type: 'CHAT_SELECTED',
   payload: { chatId },
 });
-export const chatsAdded = (newChats, ids) => ({
+export const chatsAdded = (newChats, ids, feedName) => ({
   type: 'CHATS_ADDED',
-  payload: { newChats, ids },
+  payload: { newChats, ids, feedName },
 });
-export const chatsUpdated = (updatedChats, ids) => ({
+export const chatsUpdated = (updatedChats, ids, feedName) => ({
   type: 'CHATS_UPDATED',
-  payload: { updatedChats, ids },
+  payload: { updatedChats, ids, feedName },
 });
-export const chatsRemoved = ids => ({
+export const chatsRemoved = (ids, feedName) => ({
   type: 'CHATS_REMOVED',
-  payload: { ids },
+  payload: { ids, feedName },
 });
 // THUNKS
 // sets unread messages to 0, updates your lastReadMessage,
@@ -34,40 +34,40 @@ export const createChat = userId => async () => {
     console.log(e);
   }
 };
-export const listenForChatUpdates = userId => (dispatch) => {
+export const listenForChatUpdates = (userId, feedName) => (dispatch) => {
   const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
     const removedChats = changes.filter(change => (change.type === 'removed'));
 
     if (newChats.length > 0) {
-      dispatch(chatsAdded(newChats, ids));
+      dispatch(chatsAdded(newChats, ids, feedName));
     }
     if (updatedChats.length > 0) {
-      dispatch(chatsUpdated(updatedChats, ids));
+      dispatch(chatsUpdated(updatedChats, ids, feedName));
     }
     if (removedChats.length > 0) {
-      dispatch(chatsRemoved(ids));
+      dispatch(chatsRemoved(ids, feedName));
     }
   };
   const unsubscribe = db.listenForUserChatUpdates(userId, callback);
   return unsubscribe;
 };
   // testing
-export const listenForTaggedChats = tagName => (dispatch) => {
+export const listenForTaggedChats = (tagName, feedName) => (dispatch) => {
   const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
     const removedChats = changes.filter(change => (change.type === 'removed'));
 
     if (newChats.length > 0) {
-      dispatch(chatsAdded(newChats, ids));
+      dispatch(chatsAdded(newChats, ids, feedName));
     }
     if (updatedChats.length > 0) {
-      dispatch(chatsUpdated(updatedChats, ids));
+      dispatch(chatsUpdated(updatedChats, ids, feedName));
     }
     if (removedChats.length > 0) {
-      dispatch(chatsRemoved(ids));
+      dispatch(chatsRemoved(ids, feedName));
     }
   };
   const unsubscribe = db.listenForTaggedChats(tagName, callback);

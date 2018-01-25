@@ -8,7 +8,9 @@ import ChatWindow from './components/ChatWindow';
 
 import './App.css';
 
-const App = ({ currentUserId }) => {
+const App = ({
+  currentUserId,
+}) => {
   const isLoggedIn = Boolean(currentUserId);
 
   return (
@@ -25,7 +27,6 @@ const App = ({ currentUserId }) => {
     </div>
   );
 };
-
 const mapStateToProps = state => ({
   currentUserId: state.user.userId,
 });
