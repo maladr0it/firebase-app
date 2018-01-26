@@ -172,11 +172,16 @@ const chats = (state = defaultState, action) => {
 export default chats;
 
 // TODO: optimise this
+// it is passing too much stuff
+// consider thinning out the chat object
 export const getChat = (state, chatId) => {
   const selectedChat = state[chatId] || defaultChat;
   const {
     scrollPos, atBottom, draftText, messageIds,
   } = selectedChat;
+  console.log('chat stats:');
+  console.log(chatId);
+  console.log(selectedChat);
   return {
     scrollPos,
     atBottom,

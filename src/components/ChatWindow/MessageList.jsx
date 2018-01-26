@@ -9,7 +9,6 @@ import {
 import { getChat, getUsers } from '../../reducers/chats';
 import { getMessages } from '../../reducers/messages';
 
-
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
 import './index.css';
@@ -39,7 +38,6 @@ class MessageListComponent extends React.Component {
     this.debouncedScroll(e.target.scrollTop);
   }
   render() {
-    console.log(this.props);
     const messages = this.props.messages.map(message => (
       <Message
         key={message.id} // not ideal key
@@ -84,7 +82,6 @@ const MessageList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(MessageListComponent);
-
 export default MessageList;
 
 MessageListComponent.propTypes = {
