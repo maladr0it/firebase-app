@@ -6,6 +6,9 @@ import { List } from 'material-ui/List';
 import {
   scrollPosUpdated,
 } from '../../actions';
+import { getChat, getUsers } from '../../reducers/chats';
+import { getMessages } from '../../reducers/messages';
+
 
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
@@ -36,18 +39,19 @@ class MessageListComponent extends React.Component {
     this.debouncedScroll(e.target.scrollTop);
   }
   render() {
-    const messages = this.props.messagesData.map(messageData => (
+    console.log(this.props);
+    const messages = this.props.messages.map(message => (
       <Message
-        key={messageData.id} // not ideal key
-        {...messageData}
+        key={message.id} // not ideal key
+        {...message}
       />
     ));
-    const usersTyping = this.props.usersData.filter(userData => (
+    const usersTyping = this.props.users.filter(userData => (
       // don't show your own typing indicator
       userData.id !== this.props.userId && userData.isTyping
     ));
-    const typingIndicators = usersTyping.map(userData => (
-      <TypingIndicator key={userData.id} author={userData.id} />
+    const typingIndicators = usersTyping.map(user => (
+      <TypingIndicator key={user.id} author={user.id} />
     ));
     return (
       <div
@@ -64,31 +68,15 @@ class MessageListComponent extends React.Component {
     );
   }
 }
-
-// SELECTORS
-// TODO: move these selectors to reducer
-const selectChat = (state, chatId) => (
-  state.chats[chatId] ||
-    {
-      messageIds: [],
-      userIds: [],
-      scrollPos: 0,
-      atBottom: false,
-    }
-);
-const getChatData = (state, chatId) => {
-  const chat = selectChat(state, chatId);
+const mapStateToProps = (state, ownProps) => {
+  const chatData = getChat(state.chats, ownProps.chatId);
   return {
-    messagesData: chat.messageIds.map(id => ({ id, ...state.messages[id] })),
-    usersData: chat.userIds.map(id => ({ id, ...chat.users[id] })),
-    scrollPos: chat.scrollPos,
-    atBottom: chat.atBottom,
+    userId: state.user.userId,
+    ...chatData,
+    users: getUsers(state.chats, ownProps.chatId),
+    messages: getMessages(state.messages, chatData.messageIds),
   };
 };
-const mapStateToProps = (state, ownProps) => ({
-  userId: state.user.userId,
-  ...getChatData(state, ownProps.chatId),
-});
 const mapDispatchToProps = {
   updateScroll: scrollPosUpdated,
 };
@@ -102,9 +90,13 @@ export default MessageList;
 MessageListComponent.propTypes = {
   userId: PropTypes.string.isRequired,
   chatId: PropTypes.string.isRequired,
-  messagesData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  usersData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  messages: PropTypes.arrayOf(PropTypes.object),
+  users: PropTypes.arrayOf(PropTypes.object),
   scrollPos: PropTypes.number.isRequired,
   atBottom: PropTypes.bool.isRequired,
   updateScroll: PropTypes.func.isRequired,
+};
+MessageListComponent.defaultProps = {
+  messages: [],
+  users: [],
 };

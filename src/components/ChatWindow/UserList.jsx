@@ -6,12 +6,14 @@ import {
   addUserToChat,
   removeUserFromChat,
 } from '../../actions';
+import { getUsers } from '../../reducers/chats';
+
 import InputForm from '../InputForm';
 
 const UserListComponent = ({
-  addUser, removeUser, chatId, usersData,
+  addUser, removeUser, chatId, users,
 }) => {
-  const users = usersData.map(userData => (
+  const userButtons = users.map(userData => (
     <button
       key={userData.id}
       onClick={() => removeUser(chatId, userData.id)}
@@ -25,26 +27,13 @@ const UserListComponent = ({
         label="ADD USER: "
         handleSubmit={userId => addUser(chatId, userId)}
       />
-      USERS: {users}
+      USERS: {userButtons}
     </div>
   );
 };
-
-const selectChat = (state, chatId) => (
-  state.chats[chatId] || { userIds: [], users: {} }
-  // TODO: simply don't render until chat exists
-);
-const getChatData = (state, chatId) => {
-  const chat = selectChat(state, chatId);
-  return {
-    usersData: chat.userIds.map(id => ({
-      id, ...chat.users[id],
-    })),
-  };
-};
-const mapStateToProps = (state, ownProps) => (
-  getChatData(state, ownProps.chatId)
-);
+const mapStateToProps = (state, ownProps) => ({
+  users: getUsers(state.chats, ownProps.chatId),
+});
 const mapDispatchToProps = ({
   addUser: addUserToChat,
   removeUser: removeUserFromChat,
@@ -58,7 +47,10 @@ export default UserList;
 
 UserListComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
-  usersData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  users: PropTypes.arrayOf(PropTypes.object),
   addUser: PropTypes.func.isRequired,
   removeUser: PropTypes.func.isRequired,
+};
+UserListComponent.defaultProps = {
+  users: [],
 };

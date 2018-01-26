@@ -43,3 +43,10 @@ const messages = (state = defaultState, action) => {
   }
 };
 export default messages;
+
+export const getMessages = (state, ids) => (
+  ids.map(id => ({
+    id,
+    ...state[id],
+  }))
+);

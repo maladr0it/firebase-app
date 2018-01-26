@@ -1,9 +1,9 @@
-.ChatListPane {
+.ChatListsPane {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 15rem;
-  background: #E7F9A9;
+  background: #FFFFFF;
 }
 
 .ChatList {
@@ -11,9 +11,10 @@
 }
 
 .Unread {
-  background: #FF9B42;
+  background: #C8963E;
 }
 
 .Selected {
-  background: #0FA3B1;
+  background: #D1462F;
+  color: #FFFFFF;
 }

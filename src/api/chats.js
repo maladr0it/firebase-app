@@ -45,7 +45,6 @@ const removeUserFromChat = async (chatId, userId) => {
 };
 
 // EXPORTS
-
 // should globally tagging a chat be called 'flagging'?
 export const tagChat = (chatId, tagName) => {
   try {
@@ -91,34 +90,4 @@ export const createChat = async () => {
     chatId: chatRef.id,
     chatData: chatSnapshot.data(),
   };
-};
-export const listenForUserChatUpdates = (userId, callback) => {
-  const unsubscribe = db.collection(`users/${userId}/chats`)
-    .orderBy('lastUpdated', 'desc').limit(10)
-    .onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges.map(change => ({
-        type: change.type,
-        id: change.doc.id,
-        data: change.doc.data(),
-      }));
-      // use 'ids' to quickly establish the order of chats for the view
-      const ids = snapshot.docs.map(doc => doc.id);
-      callback(changes, ids);
-    });
-  return unsubscribe;
-};
-export const listenForTaggedChats = (tagName, callback) => {
-  const unsubscribe = db.collection('chats')
-    .where(`tags.${tagName}`, '==', true)
-    .orderBy('createdAt', 'desc')
-    .onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges.map(change => ({
-        type: change.type,
-        id: change.doc.id,
-        data: change.doc.data(),
-      }));
-      const ids = snapshot.docs.map(doc => doc.id);
-      callback(changes, ids);
-    });
-  return unsubscribe;
 };

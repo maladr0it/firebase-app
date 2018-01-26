@@ -170,3 +170,24 @@ const chats = (state = defaultState, action) => {
   }
 };
 export default chats;
+
+// TODO: optimise this
+export const getChat = (state, chatId) => {
+  const selectedChat = state[chatId] || defaultChat;
+  const {
+    scrollPos, atBottom, draftText, messageIds,
+  } = selectedChat;
+  return {
+    scrollPos,
+    atBottom,
+    draftText,
+    messageIds,
+  };
+};
+export const getUsers = (state, chatId) => {
+  const selectedChat = state[chatId] || defaultChat;
+  return selectedChat.userIds.map(id => ({
+    id,
+    ...selectedChat.users[id],
+  }));
+};

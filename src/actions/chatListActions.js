@@ -34,7 +34,7 @@ export const createChat = userId => async () => {
     console.log(e);
   }
 };
-export const listenForChatUpdates = (userId, feedName) => (dispatch) => {
+export const listenToUserChats = (userId, feedName) => (dispatch) => {
   const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
@@ -50,11 +50,11 @@ export const listenForChatUpdates = (userId, feedName) => (dispatch) => {
       dispatch(chatsRemoved(ids, feedName));
     }
   };
-  const unsubscribe = db.listenForUserChatUpdates(userId, callback);
+  const unsubscribe = db.listenToUserChats(userId, callback);
   return unsubscribe;
 };
   // testing
-export const listenForTaggedChats = (tagName, feedName) => (dispatch) => {
+export const listenToFilteredChats = (tagName, feedName) => (dispatch) => {
   const callback = (changes, ids) => {
     const newChats = changes.filter(change => (change.type === 'added'));
     const updatedChats = changes.filter(change => (change.type === 'modified'));
@@ -70,6 +70,6 @@ export const listenForTaggedChats = (tagName, feedName) => (dispatch) => {
       dispatch(chatsRemoved(ids, feedName));
     }
   };
-  const unsubscribe = db.listenForTaggedChats(tagName, callback);
+  const unsubscribe = db.listenToFilteredChats(tagName, callback);
   return unsubscribe;
 };

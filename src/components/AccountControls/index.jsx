@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
 import UserControls from './UserControls';
 
+import './index.css';
+
 const AccountControls = props => (
-  <div style={{ background: '#79ADDC' }}>
+  <div className="AccountControls">
     {(props.isLoggedIn) ? <UserControls /> : <LoginForm />}
   </div>
 );

@@ -54,6 +54,16 @@ const updateUserChat = async (userId, chatId) => {
     // all docs read in a transaction must be written
   });
 };
+const updateChat = (chatId) => {
+  try {
+    db.collection('chats').doc(chatId)
+      .update({
+        lastUpdated: timestamp,
+      });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 // EXPORTS
 export const sendMessage = async (chatId, userId, text) => {
@@ -61,7 +71,9 @@ export const sendMessage = async (chatId, userId, text) => {
   try {
     const chatUserIds = await getChatUserIds(chatId);
     const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
+    updateChat(chatId);
     chatUserIds.forEach(id => updateUserChat(id, chatId));
+
     const messageSnapshot = await messageRef.get();
     // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
     messagePayload = {

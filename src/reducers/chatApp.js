@@ -1,14 +1,10 @@
 const defaultState = {
-  chatIds: [],
-  // experiment with this
   chatIdsByFeed: {
     inbox: [],
     hasAgent: [],
   },
   selectedChat: undefined,
 };
-
-// chat Ids are in reverse order, with oldest being at the end
 
 const chatApp = (state = defaultState, action) => {
   switch (action.type) {
@@ -28,7 +24,6 @@ const chatApp = (state = defaultState, action) => {
       const { ids, feedName } = action.payload;
       return {
         ...state,
-        chatIds: ids, // TODO: remove this eventually
         chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
@@ -36,7 +31,6 @@ const chatApp = (state = defaultState, action) => {
       const { ids, feedName } = action.payload;
       return {
         ...state,
-        chatIds: ids,
         chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
@@ -44,7 +38,6 @@ const chatApp = (state = defaultState, action) => {
       const { ids, feedName } = action.payload;
       return {
         ...state,
-        chatIds: ids,
         chatIdsByFeed: { ...state.chatIdsByFeed, [feedName]: ids },
       };
     }
@@ -59,5 +52,4 @@ const chatApp = (state = defaultState, action) => {
       return state;
   }
 };
-
 export default chatApp;

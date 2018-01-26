@@ -72,7 +72,10 @@ ChatItemComponent.propTypes = {
   handleSelectChat: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
   userIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  unreadCount: PropTypes.number.isRequired,
+  unreadCount: PropTypes.number,
   messageListener: PropTypes.func.isRequired,
   userListener: PropTypes.func.isRequired,
+};
+ChatItemComponent.defaultProps = {
+  unreadCount: 0,
 };
