@@ -55,6 +55,15 @@ export const tagChat = (chatId, tagName) => {
     console.log(e);
   }
 };
+export const untagChat = (chatId, tagName) => {
+  try {
+    db.collection('chats').doc(chatId).update({
+      [`tags.${tagName}`]: firebase.firestore.FieldValue.delete(),
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
 // TODO: is async needed here?
 export const addChatParticipant = async (chatId, userId) => {
   try {

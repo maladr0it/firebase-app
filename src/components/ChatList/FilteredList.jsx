@@ -10,7 +10,7 @@ import {
 import ChatItem from './ChatItem';
 import './index.css';
 
-class InboxComponent extends React.Component {
+class FilteredListComponent extends React.Component {
   componentDidMount() {
     this.chatUnsubscribe = this.props.onListen(
       this.props.tagName,
@@ -48,21 +48,22 @@ const mapDispatchToProps = {
   onSelectChat: selectChat,
   onListen: listenToFilteredChats,
 };
-const Inbox = connect(
+const FilteredList = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(InboxComponent);
-export default Inbox;
+)(FilteredListComponent);
+export default FilteredList;
 
-InboxComponent.propTypes = {
+FilteredListComponent.propTypes = {
   userId: PropTypes.string.isRequired,
   tagName: PropTypes.string.isRequired,
   feedName: PropTypes.string.isRequired,
   selectedChat: PropTypes.string,
-  chatIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  chatIds: PropTypes.arrayOf(PropTypes.string),
   onSelectChat: PropTypes.func.isRequired,
   onListen: PropTypes.func.isRequired,
 };
-InboxComponent.defaultProps = {
+FilteredListComponent.defaultProps = {
   selectedChat: '',
+  chatIds: [],
 };

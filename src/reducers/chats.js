@@ -171,9 +171,12 @@ export const getChat = (state, chatId) => (
   state[chatId] || defaultChat
 );
 export const getUsers = (state, chatId) => {
-  const selectedChat = state[chatId] || defaultChat;
+  const selectedChat = getChat(state, chatId);
   return selectedChat.userIds.map(id => ({
     id,
     ...selectedChat.users[id],
   }));
 };
+export const getTags = (state, chatId) => (
+  Object.keys(getChat(state, chatId).tags)
+);

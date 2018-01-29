@@ -3,6 +3,7 @@ const defaultState = {
     inbox: [],
     hasAgent: [],
   },
+  filter: 'NONE',
   selectedChat: undefined,
 };
 
@@ -19,6 +20,13 @@ const chatApp = (state = defaultState, action) => {
     // wipe list
     case 'LOGGED_OUT': {
       return defaultState;
+    }
+    case 'FILTER_APPLIED': {
+      const { filter } = action.payload;
+      return {
+        ...state,
+        filter,
+      };
     }
     case 'CHATS_ADDED': {
       const { ids, feedName } = action.payload;

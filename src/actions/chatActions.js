@@ -34,6 +34,9 @@ export const addUserToChat = (chatId, userId) => () => {
 export const tagChat = (chatId, tagName) => () => {
   db.tagChat(chatId, tagName);
 };
+export const untagChat = (chatId, tagName) => () => {
+  db.untagChat(chatId, tagName);
+};
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, ids) => {
     const newUsers = changes.filter(change => (change.type === 'added'));

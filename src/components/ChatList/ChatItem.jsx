@@ -7,7 +7,7 @@ import {
   listenToChatForUsers,
   listenToChatForMeta,
 } from '../../actions';
-import { getChat, getUsers } from '../../reducers/chats';
+import { getChat } from '../../reducers/chats';
 
 import './index.css';
 

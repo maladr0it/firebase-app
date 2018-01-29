@@ -16,6 +16,10 @@ export const chatsRemoved = (ids, feedName) => ({
   type: 'CHATS_REMOVED',
   payload: { ids, feedName },
 });
+export const filterApplied = filter => ({
+  type: 'FILTER_APPLIED',
+  payload: { filter },
+});
 // THUNKS
 // sets unread messages to 0, updates your lastReadMessage,
 // sets user/:userId/selectedChatId
