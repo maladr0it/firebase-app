@@ -5,11 +5,15 @@ import { ListItem } from 'material-ui/List';
 import {
   listenToChatForMessages,
   listenToChatForUsers,
+  listenToChatForMeta,
 } from '../../actions';
+import { getChat, getUsers } from '../../reducers/chats';
+
 import './index.css';
 
 class ChatItemComponent extends React.Component {
   componentDidMount() {
+    this.chatMetaUnsubscribe = this.props.chatMetaListener(this.props.chatId);
     this.messageUnsubscribe = this.props.messageListener(
       this.props.chatId,
       this.props.userId,
@@ -17,12 +21,14 @@ class ChatItemComponent extends React.Component {
     this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
   componentWillUnmount() {
-    console.log('destroying listeners for', this.props.chatId);
+    // console.log('destroying listeners for', this.props.chatId);
+    this.chatMetaUnsubscribe();
     this.messageUnsubscribe();
     this.userUnsubscribe();
   }
   messageUnsubscribe = undefined;
   userUnsubscribe = undefined;
+  chatMetaUnsubscribe = undefined;
 
   render() {
     const {
@@ -44,18 +50,12 @@ class ChatItemComponent extends React.Component {
     );
   }
 }
-const getChatData = (state, chatId) => {
-  const chatData = state.chats[chatId];
-  return {
-    userIds: chatData.userIds,
-    unreadCount: chatData.unreadCount,
-  };
-};
 const mapStateToProps = (state, ownProps) => ({
   userId: state.user.userId,
-  ...getChatData(state, ownProps.chatId),
+  ...getChat(state.chats, ownProps.chatId),
 });
 const mapDispatchToProps = {
+  chatMetaListener: listenToChatForMeta,
   messageListener: listenToChatForMessages,
   userListener: listenToChatForUsers,
 };
@@ -73,6 +73,7 @@ ChatItemComponent.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   userIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   unreadCount: PropTypes.number,
+  chatMetaListener: PropTypes.func.isRequired,
   messageListener: PropTypes.func.isRequired,
   userListener: PropTypes.func.isRequired,
 };

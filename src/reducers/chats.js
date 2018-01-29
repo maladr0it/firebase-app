@@ -24,6 +24,7 @@ const defaultChat = {
   messageIds: [],
   userIds: [],
   users: {},
+  tags: {},
   scrollPos: 0,
   atBottom: true,
   draftText: '',
@@ -31,6 +32,13 @@ const defaultChat = {
 
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
+    case 'CHAT_DATA_UPDATED': {
+      const { data } = action.payload;
+      return {
+        ...state,
+        ...data,
+      };
+    }
     case 'MESSAGES_ADDED': {
       const { messageIds } = action.payload;
       return {
@@ -98,26 +106,11 @@ const defaultState = {};
 
 const chats = (state = defaultState, action) => {
   switch (action.type) {
-    case 'CHATS_ADDED': {
-      const { newChats } = action.payload;
-      const chatsData = newChats.reduce((acc, chatDoc) => {
-        acc[chatDoc.id] = { ...defaultChat, ...chatDoc.data };
-        return acc;
-      }, {});
+    case 'CHAT_DATA_UPDATED': {
+      const { chatId } = action.payload;
       return {
         ...state,
-        ...chatsData,
-      };
-    }
-    case 'CHATS_UPDATED': {
-      const { updatedChats } = action.payload;
-      const chatsData = updatedChats.reduce((acc, chatDoc) => {
-        acc[chatDoc.id] = { ...state[chatDoc.id], ...chatDoc.data };
-        return acc;
-      }, {});
-      return {
-        ...state,
-        ...chatsData,
+        [chatId]: chat(state[chatId], action),
       };
     }
     case 'MESSAGES_ADDED': {
@@ -174,21 +167,9 @@ export default chats;
 // TODO: optimise this
 // it is passing too much stuff
 // consider thinning out the chat object
-export const getChat = (state, chatId) => {
-  const selectedChat = state[chatId] || defaultChat;
-  const {
-    scrollPos, atBottom, draftText, messageIds,
-  } = selectedChat;
-  console.log('chat stats:');
-  console.log(chatId);
-  console.log(selectedChat);
-  return {
-    scrollPos,
-    atBottom,
-    draftText,
-    messageIds,
-  };
-};
+export const getChat = (state, chatId) => (
+  state[chatId] || defaultChat
+);
 export const getUsers = (state, chatId) => {
   const selectedChat = state[chatId] || defaultChat;
   return selectedChat.userIds.map(id => ({

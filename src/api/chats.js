@@ -91,3 +91,10 @@ export const createChat = async () => {
     chatData: chatSnapshot.data(),
   };
 };
+export const listenToChat = (chatId, callback) => {
+  const unsubscribe = db.collection('chats').doc(chatId)
+    .onSnapshot((doc) => {
+      callback(doc.data());
+    });
+  return unsubscribe;
+};

@@ -20,6 +20,10 @@ export const draftTextUpdated = (chatId, text) => ({
   type: 'DRAFT_TEXT_UPDATED',
   payload: { chatId, text },
 });
+export const chatDataUpdated = (chatId, data) => ({
+  type: 'CHAT_DATA_UPDATED',
+  payload: { chatId, data },
+});
 // THUNKS
 export const removeUserFromChat = (chatId, userId) => () => {
   db.removeChatParticipant(chatId, userId);
@@ -46,5 +50,12 @@ export const listenToChatForUsers = chatId => (dispatch) => {
     }
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
+  return unsubscribe;
+};
+export const listenToChatForMeta = chatId => (dispatch) => {
+  const callback = (data) => {
+    dispatch(chatDataUpdated(chatId, data));
+  };
+  const unsubscribe = db.listenToChat(chatId, callback);
   return unsubscribe;
 };
