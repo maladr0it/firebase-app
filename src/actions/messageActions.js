@@ -12,10 +12,7 @@ export const messageSent = (messageId, messageData) => ({
   type: 'MESSAGE_SENT',
   payload: { messageId, messageData },
 });
-// export const messageUpdated = (messageId, messageData) => ({
-//   type: 'MESSAGE_UPDATED',
-//   payload: { messageId, messageData },
-// });
+
 // THUNKS
 export const sendMessage = (chatId, userId, text) => async (dispatch) => {
   try {

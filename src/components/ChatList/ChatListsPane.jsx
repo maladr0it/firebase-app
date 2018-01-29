@@ -1,47 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import {
-  listenToUserChats,
-  listenToFilteredChats,
-} from '../../actions';
 
-import ChatList from './ChatList';
+import Inbox from './Inbox';
+import FilteredList from './FilteredList';
 import ChatControls from './ChatControls';
 
 import './index.css';
 
-const ChatListsPaneComponent = ({
-  userId, userChatListener, filteredChatListener,
-}) => (
+const ChatListsPaneComponent = () => (
   <div className="ChatListsPane">
     <ChatControls />
-    <ChatList
-      listener={() => userChatListener(userId, 'inbox')}
-      feedName="inbox"
-    />
-    <div>FILTERED LIST:</div>
-    <ChatList
-      listener={() => filteredChatListener('hasAgent', 'hasAgent')}
-      feedName="hasAgent"
-    />
+    <Inbox feedName="inbox" />
+    Filtered:
+    <FilteredList feedName="hasAgent" tagName="hasAgent" />
   </div>
 );
-const mapStateToProps = state => ({
-  userId: state.user.userId,
-});
-const mapDispatchToProps = ({
-  userChatListener: listenToUserChats,
-  filteredChatListener: listenToFilteredChats,
-});
-const ChatListsPane = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ChatListsPaneComponent);
-export default ChatListsPane;
-
-ChatListsPaneComponent.propTypes = {
-  userId: PropTypes.string.isRequired,
-  userChatListener: PropTypes.func.isRequired,
-  filteredChatListener: PropTypes.func.isRequired,
-};
+export default ChatListsPaneComponent;
