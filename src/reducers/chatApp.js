@@ -3,7 +3,7 @@ const defaultState = {
     inbox: [],
     hasAgent: [],
   },
-  filter: 'NONE',
+  filters: [],
   selectedChat: undefined,
 };
 
@@ -21,11 +21,11 @@ const chatApp = (state = defaultState, action) => {
     case 'LOGGED_OUT': {
       return defaultState;
     }
-    case 'FILTER_APPLIED': {
+    case 'FILTER_ADDED': {
       const { filter } = action.payload;
       return {
         ...state,
-        filter,
+        filters: [...state.filters, filter],
       };
     }
     case 'CHATS_ADDED': {

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import InputForm from '../InputForm';
 import {
   createChat,
-  filterApplied,
+  filterAdded,
 } from '../../actions';
 
+import InputForm from '../InputForm';
+
 const ChatControlsComponent = ({
-  onAdd, onFilterApplied, userId,
+  onAdd, onFilterAdded, userId,
 }) => (
   <div>
     <button onClick={() => onAdd(userId)}>
@@ -16,7 +17,7 @@ const ChatControlsComponent = ({
     </button>
     <InputForm
       label="FILTER:"
-      handleSubmit={filter => onFilterApplied(filter)}
+      handleSubmit={filter => onFilterAdded(filter)}
     />
   </div>
 );
@@ -25,7 +26,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
   onAdd: createChat,
-  onFilterApplied: filterApplied,
+  onFilterAdded: filterAdded,
 };
 const ChatControls = connect(
   mapStateToProps,
@@ -36,5 +37,5 @@ export default ChatControls;
 ChatControlsComponent.propTypes = {
   userId: PropTypes.string.isRequired,
   onAdd: PropTypes.func.isRequired,
-  onFilterApplied: PropTypes.func.isRequired,
+  onFilterAdded: PropTypes.func.isRequired,
 };

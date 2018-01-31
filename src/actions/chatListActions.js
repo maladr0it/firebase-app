@@ -16,8 +16,8 @@ export const chatsRemoved = (ids, feedName) => ({
   type: 'CHATS_REMOVED',
   payload: { ids, feedName },
 });
-export const filterApplied = filter => ({
-  type: 'FILTER_APPLIED',
+export const filterAdded = filter => ({
+  type: 'FILTER_ADDED',
   payload: { filter },
 });
 // THUNKS

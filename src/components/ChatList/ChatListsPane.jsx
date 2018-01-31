@@ -8,21 +8,27 @@ import ChatControls from './ChatControls';
 
 import './index.css';
 
-
-// TODO: this is hacks, type "NONE" to unmount the listeners
-const ChatListsPaneComponent = ({ filter }) => {
-  const list = (filter === 'NONE') ? '' : <FilteredList feedName={filter} tagName={filter} />;
+const ChatListsPaneComponent = ({
+  filters,
+}) => {
+  // TODO: this is hacks, type "NONE" to unmount the listeners
+  const filteredLists = filters.map(filter => (
+    <React.Fragment key={filter}>
+      <div>{filter}</div>
+      <FilteredList feedName={filter} tagName={filter} />
+    </React.Fragment>
+  ));
   return (
     <div className="ChatListsPane">
       <ChatControls />
+      <div>INBOX</div>
       <Inbox feedName="inbox" />
-      FILTER: {filter}
-      {list}
+      {filteredLists}
     </div>
   );
 };
 const mapStateToProps = state => ({
-  filter: state.chatApp.filter,
+  filters: state.chatApp.filters,
 });
 const ChatListsPane = connect(
   mapStateToProps,
@@ -31,8 +37,8 @@ const ChatListsPane = connect(
 export default ChatListsPane;
 
 ChatListsPaneComponent.propTypes = {
-  filter: PropTypes.string,
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-ChatListsPaneComponent.defaultProps = {
-  filter: 'hasAgent',
-};
+// ChatListsPaneComponent.defaultProps = {
+//   filter: 'hasAgent',
+// };
