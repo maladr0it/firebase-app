@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  filterRemoved,
-} from '../../actions';
+
 import Inbox from './Inbox';
 import FilteredList from './FilteredList';
 import ChatControls from './ChatControls';
@@ -11,18 +9,15 @@ import ChatControls from './ChatControls';
 import './index.css';
 
 const ChatListsPaneComponent = ({
-  filters, onFilterRemoved,
+  filters,
 }) => {
   // TODO: this is hacks, type "NONE" to unmount the listeners
   const filteredLists = filters.map(filter => (
-    <React.Fragment key={filter}>
-      <button
-        onClick={() => onFilterRemoved(filter)}
-      >
-        {filter}
-      </button>
-      <FilteredList feedName={filter} tagName={filter} />
-    </React.Fragment>
+    <FilteredList
+      key={filter}
+      feedName={filter}
+      tagName={filter}
+    />
   ));
   return (
     <div className="ChatListsPane">
@@ -36,16 +31,12 @@ const ChatListsPaneComponent = ({
 const mapStateToProps = state => ({
   filters: state.chatApp.filters,
 });
-const mapDispatchToProps = ({
-  onFilterRemoved: filterRemoved,
-});
 const ChatListsPane = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  null,
 )(ChatListsPaneComponent);
 export default ChatListsPane;
 
 ChatListsPaneComponent.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onFilterRemoved: PropTypes.func.isRequired,
 };

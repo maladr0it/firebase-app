@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import IconMenu from 'material-ui/IconMenu';
+import Chip from 'material-ui/Chip';
 
 import {
   addUserToChat,
@@ -13,21 +15,31 @@ import InputForm from '../InputForm';
 const UserListComponent = ({
   onAddUser, onRemoveUser, chatId, users,
 }) => {
-  const userButtons = users.map(userData => (
-    <button
+  const userChips = users.map(userData => (
+    <Chip
       key={userData.id}
-      onClick={() => onRemoveUser(chatId, userData.id)}
+      onRequestDelete={() => onRemoveUser(chatId, userData.id)}
     >
       {userData.id}
-    </button>
+    </Chip>
   ));
-  return (
-    <div>
+  const addForm = (
+    <IconMenu
+      iconButtonElement={<Chip>+</Chip>}
+      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+    >
       <InputForm
         label="ADD USER: "
-        handleSubmit={userId => onAddUser(chatId, userId)}
+        handleSubmit={tagName => onAddUser(chatId, tagName)}
       />
-      USERS: {userButtons}
+    </IconMenu>
+  );
+  return (
+    <div>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {userChips}
+        {addForm}
+      </div>
     </div>
   );
 };

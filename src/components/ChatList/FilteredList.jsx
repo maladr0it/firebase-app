@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List } from 'material-ui/List';
+import Chip from 'material-ui/Chip';
 import {
   selectChat,
   listenToFilteredChats,
+  filterRemoved,
 } from '../../actions';
 
 import ChatItem from './ChatItem';
@@ -22,7 +24,8 @@ class FilteredListComponent extends React.Component {
   }
   render() {
     const {
-      onSelectChat, userId, chatIds, selectedChat,
+      onSelectChat, onRemoveFilter,
+      userId, chatIds, selectedChat, tagName,
     } = this.props;
     const chats = chatIds.map(chatId => (
       <ChatItem
@@ -33,9 +36,17 @@ class FilteredListComponent extends React.Component {
       />
     ));
     return (
-      <List className="ChatList">
-        {chats}
-      </List>
+      <React.Fragment>
+        <Chip
+          label={tagName}
+          onRequestDelete={() => onRemoveFilter(tagName)}
+        >
+          {tagName}
+        </Chip>
+        <List className="ChatList">
+          {chats}
+        </List>
+      </React.Fragment>
     );
   }
 }
@@ -45,6 +56,7 @@ const mapStateToProps = (state, ownProps) => ({
   chatIds: state.chatApp.chatIdsByFeed[ownProps.feedName],
 });
 const mapDispatchToProps = {
+  onRemoveFilter: filterRemoved,
   onSelectChat: selectChat,
   onListen: listenToFilteredChats,
 };
@@ -60,6 +72,7 @@ FilteredListComponent.propTypes = {
   feedName: PropTypes.string.isRequired,
   selectedChat: PropTypes.string,
   chatIds: PropTypes.arrayOf(PropTypes.string),
+  onRemoveFilter: PropTypes.func.isRequired,
   onSelectChat: PropTypes.func.isRequired,
   onListen: PropTypes.func.isRequired,
 };

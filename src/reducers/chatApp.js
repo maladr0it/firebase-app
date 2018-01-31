@@ -3,7 +3,7 @@ const defaultState = {
     inbox: [],
     hasAgent: [],
   },
-  filters: [],
+  filters: ['isOpen'],
   selectedChat: undefined,
 };
 

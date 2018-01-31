@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 class InputForm extends React.Component {
   state = {
@@ -15,17 +17,16 @@ class InputForm extends React.Component {
   }
   render() {
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
-        <label htmlFor="textInput">
-          {this.props.label}
-          <input
-            id="textInput"
-            type="text"
-            value={this.state.value}
-            onChange={e => this.handleChange(e)}
-          />
-        </label>
-        <input type="submit" value="OK" />
+      <form
+        style={{ display: 'flex', justifyContent: 'center' }}
+        onSubmit={e => this.handleSubmit(e)}
+      >
+        <TextField
+          hintText={this.props.label}
+          value={this.state.value}
+          onChange={e => this.handleChange(e)}
+        />
+        <FlatButton label="OK" type="submit" />
       </form>
     );
   }

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import IconMenu from 'material-ui/IconMenu';
+import Chip from 'material-ui/Chip';
 
 import {
   tagChat,
@@ -13,22 +15,32 @@ import InputForm from '../InputForm';
 const TagControlsComponent = ({
   chatId, tags, onTagChat, onUntagChat,
 }) => {
-  const tagButtons = tags.map(tag => (
-    <button
+  const tagChips = tags.map(tag => (
+    <Chip
       key={tag}
-      onClick={() => onUntagChat(chatId, tag)}
+      onRequestDelete={() => onUntagChat(chatId, tag)}
     >
       {tag}
-    </button>
+    </Chip>
   ));
-  return (
-    <div>
+  const addForm = (
+    <IconMenu
+      iconButtonElement={<Chip>+</Chip>}
+      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+    >
       <InputForm
-        label="add tag: "
+        label="ADD TAG: "
         handleSubmit={tagName => onTagChat(chatId, tagName)}
       />
-      TAGS: {tagButtons}
-      {/* TAGS: {tags.map(tag => `${tag} `)} */}
+    </IconMenu>
+  );
+  return (
+    // TODO: if not nested, there are css issues.  investigate
+    <div>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {tagChips}
+        {addForm}
+      </div>
     </div>
   );
 };
