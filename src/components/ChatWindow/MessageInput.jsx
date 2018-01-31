@@ -98,10 +98,14 @@ export default MessageInput;
 
 MessageInputComponent.propTypes = {
   userId: PropTypes.string.isRequired,
-  chatId: PropTypes.string.isRequired,
-  draftText: PropTypes.string.isRequired,
+  chatId: PropTypes.string,
+  draftText: PropTypes.string,
   updateDraft: PropTypes.func.isRequired,
   onSend: PropTypes.func.isRequired,
   onStartTyping: PropTypes.func.isRequired,
   onStopTyping: PropTypes.func.isRequired,
+};
+MessageInputComponent.defaultProps = {
+  chatId: '',
+  draftText: '',
 };

@@ -86,7 +86,12 @@ export const sendMessage = async (chatId, userId, text) => {
   return messagePayload;
 };
 export const markMessagesAsRead = async (chatId, userId) => {
-  console.log('checking for unread...');
+  // marking unread as 0
+  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
+    .update({
+      unreadCount: 0,
+    });
+
   const readStatusKey = `readStatus.${userId}`;
   const messagesSnapshot = await db.collection(`chats/${chatId}/messages`)
     .where(readStatusKey, '==', null)

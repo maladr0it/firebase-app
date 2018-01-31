@@ -28,6 +28,13 @@ const chatApp = (state = defaultState, action) => {
         filters: [...state.filters, filter],
       };
     }
+    case 'FILTER_REMOVED': {
+      const { filter } = action.payload;
+      return {
+        ...state,
+        filters: state.filters.filter(e => e !== filter),
+      };
+    }
     case 'CHATS_ADDED': {
       const { ids, feedName } = action.payload;
       return {

@@ -12,7 +12,6 @@ export const listenToUserChats = (userId, callback) => {
         id: change.doc.id,
         data: change.doc.data(),
       }));
-      // use 'ids' to quickly establish the order of chats for the view
       const ids = snapshot.docs.map(doc => doc.id);
       callback(changes, ids);
     });

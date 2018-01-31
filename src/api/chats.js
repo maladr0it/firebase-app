@@ -51,6 +51,7 @@ export const tagChat = (chatId, tagName) => {
     db.collection('chats').doc(chatId).update({
       [`tags.${tagName}`]: true,
     });
+    console.log(`${chatId} tagged with ${tagName}`);
   } catch (e) {
     console.log(e);
   }
@@ -60,6 +61,7 @@ export const untagChat = (chatId, tagName) => {
     db.collection('chats').doc(chatId).update({
       [`tags.${tagName}`]: firebase.firestore.FieldValue.delete(),
     });
+    console.log(`${chatId}'s tag ${tagName} removed`);
   } catch (e) {
     console.log(e);
   }
@@ -91,7 +93,7 @@ export const createChat = async () => {
   const chatRef = await db.collection('chats')
     .add({
       createdAt: timestamp,
-      // lastUpdated: timestamp
+      lastUpdated: timestamp,
     });
   const chatSnapshot = await chatRef.get();
   console.log(`db: created new chat ${chatRef.id}`);

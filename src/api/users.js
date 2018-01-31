@@ -21,18 +21,10 @@ export const createUser = async username => (
     isAgent: true,
   })
 );
-
-// naming is a little gross here?
-// this should do a batch write!!
-// select chat and set unread to 0
 export const setSelectedChatForUser = (userId, chatId) => {
   db.collection('users').doc(`${userId}`)
     .update({
       selectedChatId: chatId,
-    });
-  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
-    .update({
-      unreadCount: 0,
     });
 };
 export const setUserTypingStatus = (userId, chatId, isTyping) => {

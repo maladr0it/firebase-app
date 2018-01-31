@@ -37,8 +37,12 @@ export const listenToChatForMessages = (chatId, userId) => (dispatch, getState) 
     if (newMessages.length > 0) {
       dispatch(messagesAdded(chatId, messageIds, newMessages));
       // TODO: avoid using getState, consider a receiving messages action
+      // also consider having a different type of listener for
+      // inbox vs feed, as this isn't needed for feeds
       const state = getState();
-      if (state.chatApp.selectedChat === chatId) {
+      if (state.chatApp.selectedChat === chatId
+        && state.chatApp.chatIdsByFeed.inbox.includes(chatId)
+      ) {
         db.markMessagesAsRead(chatId, userId);
       }
     }

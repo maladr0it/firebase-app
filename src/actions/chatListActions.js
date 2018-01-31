@@ -20,6 +20,10 @@ export const filterAdded = filter => ({
   type: 'FILTER_ADDED',
   payload: { filter },
 });
+export const filterRemoved = filter => ({
+  type: 'FILTER_REMOVED',
+  payload: { filter },
+});
 // THUNKS
 // sets unread messages to 0, updates your lastReadMessage,
 // sets user/:userId/selectedChatId
