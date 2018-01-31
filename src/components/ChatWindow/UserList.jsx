@@ -31,6 +31,7 @@ const UserListComponent = ({
       <InputForm
         label="ADD USER: "
         handleSubmit={tagName => onAddUser(chatId, tagName)}
+        autoFocus
       />
     </IconMenu>
   );

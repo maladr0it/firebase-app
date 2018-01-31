@@ -26,11 +26,13 @@ const TagControlsComponent = ({
   const addForm = (
     <IconMenu
       iconButtonElement={<Chip>+</Chip>}
-      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+      anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}
+      targetOrigin={{ horizontal: 'middle', vertical: 'top' }}
     >
       <InputForm
         label="ADD TAG: "
         handleSubmit={tagName => onTagChat(chatId, tagName)}
+        autoFocus
       />
     </IconMenu>
   );

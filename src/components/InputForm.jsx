@@ -22,6 +22,7 @@ class InputForm extends React.Component {
         onSubmit={e => this.handleSubmit(e)}
       >
         <TextField
+          autoFocus={this.props.autoFocus}
           hintText={this.props.label}
           value={this.state.value}
           onChange={e => this.handleChange(e)}
@@ -36,4 +37,8 @@ export default InputForm;
 InputForm.propTypes = {
   label: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  autoFocus: PropTypes.bool,
+};
+InputForm.defaultProps = {
+  autoFocus: false,
 };

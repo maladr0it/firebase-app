@@ -12,6 +12,7 @@ const LoginFormComponent = ({ onLogin, onCreateUser }) => (
     <InputForm
       label="USERNAME: "
       handleSubmit={value => onLogin(value)}
+      autoFocus
     />
     <InputForm
       label="NEW USER: "
