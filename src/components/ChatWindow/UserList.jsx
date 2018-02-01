@@ -20,7 +20,7 @@ const UserListComponent = ({
       key={userData.id}
       onRequestDelete={() => onRemoveUser(chatId, userData.id)}
     >
-      {userData.id}
+      {userData.username || userData.id }
     </Chip>
   ));
   const addForm = (

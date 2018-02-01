@@ -7,7 +7,7 @@ import {
   listenToChatForUsers,
   listenToChatForMeta,
 } from '../../actions';
-import { getChat } from '../../reducers/chats';
+import { getChat, getUsers } from '../../reducers/chats';
 
 import './index.css';
 
@@ -33,17 +33,17 @@ class ChatItemComponent extends React.Component {
   render() {
     const {
       handleSelectChat,
-      chatId, userIds, unreadCount, isSelected,
+      chatId, users, unreadCount, isSelected,
     } = this.props;
     const readStatus = (unreadCount) ? 'Unread' : '';
     const selectedStatus = (isSelected) ? 'Selected' : '';
-    const users = userIds.map(id => <span key={id}>{id} </span>);
+    const userList = users.map(user => <span key={user.id}>{user.username} </span>);
     return (
       // HAX: List within a containing div to override MUI's backgroundColor
       <div className={`${readStatus} ${selectedStatus}`}>
         <ListItem
-          primaryText={chatId}
-          secondaryText={<p>{users} -- {unreadCount}</p>}
+          primaryText={userList}
+          secondaryText={<p>{chatId} -- {unreadCount}</p>}
           onClick={() => handleSelectChat()}
         />
       </div>
@@ -53,6 +53,7 @@ class ChatItemComponent extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   userId: state.user.userId,
   ...getChat(state.chats, ownProps.chatId),
+  users: getUsers(state.chats, ownProps.chatId),
 });
 const mapDispatchToProps = {
   chatMetaListener: listenToChatForMeta,
@@ -71,7 +72,7 @@ ChatItemComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
   handleSelectChat: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
-  userIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  users: PropTypes.arrayOf(PropTypes.object),
   unreadCount: PropTypes.number,
   chatMetaListener: PropTypes.func.isRequired,
   messageListener: PropTypes.func.isRequired,
@@ -79,4 +80,5 @@ ChatItemComponent.propTypes = {
 };
 ChatItemComponent.defaultProps = {
   unreadCount: 0,
+  users: [],
 };

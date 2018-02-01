@@ -14,10 +14,12 @@ const addChatToUser = async (userId, chatId) => {
   }
   console.log(`db: added chat ${chatId} to user ${userId}`);
 };
-const addUserToChat = async (chatId, userId) => {
+const addUserToChat = async (chatId, userId, userData) => {
   try {
     await db.collection(`chats/${chatId}/users`).doc(userId).set({
       joinedAt: timestamp,
+      isTyping: false,
+      ...userData,
     });
   } catch (e) {
     console.log(e);
@@ -65,26 +67,28 @@ export const untagChat = (chatId, tagName) => {
   } catch (e) {
     console.log(e);
   }
-}
+};
 // TODO: is async needed here?
 export const addChatParticipant = async (chatId, userId) => {
   try {
-    await Promise.all([
-      addChatToUser(userId, chatId), // this is adding, then modifying
-      addUserToChat(chatId, userId),
+    // TODO: this should only access safe fields,
+    // not entire user doc
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userData = userDoc.data();
+    Promise.all([
+      addChatToUser(userId, chatId), // ?? this is adding, then modifying
+      addUserToChat(chatId, userId, userData),
     ]);
-    return;
   } catch (e) {
     console.log(e);
   }
 };
 export const removeChatParticipant = async (chatId, userId) => {
   try {
-    await Promise.all([
+    Promise.all([
       removeChatFromUser(userId, chatId),
       removeUserFromChat(chatId, userId),
     ]);
-    return;
   } catch (e) {
     console.log(e);
   }
