@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import IconMenu from 'material-ui/IconMenu';
-import Chip from 'material-ui/Chip';
+import IconButton from 'material-ui/IconButton';
+import AddIcon from 'material-ui/svg-icons/content/add';
 import {
   filterAdded,
 } from '../../actions';
@@ -25,7 +26,7 @@ const ChatListsPaneComponent = ({
   ));
   const addForm = (
     <IconMenu
-      iconButtonElement={<Chip>+</Chip>}
+      iconButtonElement={<IconButton><AddIcon /></IconButton>}
       anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}
       targetOrigin={{ horizontal: 'middle', vertical: 'top' }}
     >

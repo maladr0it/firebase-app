@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import IconMenu from 'material-ui/IconMenu';
 import Chip from 'material-ui/Chip';
+import IconButton from 'material-ui/IconButton';
+import AddIcon from 'material-ui/svg-icons/content/add';
 
 import {
   tagChat,
@@ -25,7 +27,7 @@ const TagControlsComponent = ({
   ));
   const addForm = (
     <IconMenu
-      iconButtonElement={<Chip>+</Chip>}
+      iconButtonElement={<IconButton><AddIcon /></IconButton>}
       anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}
       targetOrigin={{ horizontal: 'middle', vertical: 'top' }}
     >
@@ -39,7 +41,7 @@ const TagControlsComponent = ({
   return (
     // TODO: if not nested, there are css issues.  investigate
     <div>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         {tagChips}
         {addForm}
       </div>

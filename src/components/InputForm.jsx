@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 
 class InputForm extends React.Component {
   state = {
@@ -27,7 +26,6 @@ class InputForm extends React.Component {
           value={this.state.value}
           onChange={e => this.handleChange(e)}
         />
-        <FlatButton label="OK" type="submit" />
       </form>
     );
   }

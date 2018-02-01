@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import IconMenu from 'material-ui/IconMenu';
 import Chip from 'material-ui/Chip';
+import IconButton from 'material-ui/IconButton';
+import AddIcon from 'material-ui/svg-icons/content/add';
 
 import {
   addUserToChat,
@@ -25,8 +27,9 @@ const UserListComponent = ({
   ));
   const addForm = (
     <IconMenu
-      iconButtonElement={<Chip>+</Chip>}
-      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+      iconButtonElement={<IconButton><AddIcon /></IconButton>}
+      anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}
+      targetOrigin={{ horizontal: 'middle', vertical: 'top' }}
     >
       <InputForm
         label="ADD USER: "
@@ -37,7 +40,7 @@ const UserListComponent = ({
   );
   return (
     <div>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         {userChips}
         {addForm}
       </div>
