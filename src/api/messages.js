@@ -14,7 +14,7 @@ const getChatUserIds = async (chatId) => {
   }
   return userIds;
 };
-const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
+const addMessageToChat = async (chatId, userId, username, chatUserIds, text) => {
   let messageRef;
   const readStatus = {};
   chatUserIds.forEach((id) => {
@@ -23,6 +23,7 @@ const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
   try {
     messageRef = await db.collection(`chats/${chatId}/messages`).add({
       author: userId,
+      authorUsername: username,
       createdAt: timestamp,
       readStatus,
       text,
@@ -66,11 +67,11 @@ const updateChat = (chatId) => {
 };
 
 // EXPORTS
-export const sendMessage = async (chatId, userId, text) => {
+export const sendMessage = async (chatId, userId, username, text) => {
   let messagePayload = {};
   try {
     const chatUserIds = await getChatUserIds(chatId);
-    const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
+    const messageRef = await addMessageToChat(chatId, userId, username, chatUserIds, text);
     updateChat(chatId);
     chatUserIds.forEach(id => updateUserChat(id, chatId));
 

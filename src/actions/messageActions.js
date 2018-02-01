@@ -14,9 +14,9 @@ export const messageSent = (messageId, messageData) => ({
 });
 
 // THUNKS
-export const sendMessage = (chatId, userId, text) => async (dispatch) => {
+export const sendMessage = (chatId, userId, username, text) => async (dispatch) => {
   try {
-    const { messageId, messageData } = await db.sendMessage(chatId, userId, text);
+    const { messageId, messageData } = await db.sendMessage(chatId, userId, username, text);
     dispatch(messageSent(messageId, messageData));
   } catch (e) {
     console.log(e);

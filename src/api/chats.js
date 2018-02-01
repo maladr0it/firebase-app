@@ -16,10 +16,11 @@ const addChatToUser = async (userId, chatId) => {
 };
 const addUserToChat = async (chatId, userId, userData) => {
   try {
+    const { username } = userData;
     await db.collection(`chats/${chatId}/users`).doc(userId).set({
       joinedAt: timestamp,
       isTyping: false,
-      ...userData,
+      username,
     });
   } catch (e) {
     console.log(e);

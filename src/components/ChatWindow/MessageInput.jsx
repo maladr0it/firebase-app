@@ -50,7 +50,7 @@ class MessageInputComponent extends React.Component {
     this.debouncedStopTyping(this.props.userId, this.props.chatId);
   }
   handleSubmit(e) {
-    this.props.onSend(this.props.chatId, this.props.userId, this.state.value);
+    this.props.onSend(this.props.chatId, this.props.userId, this.props.username, this.state.value);
     this.setState({ value: '' });
     // cancel debounced draft update so it doens't overwrite the clear
     this.debouncedUpdateDraft.cancel();
@@ -80,6 +80,7 @@ class MessageInputComponent extends React.Component {
 }
 const mapStateToProps = state => ({
   userId: state.user.userId,
+  username: state.user.username,
   chatId: state.chatApp.selectedChat,
   draftText: getChat(state.chats, state.chatApp.selectedChat).draftText,
 });
