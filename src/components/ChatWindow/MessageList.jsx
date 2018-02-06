@@ -6,7 +6,7 @@ import { List } from 'material-ui/List';
 import {
   scrollPosUpdated,
 } from '../../actions';
-import { getChat, getUsers } from '../../reducers/chats';
+import { getChat } from '../../reducers/chats';
 import { getMessages } from '../../reducers/messages';
 
 import Message from './Message';
@@ -44,13 +44,6 @@ class MessageListComponent extends React.Component {
         {...message}
       />
     ));
-    const usersTyping = this.props.users.filter(userData => (
-      // don't show your own typing indicator
-      userData.id !== this.props.userId && userData.isTyping
-    ));
-    const typingIndicators = usersTyping.map(user => (
-      <TypingIndicator key={user.id} author={user.id} />
-    ));
     return (
       <div
         className="MessageListContainer"
@@ -59,7 +52,6 @@ class MessageListComponent extends React.Component {
       >
         <List>
           {messages}
-          {typingIndicators}
           <div ref={(el) => { this.bottomElement = el; }} />
         </List>
       </div>
@@ -71,7 +63,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     userId: state.user.userId,
     ...chatData,
-    users: getUsers(state.chats, ownProps.chatId),
     messages: getMessages(state.messages, chatData.messageIds),
   };
 };

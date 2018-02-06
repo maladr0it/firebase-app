@@ -7,25 +7,11 @@ const addChatToUser = async (userId, chatId) => {
   try {
     await db.collection(`users/${userId}/chats`).doc(`${chatId}`).set({
       lastUpdated: timestamp,
-      unreadCount: 0,
     });
   } catch (e) {
     console.log(e);
   }
   console.log(`db: added chat ${chatId} to user ${userId}`);
-};
-const addUserToChat = async (chatId, userId, userData) => {
-  try {
-    const { username } = userData;
-    await db.collection(`chats/${chatId}/users`).doc(userId).set({
-      joinedAt: timestamp,
-      isTyping: false,
-      username,
-    });
-  } catch (e) {
-    console.log(e);
-  }
-  console.log(`db: added user ${userId} to chat ${chatId}`);
 };
 const removeChatFromUser = async (userId, chatId) => {
   const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
@@ -37,10 +23,21 @@ const removeChatFromUser = async (userId, chatId) => {
   console.log(`db: removed chat ${chatId} from user ${userId}`);
   return chatRef;
 };
-const removeUserFromChat = async (chatId, userId) => {
-  const userRef = db.collection(`chats/${chatId}/users`).doc(`${userId}`);
+const addUserToChat = async (chatId, userId) => {
   try {
-    await userRef.delete();
+    await db.collection('chats').doc(chatId).update({
+      [`usersJoined.${userId}`]: true,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(`db: added user ${userId} to chat ${chatId}`);
+};
+const removeUserFromChat = async (chatId, userId) => {
+  try {
+    await db.collection('chats').doc(chatId).update({
+      [`usersJoined.${userId}`]: false,
+    });
   } catch (e) {
     console.log(e);
   }

@@ -10,19 +10,19 @@ import {
   addUserToChat,
   removeUserFromChat,
 } from '../../actions';
-import { getUsers } from '../../reducers/chats';
+import { getUserIds } from '../../reducers/chats';
 
 import InputForm from '../InputForm';
 
 const UserListComponent = ({
-  onAddUser, onRemoveUser, chatId, users,
+  onAddUser, onRemoveUser, chatId, userIds,
 }) => {
-  const userChips = users.map(userData => (
+  const userChips = userIds.map(id => (
     <Chip
-      key={userData.id}
-      onRequestDelete={() => onRemoveUser(chatId, userData.id)}
+      key={id}
+      onRequestDelete={() => onRemoveUser(chatId, id)}
     >
-      {userData.username || userData.id }
+      {id}
     </Chip>
   ));
   const addForm = (
@@ -48,7 +48,7 @@ const UserListComponent = ({
   );
 };
 const mapStateToProps = (state, ownProps) => ({
-  users: getUsers(state.chats, ownProps.chatId),
+  userIds: getUserIds(state.chats, ownProps.chatId),
 });
 const mapDispatchToProps = ({
   onAddUser: addUserToChat,
@@ -63,10 +63,10 @@ export default UserList;
 
 UserListComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object),
+  userIds: PropTypes.arrayOf(PropTypes.string),
   onAddUser: PropTypes.func.isRequired,
   onRemoveUser: PropTypes.func.isRequired,
 };
 UserListComponent.defaultProps = {
-  users: [],
+  userIds: [],
 };

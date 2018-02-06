@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import { ListItem } from 'material-ui/List';
 import {
   listenToChatForMessages,
-  listenToChatForUsers,
   listenToChatForMeta,
 } from '../../actions';
-import { getChat, getUsers } from '../../reducers/chats';
+import { getChat } from '../../reducers/chats';
 
 import './index.css';
 
@@ -18,32 +17,29 @@ class ChatItemComponent extends React.Component {
       this.props.chatId,
       this.props.userId,
     );
-    this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
   componentWillUnmount() {
-    // console.log('destroying listeners for', this.props.chatId);
     this.chatMetaUnsubscribe();
     this.messageUnsubscribe();
-    this.userUnsubscribe();
   }
-  messageUnsubscribe = undefined;
-  userUnsubscribe = undefined;
   chatMetaUnsubscribe = undefined;
+  messageUnsubscribe = undefined;
 
   render() {
     const {
       handleSelectChat,
-      chatId, users, unreadCount, isSelected,
+      chatId, usersJoined, isSelected,
     } = this.props;
-    const readStatus = (unreadCount) ? 'Unread' : '';
     const selectedStatus = (isSelected) ? 'Selected' : '';
-    const userList = users.map(user => <span key={user.id}>{user.username} </span>);
+    const userList = Object.keys(usersJoined).map(id => (
+      <span key={id}>{id} </span>
+    ));
     return (
       // HAX: List within a containing div to override MUI's backgroundColor
-      <div className={`${readStatus} ${selectedStatus}`}>
+      <div className={`${selectedStatus}`}>
         <ListItem
           primaryText={userList}
-          secondaryText={<p>{chatId} -- {unreadCount}</p>}
+          secondaryText={<p>{chatId}</p>}
           onClick={() => handleSelectChat()}
         />
       </div>
@@ -53,12 +49,10 @@ class ChatItemComponent extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   userId: state.user.userId,
   ...getChat(state.chats, ownProps.chatId),
-  users: getUsers(state.chats, ownProps.chatId),
 });
 const mapDispatchToProps = {
   chatMetaListener: listenToChatForMeta,
   messageListener: listenToChatForMessages,
-  userListener: listenToChatForUsers,
 };
 const ChatContainer = connect(
   mapStateToProps,
@@ -72,13 +66,10 @@ ChatItemComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
   handleSelectChat: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object),
-  unreadCount: PropTypes.number,
+  usersJoined: PropTypes.objectOf(PropTypes.bool),
   chatMetaListener: PropTypes.func.isRequired,
   messageListener: PropTypes.func.isRequired,
-  userListener: PropTypes.func.isRequired,
 };
 ChatItemComponent.defaultProps = {
-  unreadCount: 0,
-  users: [],
+  usersJoined: {},
 };

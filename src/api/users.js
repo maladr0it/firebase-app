@@ -31,16 +31,3 @@ export const setUserTypingStatus = (userId, chatId, isTyping) => {
       isTyping,
     });
 };
-export const listenToChatForUsers = (chatId, callback) => {
-  const unsubscribe = db.collection(`chats/${chatId}/users`)
-    .onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges.map(change => ({
-        type: change.type,
-        id: change.doc.id,
-        data: change.doc.data(),
-      }));
-      const ids = snapshot.docs.map(doc => doc.id);
-      callback(changes, ids);
-    });
-  return unsubscribe;
-};

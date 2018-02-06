@@ -5,7 +5,7 @@ import { ListItem } from 'material-ui/List';
 import './index.css';
 
 const MessageComponent = ({
-  text, author, authorUsername, createdAt, readStatus,
+  text, author, createdAt, readStatus,
 }) => {
   const timestamp = (createdAt) ? createdAt.toString() : 'sending...';
   const seenBy = Object.keys(readStatus).filter(id => readStatus[id] !== null)
@@ -16,7 +16,7 @@ const MessageComponent = ({
     <div className="Message">
       <ListItem
         disabled
-        primaryText={`${authorUsername} says: ${text}`}
+        primaryText={`${author} says: ${text}`}
         secondaryText={
           <p>
             Sent: {timestamp}
@@ -33,7 +33,6 @@ export default MessageComponent;
 
 MessageComponent.propTypes = {
   author: PropTypes.string.isRequired,
-  authorUsername: PropTypes.string,
   text: PropTypes.string.isRequired,
   createdAt: PropTypes.instanceOf(Date),
   readStatus: PropTypes.objectOf(Date),
@@ -41,5 +40,4 @@ MessageComponent.propTypes = {
 MessageComponent.defaultProps = {
   createdAt: Date.now(),
   readStatus: {},
-  authorUsername: 'unknown',
 };

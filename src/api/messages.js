@@ -14,7 +14,7 @@ const getChatUserIds = async (chatId) => {
   }
   return userIds;
 };
-const addMessageToChat = async (chatId, userId, username, chatUserIds, text) => {
+const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
   let messageRef;
   const readStatus = {};
   chatUserIds.forEach((id) => {
@@ -23,7 +23,6 @@ const addMessageToChat = async (chatId, userId, username, chatUserIds, text) => 
   try {
     messageRef = await db.collection(`chats/${chatId}/messages`).add({
       author: userId,
-      authorUsername: username,
       createdAt: timestamp,
       readStatus,
       text,
@@ -35,25 +34,11 @@ const addMessageToChat = async (chatId, userId, username, chatUserIds, text) => 
 };
 // here is where we should set the read status
 const updateUserChat = async (userId, chatId) => {
-  const userRef = db.collection('users').doc(`${userId}`);
-  const chatRef = db.collection(`users/${userId}/chats`).doc(`${chatId}`);
-  db.runTransaction(async (transaction) => {
-    const [userDoc, chatDoc] = await Promise.all([
-      transaction.get(userRef),
-      transaction.get(chatRef),
-    ]);
-    // increment if user is not viewing the chat
-    let unreadCount = chatDoc.data().unreadCount || 0;
-    if (userDoc.data().selectedChatId !== chatId) {
-      unreadCount += 1;
-    }
-    transaction.update(chatRef, {
+  console.log(`updating ${userId}'s inbox`);
+  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
+    .update({
       lastUpdated: timestamp,
-      unreadCount,
     });
-    transaction.update(userRef, {});
-    // all docs read in a transaction must be written
-  });
 };
 const updateChat = (chatId) => {
   try {
@@ -67,11 +52,11 @@ const updateChat = (chatId) => {
 };
 
 // EXPORTS
-export const sendMessage = async (chatId, userId, username, text) => {
+export const sendMessage = async (chatId, userId, text) => {
   let messagePayload = {};
   try {
     const chatUserIds = await getChatUserIds(chatId);
-    const messageRef = await addMessageToChat(chatId, userId, username, chatUserIds, text);
+    const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
     updateChat(chatId);
     chatUserIds.forEach(id => updateUserChat(id, chatId));
 
@@ -87,21 +72,14 @@ export const sendMessage = async (chatId, userId, username, text) => {
   return messagePayload;
 };
 export const markMessagesAsRead = async (chatId, userId) => {
-  // marking unread as 0
-  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
-    .update({
-      unreadCount: 0,
-    });
-
-  const readStatusKey = `readStatus.${userId}`;
   const messagesSnapshot = await db.collection(`chats/${chatId}/messages`)
-    .where(readStatusKey, '==', null)
+    .where(`readStatus.${userId}`, '==', null)
     .get();
   messagesSnapshot.forEach((snap) => {
     console.log('marking message as read');
     db.collection(`chats/${chatId}/messages`).doc(`${snap.id}`)
       .update({
-        [readStatusKey]: timestamp,
+        [`readStatus.${userId}`]: timestamp,
       });
   });
 };

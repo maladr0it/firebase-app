@@ -22,8 +22,7 @@
 // defaultProps and selectors are set up correctly
 const defaultChat = {
   messageIds: [],
-  userIds: [],
-  users: {},
+  usersJoined: {},
   tags: {},
   scrollPos: 0,
   atBottom: true,
@@ -33,6 +32,7 @@ const defaultChat = {
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
     case 'CHAT_DATA_UPDATED': {
+      console.log(action.payload.data);
       const { data } = action.payload;
       return {
         ...state,
@@ -44,42 +44,6 @@ const chat = (state = defaultChat, action) => {
       return {
         ...state,
         messageIds,
-      };
-    }
-    case 'CHAT_USERS_ADDED': {
-      const { newUsers, ids } = action.payload;
-      const usersData = newUsers.reduce((acc, userDoc) => {
-        acc[userDoc.id] = userDoc.data;
-        return acc;
-      }, {});
-      return {
-        ...state,
-        userIds: ids,
-        users: {
-          ...state.users,
-          ...usersData,
-        },
-      };
-    }
-    case 'CHAT_USERS_UPDATED': {
-      const { updatedUsers } = action.payload;
-      const usersData = updatedUsers.reduce((acc, userDoc) => {
-        acc[userDoc.id] = userDoc.data;
-        return acc;
-      }, {});
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          ...usersData,
-        },
-      };
-    }
-    case 'CHAT_USERS_REMOVED': {
-      const { ids } = action.payload;
-      return {
-        ...state,
-        userIds: ids,
       };
     }
     case 'SCROLL_POS_UPDATED': {
@@ -120,27 +84,6 @@ const chats = (state = defaultState, action) => {
         [chatId]: chat(state[chatId], action),
       };
     }
-    case 'CHAT_USERS_ADDED': {
-      const { chatId } = action.payload;
-      return {
-        ...state,
-        [chatId]: chat(state[chatId], action),
-      };
-    }
-    case 'CHAT_USERS_UPDATED': {
-      const { chatId } = action.payload;
-      return {
-        ...state,
-        [chatId]: chat(state[chatId], action),
-      };
-    }
-    case 'CHAT_USERS_REMOVED': {
-      const { chatId } = action.payload;
-      return {
-        ...state,
-        [chatId]: chat(state[chatId], action),
-      };
-    }
     case 'SCROLL_POS_UPDATED': {
       const { chatId } = action.payload;
       return {
@@ -170,13 +113,9 @@ export default chats;
 export const getChat = (state, chatId) => (
   state[chatId] || defaultChat
 );
-export const getUsers = (state, chatId) => {
-  const selectedChat = getChat(state, chatId);
-  return selectedChat.userIds.map(id => ({
-    id,
-    ...selectedChat.users[id],
-  }));
-};
+export const getUserIds = (state, chatId) => (
+  Object.keys(getChat(state, chatId).usersJoined)
+);
 export const getTags = (state, chatId) => (
   Object.keys(getChat(state, chatId).tags)
 );
