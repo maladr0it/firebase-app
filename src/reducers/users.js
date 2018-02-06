@@ -30,3 +30,17 @@ export const getUsers = (state, userIds) => (
     return { id, ...userData };
   })
 );
+export const getUser = (state, userId) => (
+  state[userId] || defaultUser
+);
+export const getReadUsers = (state, readStatus) => {
+  const userIds = Object.keys(readStatus).filter(id => readStatus[id] != null);
+  return userIds.map((id) => {
+    const userData = state[id] || defaultUser;
+    return {
+      id,
+      ...userData,
+      seenAt: readStatus[id],
+    };
+  });
+};

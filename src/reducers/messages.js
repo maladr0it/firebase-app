@@ -1,8 +1,8 @@
-// example state
+// example
 // messages = {
-//   msg10814: { text: 'hi', isPending: false },
-//   msg10948: { text: 'howdy!, isPending: true }
-// }
+//   msg10814: { author: 'usr191901', text: 'hi', isPending: false },
+//   msg10948: { author: 'usr177154', text: 'howdy!, isPending: true }
+// };
 
 const defaultState = { };
 
