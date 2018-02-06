@@ -1,28 +1,28 @@
 // example
-//  chats = {
-//    chat94109810: {
-//      FROM DB
-//      createdAt: 90840118,
-//      lastUpdated: 1930581,
-//      tags: { hasAgent: true, newCustomer: true, etc... }
+// chats = {
+//   chat94109810: {
+//     FROM DB
+//     createdAt: 90840118,
+//     lastUpdated: 1930581,
+//     tags: { hasAgent: true, newCustomer: true, etc... }
 //
-//      LOCAL DB
-//      messageIds: ['msg29401', 'msg49081', 'mgs02821']
-//      userIds: ['usr0001', 'usr0002', 'usr0003'],
-//      users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
+//     LOCAL DB
+//     messageIds: ['msg29401', 'msg49081', 'mgs02821']
+//     userIds: ['usr0001', 'usr0002', 'usr0003'],
+//     users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
 //
-//      DISPLAY
-//      scrollPos: 400,
-//      atBottom: true,
-//      draftText: '',
+//     DISPLAY
+//     scrollPos: 400,
+//     atBottom: true,
+//     draftText: '',
 //   },
-// }
+// };
 
 // TODO: might not need this if
 // defaultProps and selectors are set up correctly
 const defaultChat = {
   messageIds: [],
-  usersJoined: {},
+  userIds: [],
   tags: {},
   scrollPos: 0,
   atBottom: true,
@@ -32,11 +32,17 @@ const defaultChat = {
 const chat = (state = defaultChat, action) => {
   switch (action.type) {
     case 'CHAT_DATA_UPDATED': {
-      console.log(action.payload.data);
       const { data } = action.payload;
       return {
         ...state,
         ...data,
+      };
+    }
+    case 'CHAT_USERS_UPDATED': {
+      const { userIds } = action.payload;
+      return {
+        ...state,
+        userIds,
       };
     }
     case 'MESSAGES_ADDED': {
@@ -71,6 +77,13 @@ const defaultState = {};
 const chats = (state = defaultState, action) => {
   switch (action.type) {
     case 'CHAT_DATA_UPDATED': {
+      const { chatId } = action.payload;
+      return {
+        ...state,
+        [chatId]: chat(state[chatId], action),
+      };
+    }
+    case 'CHAT_USERS_UPDATED': {
       const { chatId } = action.payload;
       return {
         ...state,
@@ -114,7 +127,7 @@ export const getChat = (state, chatId) => (
   state[chatId] || defaultChat
 );
 export const getUserIds = (state, chatId) => (
-  Object.keys(getChat(state, chatId).usersJoined)
+  getChat(state, chatId).userIds
 );
 export const getTags = (state, chatId) => (
   Object.keys(getChat(state, chatId).tags)

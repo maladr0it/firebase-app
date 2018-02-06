@@ -19,15 +19,32 @@ export const createUser = async username => (
     dateJoined: timestamp,
   })
 );
-export const setSelectedChatForUser = (userId, chatId) => {
-  db.collection('users').doc(`${userId}`)
-    .update({
-      selectedChatId: chatId,
-    });
-};
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
   db.collection(`chats/${chatId}/users`).doc(`${userId}`)
     .update({
       isTyping,
     });
+};
+export const listenToChatForUsers = (chatId, callback) => {
+  console.log(`chat ${chatId} is listening for users now`);
+  const unsubscribe = db.collection(`chats/${chatId}/users`)
+    .orderBy('joinedAt', 'desc')
+    .onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges.map(change => ({
+        type: change.type,
+        id: change.doc.id,
+        data: change.doc.data(),
+      }));
+      const ids = snapshot.docs.map(doc => doc.id);
+      callback(changes, ids);
+    });
+  return unsubscribe;
+};
+export const listenToUser = (userId, callback) => {
+  console.log(`listening to user ${userId} now`);
+  const unsubscribe = db.collection('users').doc(userId)
+    .onSnapshot((doc) => {
+      callback(doc.data());
+    });
+  return unsubscribe;
 };

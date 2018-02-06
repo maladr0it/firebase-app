@@ -30,11 +30,9 @@ export const filterRemoved = filter => ({
 export const selectInboxChat = (userId, chatId) => (dispatch) => {
   dispatch(chatSelected(chatId));
   db.markMessagesAsRead(chatId, userId);
-  db.setSelectedChatForUser(userId, chatId);
 };
 export const selectChat = (userId, chatId) => (dispatch) => {
   dispatch(chatSelected(chatId));
-  db.setSelectedChatForUser(userId, chatId);
 };
 // create chat and add yourself as a participant, for now
 // this likely won't be used in future

@@ -23,27 +23,27 @@ const removeChatFromUser = async (userId, chatId) => {
   console.log(`db: removed chat ${chatId} from user ${userId}`);
   return chatRef;
 };
-const addUserToChat = async (chatId, userId) => {
+const addUserToChat = (chatId, userId) => {
   try {
-    await db.collection('chats').doc(chatId).update({
-      [`usersJoined.${userId}`]: true,
+    db.collection(`chats/${chatId}/users`).doc(userId).set({
+      isJoined: true,
+      joinedAt: timestamp,
     });
   } catch (e) {
     console.log(e);
   }
   console.log(`db: added user ${userId} to chat ${chatId}`);
 };
-const removeUserFromChat = async (chatId, userId) => {
+const removeUserFromChat = (chatId, userId) => {
   try {
-    await db.collection('chats').doc(chatId).update({
-      [`usersJoined.${userId}`]: false,
+    db.collection(`chats/${chatId}/users`).doc(userId).set({
+      isJoined: false,
     });
   } catch (e) {
     console.log(e);
   }
   console.log(`db: removed user ${userId} from chat ${chatId}`);
 };
-
 // EXPORTS
 // should globally tagging a chat be called 'flagging'?
 export const tagChat = (chatId, tagName) => {
@@ -69,14 +69,8 @@ export const untagChat = (chatId, tagName) => {
 // TODO: is async needed here?
 export const addChatParticipant = async (chatId, userId) => {
   try {
-    // TODO: this should only access safe fields,
-    // not entire user doc
-    const userDoc = await db.collection('users').doc(userId).get();
-    const userData = userDoc.data();
-    Promise.all([
-      addChatToUser(userId, chatId), // ?? this is adding, then modifying
-      addUserToChat(chatId, userId, userData),
-    ]);
+    addChatToUser(userId, chatId); // ?? this is adding, then modifying
+    addUserToChat(chatId, userId);
   } catch (e) {
     console.log(e);
   }

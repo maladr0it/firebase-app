@@ -5,8 +5,10 @@ import { ListItem } from 'material-ui/List';
 import {
   listenToChatForMessages,
   listenToChatForMeta,
+  listenToChatForUsers,
 } from '../../actions';
 import { getChat } from '../../reducers/chats';
+import { getUsers } from '../../reducers/users';
 
 import './index.css';
 
@@ -17,6 +19,7 @@ class ChatItemComponent extends React.Component {
       this.props.chatId,
       this.props.userId,
     );
+    this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
   componentWillUnmount() {
     this.chatMetaUnsubscribe();
@@ -28,11 +31,11 @@ class ChatItemComponent extends React.Component {
   render() {
     const {
       handleSelectChat,
-      chatId, usersJoined, isSelected,
+      chatId, users, isSelected,
     } = this.props;
     const selectedStatus = (isSelected) ? 'Selected' : '';
-    const userList = Object.keys(usersJoined).map(id => (
-      <span key={id}>{id} </span>
+    const userList = users.map(user => (
+      <span key={user.id}>{user.username} </span>
     ));
     return (
       // HAX: List within a containing div to override MUI's backgroundColor
@@ -46,13 +49,17 @@ class ChatItemComponent extends React.Component {
     );
   }
 }
-const mapStateToProps = (state, ownProps) => ({
-  userId: state.user.userId,
-  ...getChat(state.chats, ownProps.chatId),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { userIds } = getChat(state.chats, ownProps.chatId);
+  return {
+    userId: state.user.userId,
+    users: getUsers(state.users, userIds),
+  };
+};
 const mapDispatchToProps = {
   chatMetaListener: listenToChatForMeta,
   messageListener: listenToChatForMessages,
+  userListener: listenToChatForUsers,
 };
 const ChatContainer = connect(
   mapStateToProps,
@@ -66,10 +73,11 @@ ChatItemComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
   handleSelectChat: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
-  usersJoined: PropTypes.objectOf(PropTypes.bool),
+  users: PropTypes.arrayOf(PropTypes.object),
   chatMetaListener: PropTypes.func.isRequired,
   messageListener: PropTypes.func.isRequired,
+  userListener: PropTypes.func.isRequired,
 };
 ChatItemComponent.defaultProps = {
-  usersJoined: {},
+  users: [],
 };
