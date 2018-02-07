@@ -4,14 +4,39 @@ const db = firebase.firestore();
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 export const getUser = async (userId) => {
-  let userDocData = {};
+  let userData = {};
   try {
     const userDoc = await db.collection('users').doc(userId).get();
-    userDocData = userDoc.data();
+    userData = userDoc.data();
   } catch (e) {
     console.log(e);
   }
-  return userDocData;
+  return userData;
+};
+export const getUserByName = async (username) => {
+  try {
+    const snapshot = await db.collection('users')
+      .where('username', '==', username).limit(1)
+      .get();
+    const { id } = snapshot.docs[0];
+    const data = snapshot.docs[0].data();
+    return { id, data };
+  } catch (e) {
+    console.log(e);
+  }
+  return undefined;
+};
+export const getUserIdByName = async (username) => {
+  let userId = '';
+  try {
+    const snapshot = await db.collection('users')
+      .where('username', '==', username).limit(1)
+      .get();
+    userId = snapshot.docs[0].id;
+  } catch (e) {
+    console.log(e);
+  }
+  return userId;
 };
 export const createUser = async username => (
   db.collection('users').add({
@@ -42,9 +67,14 @@ export const listenToChatForUsers = (chatId, callback) => {
 };
 export const listenToUser = (userId, callback) => {
   console.log(`listening to user ${userId} now`);
-  const unsubscribe = db.collection('users').doc(userId)
-    .onSnapshot((doc) => {
-      callback(doc.data());
-    });
+  let unsubscribe;
+  try {
+    unsubscribe = db.collection('users').doc(userId)
+      .onSnapshot((doc) => {
+        callback(doc.data());
+      });
+  } catch (e) {
+    console.log(e);
+  }
   return unsubscribe;
 };

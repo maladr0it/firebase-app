@@ -16,10 +16,12 @@ export const userDataUpdated = (userId, userData) => ({
   payload: { userId, userData },
 });
 // THUNKS
-export const login = userId => async (dispatch) => {
-  const userData = await db.getUser(userId);
-  console.log(`welcome ${userData.username}`);
-  dispatch(loggedIn(userId, userData));
+export const login = username => async (dispatch) => {
+  const user = await db.getUserByName(username);
+  if (user) {
+    console.log(`welcome ${user.data.username}`);
+    dispatch(loggedIn(user.id, user.data));
+  }
 };
 export const logout = () => (dispatch) => {
   dispatch(loggedOut());
@@ -42,12 +44,17 @@ const listenToUser = userId => (dispatch) => {
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, userIds) => {
     const newUsers = changes.filter(change => (change.type === 'added'));
-    // const updatedUsers = changes.filter(change => (change.type === 'modified'));
-    // const removedUsers = changes.filter(change => (change.type === 'removed'));
+    // open a listener to this user if they are new
     if (newUsers.length > 0) {
       newUsers.forEach(user => dispatch(listenToUser(user.id)));
-      dispatch(chatUsersUpdated(chatId, userIds));
     }
+    // get 'isJoined' userIds only
+    const joinedUsers = changes.filter(change => (
+      change.data.isJoined === true
+    ));
+    const joinedUserIds = joinedUsers.map(user => user.id);
+    console.log(joinedUsers);
+    dispatch(chatUsersUpdated(chatId, joinedUserIds));
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;

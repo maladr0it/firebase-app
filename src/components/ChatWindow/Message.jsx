@@ -34,15 +34,10 @@ const MessageComponent = ({
   );
 };
 // this will get the readStatus and username for the component
-const mapStateToProps = (state, ownProps) => {
-  // get authorId, readStatusIds
-  // get the user obj for each of these
-  const author = getUser(state.users, [ownProps.author]);
-  return {
-    authorUsername: author.username,
-    readUsers: getReadUsers(state.users, ownProps.readStatus),
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  authorUsername: getUser(state.users, ownProps.author).username,
+  readUsers: getReadUsers(state.users, ownProps.readStatus),
+});
 const Message = connect(
   mapStateToProps,
   null,

@@ -36,7 +36,7 @@ const addUserToChat = (chatId, userId) => {
 };
 const removeUserFromChat = (chatId, userId) => {
   try {
-    db.collection(`chats/${chatId}/users`).doc(userId).set({
+    db.collection(`chats/${chatId}/users`).doc(userId).update({
       isJoined: false,
     });
   } catch (e) {
@@ -67,7 +67,7 @@ export const untagChat = (chatId, tagName) => {
   }
 };
 // TODO: is async needed here?
-export const addChatParticipant = async (chatId, userId) => {
+export const addChatParticipant = (chatId, userId) => {
   try {
     addChatToUser(userId, chatId); // ?? this is adding, then modifying
     addUserToChat(chatId, userId);
@@ -75,12 +75,10 @@ export const addChatParticipant = async (chatId, userId) => {
     console.log(e);
   }
 };
-export const removeChatParticipant = async (chatId, userId) => {
+export const removeChatParticipant = (chatId, userId) => {
   try {
-    Promise.all([
-      removeChatFromUser(userId, chatId),
-      removeUserFromChat(chatId, userId),
-    ]);
+    removeChatFromUser(userId, chatId);
+    removeUserFromChat(chatId, userId);
   } catch (e) {
     console.log(e);
   }

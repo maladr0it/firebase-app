@@ -7,6 +7,8 @@ const user = (state = defaultState, action) => {
   switch (action.type) {
     case 'LOGGED_IN': {
       const { userId, userData } = action.payload;
+      console.log('///');
+      console.log(userData);
       return {
         ...state,
         userId,

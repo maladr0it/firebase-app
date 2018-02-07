@@ -11,8 +11,6 @@ const users = (state = defaultState, action) => {
   switch (action.type) {
     case 'USER_DATA_UPDATED': {
       const { userId, userData } = action.payload;
-      console.log('adding/updating user data');
-      console.log(userData);
       return {
         ...state,
         [userId]: userData,
@@ -35,12 +33,5 @@ export const getUser = (state, userId) => (
 );
 export const getReadUsers = (state, readStatus) => {
   const userIds = Object.keys(readStatus).filter(id => readStatus[id] != null);
-  return userIds.map((id) => {
-    const userData = state[id] || defaultUser;
-    return {
-      id,
-      ...userData,
-      seenAt: readStatus[id],
-    };
-  });
+  return getUsers(state, userIds);
 };
