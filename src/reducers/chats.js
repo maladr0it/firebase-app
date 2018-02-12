@@ -23,6 +23,7 @@
 const defaultChat = {
   messageIds: [],
   userIds: [],
+  usersState: {}, // chat-specific user data (joinedStatus, isTyping)
   tags: {},
   scrollPos: 0,
   atBottom: true,
@@ -39,10 +40,15 @@ const chat = (state = defaultChat, action) => {
       };
     }
     case 'CHAT_USERS_UPDATED': {
-      const { userIds } = action.payload;
+      const { userIds, changes } = action.payload;
+      const usersData = changes.reduce((acc, userDoc) => {
+        acc[userDoc.id] = userDoc.data;
+        return acc;
+      }, {});
       return {
         ...state,
         userIds,
+        usersState: { ...state.usersState, ...usersData },
       };
     }
     case 'MESSAGES_ADDED': {
@@ -129,6 +135,12 @@ export const getChat = (state, chatId) => (
 export const getUserIds = (state, chatId) => (
   getChat(state, chatId).userIds
 );
+export const getJoinedUserIds = (state, chatId) => {
+  const { usersState } = getChat(state, chatId);
+  return Object.keys(usersState).filter(id => (
+    usersState[id].isJoined
+  ));
+};
 export const getTags = (state, chatId) => (
   Object.keys(getChat(state, chatId).tags)
 );

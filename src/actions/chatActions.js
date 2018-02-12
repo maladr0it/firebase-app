@@ -16,7 +16,8 @@ export const chatDataUpdated = (chatId, data) => ({
 export const removeUserFromChat = (chatId, userId) => () => {
   db.removeChatParticipant(chatId, userId);
 };
-export const addUserToChat = (chatId, userId) => () => {
+export const addUserToChat = (chatId, username) => async () => {
+  const userId = await db.getUserIdByName(username);
   db.addChatParticipant(chatId, userId);
 };
 export const tagChat = (chatId, tagName) => () => {

@@ -7,9 +7,9 @@ export const loggedIn = (userId, userData) => ({
 export const loggedOut = () => ({
   type: 'LOGGED_OUT',
 });
-export const chatUsersUpdated = (chatId, userIds) => ({
+export const chatUsersUpdated = (chatId, userIds, changes) => ({
   type: 'CHAT_USERS_UPDATED',
-  payload: { chatId, userIds },
+  payload: { chatId, userIds, changes },
 });
 export const userDataUpdated = (userId, userData) => ({
   type: 'USER_DATA_UPDATED',
@@ -48,13 +48,7 @@ export const listenToChatForUsers = chatId => (dispatch) => {
     if (newUsers.length > 0) {
       newUsers.forEach(user => dispatch(listenToUser(user.id)));
     }
-    // get 'isJoined' userIds only
-    const joinedUsers = changes.filter(change => (
-      change.data.isJoined === true
-    ));
-    const joinedUserIds = joinedUsers.map(user => user.id);
-    console.log(joinedUsers);
-    dispatch(chatUsersUpdated(chatId, joinedUserIds));
+    dispatch(chatUsersUpdated(chatId, userIds, changes));
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;

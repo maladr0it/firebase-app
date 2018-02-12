@@ -7,7 +7,7 @@ import {
   listenToChatForMeta,
   listenToChatForUsers,
 } from '../../actions';
-import { getChat } from '../../reducers/chats';
+import { getJoinedUserIds } from '../../reducers/chats';
 import { getUsers } from '../../reducers/users';
 
 import './index.css';
@@ -50,7 +50,7 @@ class ChatItemComponent extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const { userIds } = getChat(state.chats, ownProps.chatId);
+  const userIds = getJoinedUserIds(state.chats, ownProps.chatId);
   return {
     userId: state.user.userId,
     users: getUsers(state.users, userIds),

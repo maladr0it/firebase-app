@@ -10,7 +10,7 @@ import {
   addUserToChat,
   removeUserFromChat,
 } from '../../actions';
-import { getChat } from '../../reducers/chats';
+import { getJoinedUserIds } from '../../reducers/chats';
 import { getUsers } from '../../reducers/users';
 
 import InputForm from '../InputForm';
@@ -34,7 +34,7 @@ const UserListComponent = ({
     >
       <InputForm
         label="ADD USER: "
-        handleSubmit={tagName => onAddUser(chatId, tagName)}
+        handleSubmit={username => onAddUser(chatId, username)}
         autoFocus
       />
     </IconMenu>
@@ -49,7 +49,7 @@ const UserListComponent = ({
   );
 };
 const mapStateToProps = (state, ownProps) => {
-  const { userIds } = getChat(state.chats, ownProps.chatId);
+  const userIds = getJoinedUserIds(state.chats, ownProps.chatId);
   return {
     users: getUsers(state.users, userIds),
   };
