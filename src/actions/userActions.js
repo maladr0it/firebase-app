@@ -15,6 +15,10 @@ export const userDataUpdated = (userId, userData) => ({
   type: 'USER_DATA_UPDATED',
   payload: { userId, userData },
 });
+export const userListenerOpened = userId => ({
+  type: 'LISTENER_OPENED',
+  payload: { resourceType: 'users', resourceId: userId },
+});
 // THUNKS
 export const login = username => async (dispatch) => {
   const user = await db.getUserByName(username);
@@ -34,11 +38,16 @@ export const createUser = username => async () => {
     console.log(e);
   }
 };
-const listenToUser = userId => (dispatch) => {
-  const callback = (data) => {
-    dispatch(userDataUpdated(userId, data));
-  };
-  const unsubscribe = db.listenToUser(userId, callback);
+const listenToUser = userId => (dispatch, getState) => {
+  let unsubscribe;
+  // only open listener if it does not yet exist
+  if (!getState().listeners.users[userId]) {
+    const callback = (data) => {
+      dispatch(userDataUpdated(userId, data));
+    };
+    dispatch(userListenerOpened(userId));
+    unsubscribe = db.listenToUser(userId, callback);
+  }
   return unsubscribe;
 };
 export const listenToChatForUsers = chatId => (dispatch) => {
