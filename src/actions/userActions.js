@@ -19,6 +19,10 @@ export const userListenerOpened = userId => ({
   type: 'LISTENER_OPENED',
   payload: { resourceType: 'users', resourceId: userId },
 });
+export const avatarUrlSet = (userId, url) => ({
+  type: 'AVATAR_URL_SET',
+  payload: { userId, url },
+});
 // THUNKS
 export const login = username => async (dispatch) => {
   const user = await db.getUserByName(username);
@@ -38,12 +42,18 @@ export const createUser = username => async () => {
     console.log(e);
   }
 };
+const getAvatar = (userId, data) => async (dispatch) => {
+  const url = await db.getAvatar(data.avatarName);
+  dispatch(avatarUrlSet(userId, url));
+};
+
 const listenToUser = userId => (dispatch, getState) => {
   let unsubscribe;
   // only open listener if it does not yet exist
   if (!getState().listeners.users[userId]) {
     const callback = (data) => {
       dispatch(userDataUpdated(userId, data));
+      dispatch(getAvatar(userId, data)); // TODO updates avatar even if it hasn't changed
     };
     dispatch(userListenerOpened(userId));
     unsubscribe = db.listenToUser(userId, callback);

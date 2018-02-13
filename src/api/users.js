@@ -1,8 +1,13 @@
 import firebase from './firebase';
 
 const db = firebase.firestore();
+const storage = firebase.storage();
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
+// experimenting with storage
+export const getAvatar = async filename => (
+  storage.ref(filename).getDownloadURL()
+);
 export const getUser = async (userId) => {
   let userData = {};
   try {

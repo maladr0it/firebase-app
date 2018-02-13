@@ -16,6 +16,14 @@ const users = (state = defaultState, action) => {
         [userId]: userData,
       };
     }
+    case 'AVATAR_URL_SET': {
+      const { userId, url } = action.payload;
+      console.log(`setting user ${userId}'s avatar URL to: ${url}`);
+      return {
+        ...state,
+        [userId]: { ...state[userId], avatarUrl: url },
+      };
+    }
     default:
       return state;
   }
