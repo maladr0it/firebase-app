@@ -19,6 +19,10 @@ const userListenerOpened = userId => ({
   type: 'LISTENER_OPENED',
   payload: { resourceType: 'users', resourceId: userId },
 });
+const reservationsUpdated = (userId, reservationIds, changes) => ({
+  type: 'RESERVATIONS_UPDATED',
+  payload: { userId, reservationIds, changes },
+});
 const avatarUrlSet = (userId, url) => ({
   type: 'AVATAR_URL_SET',
   payload: { userId, url },
@@ -34,17 +38,19 @@ const getAvatar = (userId, data) => async (dispatch) => {
   dispatch(avatarUrlSet(userId, url));
 };
 const listenToUser = userId => (dispatch, getState) => {
-  let unsubscribe;
   // only open listener if it does not yet exist
   if (!getState().listeners.users[userId]) {
-    const callback = (data) => {
+    const userCallback = (data) => {
       dispatch(userDataUpdated(userId, data));
       dispatch(getAvatar(userId, data)); // TODO updates avatar even if it hasn't changed
     };
+    const reservationCallback = (changes, reservationIds) => {
+      dispatch(reservationsUpdated(userId, reservationIds, changes));
+    };
     dispatch(userListenerOpened(userId));
-    unsubscribe = db.listenToUser(userId, callback);
+    db.listenToUser(userId, userCallback);
+    db.listenForReservations(userId, reservationCallback);
   }
-  return unsubscribe;
 };
 export const login = username => async (dispatch) => {
   const user = await db.getUserByName(username);
@@ -63,6 +69,10 @@ export const createUser = username => async () => {
   } catch (e) {
     console.log(e);
   }
+};
+// TODO: some of these reservation functions don't belong here
+export const createReservation = (userId, description) => () => {
+  db.createReservation(userId, description);
 };
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, userIds) => {

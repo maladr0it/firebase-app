@@ -4,6 +4,7 @@ import users from './users';
 import chatApp from './chatApp';
 import chats from './chats';
 import messages from './messages';
+import reservations from './reservations';
 import listeners from './listeners';
 
 const app = combineReducers({
@@ -12,6 +13,7 @@ const app = combineReducers({
   chatApp,
   chats,
   messages,
+  reservations,
   listeners,
 });
 

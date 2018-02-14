@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getUser } from '../../reducers/users';
 
 import UserProfile from './UserProfile';
+import ReservationsList from './ReservationsList';
 
 import './index.css';
 
@@ -12,7 +13,10 @@ const UserPaneComponent = ({
 }) => (
   <div className="UserPane">
     {(userId) ? (
-      <UserProfile userId={userId} {...userData} />
+      <React.Fragment>
+        <UserProfile userId={userId} {...userData} />
+        <ReservationsList userId={userId} reservationIds={userData.reservationIds} />
+      </React.Fragment>
     ) : (
       ''
     )}
@@ -31,6 +35,7 @@ export default UserPane;
 const userShape = {
   username: PropTypes.string,
   avatarUrl: PropTypes.string,
+  boomie: PropTypes.string,
   joinedAt: PropTypes.instanceOf(Date),
 };
 UserPaneComponent.propTypes = {

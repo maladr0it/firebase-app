@@ -3,7 +3,6 @@
 //   msg10814: { author: 'usr191901', text: 'hi', isPending: false },
 //   msg10948: { author: 'usr177154', text: 'howdy!, isPending: true }
 // };
-
 const defaultState = { };
 
 const messages = (state = defaultState, action) => {

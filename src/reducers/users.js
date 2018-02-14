@@ -13,7 +13,14 @@ const users = (state = defaultState, action) => {
       const { userId, userData } = action.payload;
       return {
         ...state,
-        [userId]: userData,
+        [userId]: { ...state[userId], ...userData },
+      };
+    }
+    case 'RESERVATIONS_UPDATED': {
+      const { userId, reservationIds } = action.payload;
+      return {
+        ...state,
+        [userId]: { ...state[userId], reservationIds },
       };
     }
     case 'AVATAR_URL_SET': {
@@ -30,8 +37,8 @@ const users = (state = defaultState, action) => {
 };
 export default users;
 
-export const getUsers = (state, userIds) => (
-  userIds.map((id) => {
+export const getUsers = (state, ids = []) => (
+  ids.map((id) => {
     const userData = state[id] || defaultUser;
     return { id, ...userData };
   })
