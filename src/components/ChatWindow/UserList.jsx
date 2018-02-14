@@ -9,6 +9,7 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 import {
   addUserToChat,
   removeUserFromChat,
+  userSelected,
 } from '../../actions';
 import { getJoinedUserIds } from '../../reducers/chats';
 import { getUsers } from '../../reducers/users';
@@ -16,11 +17,13 @@ import { getUsers } from '../../reducers/users';
 import InputForm from '../InputForm';
 
 const UserListComponent = ({
-  onAddUser, onRemoveUser, chatId, users,
+  onAddUser, onRemoveUser, onSelectUser,
+  chatId, users,
 }) => {
   const userChips = users.map(user => (
     <Chip
       key={user.id}
+      onClick={() => onSelectUser(user.id)}
       onRequestDelete={() => onRemoveUser(chatId, user.id)}
     >
       {user.username}
@@ -57,12 +60,12 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = ({
   onAddUser: addUserToChat,
   onRemoveUser: removeUserFromChat,
+  onSelectUser: userSelected,
 });
 const UserList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(UserListComponent);
-
 export default UserList;
 
 UserListComponent.propTypes = {
@@ -70,6 +73,7 @@ UserListComponent.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   onAddUser: PropTypes.func.isRequired,
   onRemoveUser: PropTypes.func.isRequired,
+  onSelectUser: PropTypes.func.isRequired,
 };
 UserListComponent.defaultProps = {
   users: [],

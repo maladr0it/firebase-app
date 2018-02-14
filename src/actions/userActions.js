@@ -1,29 +1,51 @@
 import * as db from '../api';
 
-export const loggedIn = (userId, userData) => ({
+const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
   payload: { userId, userData },
 });
-export const loggedOut = () => ({
+const loggedOut = () => ({
   type: 'LOGGED_OUT',
 });
-export const chatUsersUpdated = (chatId, userIds, changes) => ({
+const chatUsersUpdated = (chatId, userIds, changes) => ({
   type: 'CHAT_USERS_UPDATED',
   payload: { chatId, userIds, changes },
 });
-export const userDataUpdated = (userId, userData) => ({
+const userDataUpdated = (userId, userData) => ({
   type: 'USER_DATA_UPDATED',
   payload: { userId, userData },
 });
-export const userListenerOpened = userId => ({
+const userListenerOpened = userId => ({
   type: 'LISTENER_OPENED',
   payload: { resourceType: 'users', resourceId: userId },
 });
-export const avatarUrlSet = (userId, url) => ({
+const avatarUrlSet = (userId, url) => ({
   type: 'AVATAR_URL_SET',
   payload: { userId, url },
 });
+export const userSelected = userId => ({
+  type: 'USER_SELECTED',
+  payload: { userId },
+});
+
 // THUNKS
+const getAvatar = (userId, data) => async (dispatch) => {
+  const url = await db.getAvatar(data.avatarName);
+  dispatch(avatarUrlSet(userId, url));
+};
+const listenToUser = userId => (dispatch, getState) => {
+  let unsubscribe;
+  // only open listener if it does not yet exist
+  if (!getState().listeners.users[userId]) {
+    const callback = (data) => {
+      dispatch(userDataUpdated(userId, data));
+      dispatch(getAvatar(userId, data)); // TODO updates avatar even if it hasn't changed
+    };
+    dispatch(userListenerOpened(userId));
+    unsubscribe = db.listenToUser(userId, callback);
+  }
+  return unsubscribe;
+};
 export const login = username => async (dispatch) => {
   const user = await db.getUserByName(username);
   if (user) {
@@ -41,24 +63,6 @@ export const createUser = username => async () => {
   } catch (e) {
     console.log(e);
   }
-};
-const getAvatar = (userId, data) => async (dispatch) => {
-  const url = await db.getAvatar(data.avatarName);
-  dispatch(avatarUrlSet(userId, url));
-};
-
-const listenToUser = userId => (dispatch, getState) => {
-  let unsubscribe;
-  // only open listener if it does not yet exist
-  if (!getState().listeners.users[userId]) {
-    const callback = (data) => {
-      dispatch(userDataUpdated(userId, data));
-      dispatch(getAvatar(userId, data)); // TODO updates avatar even if it hasn't changed
-    };
-    dispatch(userListenerOpened(userId));
-    unsubscribe = db.listenToUser(userId, callback);
-  }
-  return unsubscribe;
 };
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, userIds) => {

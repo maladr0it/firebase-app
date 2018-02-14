@@ -49,13 +49,13 @@ const Message = connect(
 )(MessageComponent);
 export default Message;
 
-const userShape = PropTypes.shape({
+const userShape = {
   username: PropTypes.string,
   avatarUrl: PropTypes.string,
-});
+};
 MessageComponent.propTypes = {
-  authorData: userShape.isRequired,
-  readUsers: PropTypes.arrayOf(userShape),
+  authorData: PropTypes.shape(userShape).isRequired,
+  readUsers: PropTypes.arrayOf(PropTypes.shape(userShape)),
   text: PropTypes.string.isRequired,
   createdAt: PropTypes.instanceOf(Date),
   readStatus: PropTypes.objectOf(Date),

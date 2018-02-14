@@ -5,6 +5,7 @@ const defaultState = {
   },
   filters: ['isOpen'],
   selectedChat: undefined,
+  selectedUser: undefined,
 };
 
 const chatApp = (state = defaultState, action) => {
@@ -61,6 +62,13 @@ const chatApp = (state = defaultState, action) => {
       return {
         ...state,
         selectedChat: chatId,
+      };
+    }
+    case 'USER_SELECTED': {
+      const { userId } = action.payload;
+      return {
+        ...state,
+        selectedUser: userId,
       };
     }
     default:

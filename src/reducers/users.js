@@ -5,7 +5,7 @@
 // };
 
 const defaultState = {};
-const defaultUser = { username: 'LOADING...' };
+const defaultUser = {};
 
 const users = (state = defaultState, action) => {
   switch (action.type) {

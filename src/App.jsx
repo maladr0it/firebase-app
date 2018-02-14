@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import AccountControls from './components/AccountControls';
 import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
+import UserPane from './components/UserPane';
 
 import './App.css';
 
@@ -20,6 +21,7 @@ const App = ({
         <div className="ChatPaneContainer">
           <ChatList />
           <ChatWindow />
+          <UserPane />
         </div>
       ) : (
         ''

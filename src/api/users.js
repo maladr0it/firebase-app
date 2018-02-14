@@ -43,10 +43,10 @@ export const getUserIdByName = async (username) => {
   }
   return userId;
 };
-export const createUser = async username => (
+export const createUser = username => (
   db.collection('users').add({
     username,
-    dateJoined: timestamp,
+    joinedAt: timestamp,
   })
 );
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
