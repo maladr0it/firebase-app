@@ -12,7 +12,7 @@ const ReservationListComponent = ({
   <div>
     <p>reservations: </p>
     <ul>
-      {reservations.map(res => <li>{res.description}</li>)}
+      {reservations.map(res => <li key={res.id}>{res.description}</li>)}
     </ul>
     <button
       onClick={() => onCreateReservation(userId, 'DO THE THING')}
@@ -21,13 +21,9 @@ const ReservationListComponent = ({
     </button>
   </div>
 );
-const mapStateToProps = (state, ownProps) => {
-  console.log('reservation Ids: ');
-  console.log(ownProps.reservationIds);
-  return {
-    reservations: getReservations(state.reservations, ownProps.reservationIds),
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  reservations: getReservations(state.reservations, ownProps.reservationIds),
+});
 const mapDispatchToProps = {
   onCreateReservation: createReservation,
 };

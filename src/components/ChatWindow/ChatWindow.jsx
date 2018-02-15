@@ -18,7 +18,7 @@ const ChatWindowComponent = ({
     <UserList chatId={chatId} />
     <TagControls chatId={chatId} />
     <MessageList chatId={chatId} />
-    <MessageInput />
+    <MessageInput chatId={chatId} />
   </div>
 );
 const mapStateToProps = state => ({

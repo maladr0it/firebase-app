@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { debounce, throttle } from 'lodash';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import { getChat } from '../../reducers/chats';
+import { getChatView } from '../../reducers/chatViews';
 import {
   sendMessage,
   draftTextUpdated,
@@ -78,11 +78,14 @@ class MessageInputComponent extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  userId: state.user.userId,
-  chatId: state.chatApp.selectedChat,
-  draftText: getChat(state.chats, state.chatApp.selectedChat).draftText,
-});
+const mapStateToProps = (state, ownProps) => {
+  const { chatId } = ownProps;
+  return {
+    userId: state.user.userId,
+    chatId,
+    draftText: getChatView(state.chatViews, chatId).draftText,
+  };
+};
 const mapDispatchToProps = {
   onSend: sendMessage,
   updateDraft: draftTextUpdated,

@@ -7,10 +7,11 @@ import {
   scrollPosUpdated,
 } from '../../actions';
 import { getChat } from '../../reducers/chats';
+import { getChatView } from '../../reducers/chatViews';
 import { getMessages } from '../../reducers/messages';
 
 import Message from './Message';
-import TypingIndicator from './TypingIndicator';
+// import TypingIndicator from './TypingIndicator';
 import './index.css';
 
 class MessageListComponent extends React.Component {
@@ -22,6 +23,7 @@ class MessageListComponent extends React.Component {
       this.props.updateScroll(this.props.chatId, scrollPos, atBottom);
     }, 100);
   }
+  // TODO: this component is updating far too often
   // bit hacky.
   // scrolls to bottom if flagged as atBottom
   componentDidUpdate(prevProps) {
@@ -59,11 +61,13 @@ class MessageListComponent extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const chatData = getChat(state.chats, ownProps.chatId);
+  const { messageIds } = getChat(state.chats, ownProps.chatId);
+  const { scrollPos, atBottom } = getChatView(state.chatViews, ownProps.chatId);
   return {
     userId: state.user.userId,
-    ...chatData,
-    messages: getMessages(state.messages, chatData.messageIds),
+    scrollPos,
+    atBottom,
+    messages: getMessages(state.messages, messageIds),
   };
 };
 const mapDispatchToProps = {
@@ -80,11 +84,13 @@ MessageListComponent.propTypes = {
   chatId: PropTypes.string.isRequired,
   messages: PropTypes.arrayOf(PropTypes.object),
   users: PropTypes.arrayOf(PropTypes.object),
-  scrollPos: PropTypes.number.isRequired,
-  atBottom: PropTypes.bool.isRequired,
+  scrollPos: PropTypes.number,
+  atBottom: PropTypes.bool,
   updateScroll: PropTypes.func.isRequired,
 };
 MessageListComponent.defaultProps = {
   messages: [],
   users: [],
+  atBottom: true,
+  scrollPos: 0,
 };

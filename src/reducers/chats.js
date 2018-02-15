@@ -10,11 +10,6 @@
 //     messageIds: ['msg29401', 'msg49081', 'mgs02821']
 //     userIds: ['usr0001', 'usr0002', 'usr0003'],
 //     users: { usr0001: { isTyping: etc...}, usr0002: { isT..} }
-//
-//     DISPLAY
-//     scrollPos: 400,
-//     atBottom: true,
-//     draftText: '',
 //   },
 // };
 
@@ -25,9 +20,6 @@ const defaultChat = {
   userIds: [],
   usersState: {}, // chat-specific user data (joinedStatus, isTyping)
   tags: {},
-  scrollPos: 0,
-  atBottom: true,
-  draftText: '',
 };
 
 const chat = (state = defaultChat, action) => {
@@ -56,21 +48,6 @@ const chat = (state = defaultChat, action) => {
       return {
         ...state,
         messageIds,
-      };
-    }
-    case 'SCROLL_POS_UPDATED': {
-      const { scrollPos, atBottom } = action.payload;
-      return {
-        ...state,
-        scrollPos,
-        atBottom,
-      };
-    }
-    case 'DRAFT_TEXT_UPDATED': {
-      const { text } = action.payload;
-      return {
-        ...state,
-        draftText: text,
       };
     }
     default:
@@ -103,20 +80,6 @@ const chats = (state = defaultState, action) => {
         [chatId]: chat(state[chatId], action),
       };
     }
-    case 'SCROLL_POS_UPDATED': {
-      const { chatId } = action.payload;
-      return {
-        ...state,
-        [chatId]: chat(state[chatId], action),
-      };
-    }
-    case 'DRAFT_TEXT_UPDATED': {
-      const { chatId } = action.payload;
-      return {
-        ...state,
-        [chatId]: chat(state[chatId], action),
-      };
-    }
     case 'LOGGED_OUT': {
       return defaultState;
     }
@@ -129,6 +92,8 @@ export default chats;
 // TODO: optimise this
 // it is passing too much stuff
 // consider thinning out the chat object
+
+// defaultChat should not be needed
 export const getChat = (state, chatId) => (
   state[chatId] || defaultChat
 );
