@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { connect } from 'react-redux';
 import Avatar from 'material-ui/Avatar';
+import { getUser } from '../../reducers/users';
 
 const UserProfileComponent = ({
   userId, username, avatarUrl,
@@ -12,7 +13,14 @@ const UserProfileComponent = ({
     <p>id is: {userId}</p>
   </div>
 );
-export default UserProfileComponent;
+const mapStateToProps = (state, ownProps) => ({
+  ...getUser(state.users, ownProps.userId),
+});
+const UserProfile = connect(
+  mapStateToProps,
+  null,
+)(UserProfileComponent);
+export default UserProfile;
 
 UserProfileComponent.propTypes = {
   userId: PropTypes.string,

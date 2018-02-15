@@ -23,7 +23,7 @@ const UserListComponent = ({
   const userChips = users.map(user => (
     <Chip
       key={user.id}
-      onClick={() => onSelectUser(user.id)}
+      onClick={() => onSelectUser(chatId, user.id)}
       onRequestDelete={() => onRemoveUser(chatId, user.id)}
     >
       {user.username}

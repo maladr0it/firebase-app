@@ -35,6 +35,17 @@ const chatViews = (state = defaultState, action) => {
         [chatId]: { ...state[chatId], draftText: text },
       };
     }
+    case 'USER_SELECTED': {
+      const { chatId, userId } = action.payload;
+      return {
+        ...state,
+        [chatId]: {
+          ...state[chatId],
+          detailViewType: 'USER', // TODO: store magic string in constants
+          selectedUserId: userId,
+        },
+      };
+    }
     default:
       return state;
   }

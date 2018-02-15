@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getUser } from '../../reducers/users';
 import { getReservations } from '../../reducers/reservations';
 import {
   createReservation,
@@ -21,9 +22,12 @@ const ReservationListComponent = ({
     </button>
   </div>
 );
-const mapStateToProps = (state, ownProps) => ({
-  reservations: getReservations(state.reservations, ownProps.reservationIds),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { reservationIds } = getUser(state.users, ownProps.userId);
+  return {
+    reservations: getReservations(state.reservations, reservationIds),
+  };
+};
 const mapDispatchToProps = {
   onCreateReservation: createReservation,
 };

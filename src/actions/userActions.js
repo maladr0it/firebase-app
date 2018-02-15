@@ -27,9 +27,9 @@ const avatarUrlSet = (userId, url) => ({
   type: 'AVATAR_URL_SET',
   payload: { userId, url },
 });
-export const userSelected = userId => ({
+export const userSelected = (chatId, userId) => ({
   type: 'USER_SELECTED',
-  payload: { userId },
+  payload: { chatId, userId },
 });
 
 // THUNKS
