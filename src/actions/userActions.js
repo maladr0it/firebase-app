@@ -31,6 +31,10 @@ export const userSelected = (chatId, userId) => ({
   type: 'USER_SELECTED',
   payload: { chatId, userId },
 });
+export const reservationSelected = (chatId, reservationId) => ({
+  type: 'RESERVATION_SELECTED',
+  payload: { chatId, reservationId },
+});
 
 // THUNKS
 const getAvatar = (userId, data) => async (dispatch) => {

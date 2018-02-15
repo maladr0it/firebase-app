@@ -32,7 +32,10 @@ const chatViews = (state = defaultState, action) => {
       const { chatId, text } = action.payload;
       return {
         ...state,
-        [chatId]: { ...state[chatId], draftText: text },
+        [chatId]: {
+          ...state[chatId],
+          draftText: text,
+        },
       };
     }
     case 'USER_SELECTED': {
@@ -41,8 +44,19 @@ const chatViews = (state = defaultState, action) => {
         ...state,
         [chatId]: {
           ...state[chatId],
-          detailViewType: 'USER', // TODO: store magic string in constants
+          detailViewType: 'USER',
           selectedUserId: userId,
+        },
+      };
+    }
+    case 'RESERVATION_SELECTED': {
+      const { chatId, reservationId } = action.payload;
+      return {
+        ...state,
+        [chatId]: {
+          ...state[chatId],
+          detailViewType: 'RESERVATION',
+          selectedReservationId: reservationId,
         },
       };
     }

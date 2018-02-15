@@ -38,13 +38,13 @@ const users = (state = defaultState, action) => {
 export default users;
 
 export const getUsers = (state, ids = []) => (
-  ids.map((id) => {
-    const userData = state[id] || defaultUser;
-    return { id, ...userData };
-  })
+  ids.map(id => ({
+    id,
+    ...state[id] || defaultUser,
+  }))
 );
-export const getUser = (state, userId) => (
-  state[userId] || defaultUser
+export const getUser = (state, id) => (
+  state[id] || defaultUser
 );
 export const getReadUsers = (state, readStatus) => {
   const userIds = Object.keys(readStatus).filter(id => readStatus[id] != null);

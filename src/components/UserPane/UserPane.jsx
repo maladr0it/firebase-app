@@ -5,11 +5,12 @@ import { getChatView } from '../../reducers/chatViews';
 
 import UserProfile from './UserProfile';
 import ReservationsList from './ReservationsList';
+import ReservationDetail from './ReservationDetail';
 
 import './index.css';
 
 const UserPaneComponent = ({
-  detailViewType, selectedUserId,
+  detailViewType, selectedUserId, selectedReservationId,
 }) => (
   <div className="UserPane">
     {(detailViewType === 'USER') ? (
@@ -20,16 +21,24 @@ const UserPaneComponent = ({
     ) : (
       ''
     )}
+    {(detailViewType === 'RESERVATION') ? (
+      <React.Fragment>
+        <ReservationDetail reservationId={selectedReservationId} />
+      </React.Fragment>
+    ) : (
+      ''
+    )}
   </div>
 );
 const mapStateToProps = (state) => {
   const { selectedChat } = state.chatApp;
   const {
-    detailViewType, selectedUserId,
+    detailViewType, selectedUserId, selectedReservationId,
   } = getChatView(state.chatViews, selectedChat);
   return {
     detailViewType,
     selectedUserId,
+    selectedReservationId,
   };
 };
 const UserPane = connect(
@@ -41,8 +50,10 @@ export default UserPane;
 UserPaneComponent.propTypes = {
   detailViewType: PropTypes.string,
   selectedUserId: PropTypes.string,
+  selectedReservationId: PropTypes.string,
 };
 UserPaneComponent.defaultProps = {
   detailViewType: '',
   selectedUserId: '',
+  selectedReservationId: '',
 };

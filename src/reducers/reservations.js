@@ -7,6 +7,7 @@
 //   },
 // };
 const defaultState = { };
+const defaultReservation = { };
 
 const reservations = (state = defaultState, action) => {
   switch (action.type) {
@@ -30,6 +31,9 @@ export default reservations;
 export const getReservations = (state, ids = []) => (
   ids.map(id => ({
     id,
-    ...state[id],
+    ...state[id] || defaultReservation,
   }))
+);
+export const getReservation = (state, id) => (
+  state[id] || defaultReservation
 );
