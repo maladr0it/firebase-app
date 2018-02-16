@@ -6,30 +6,30 @@ import { getChatView } from '../../reducers/chatViews';
 import UserProfile from './UserProfile';
 import ReservationsList from './ReservationsList';
 import ReservationDetail from './ReservationDetail';
-
 import './index.css';
 
 const UserPaneComponent = ({
   detailViewType, selectedUserId, selectedReservationId,
-}) => (
-  <div className="UserPane">
-    {(detailViewType === 'USER') ? (
-      <React.Fragment>
-        <UserProfile userId={selectedUserId} />
-        <ReservationsList userId={selectedUserId} />
-      </React.Fragment>
-    ) : (
-      ''
-    )}
-    {(detailViewType === 'RESERVATION') ? (
-      <React.Fragment>
-        <ReservationDetail reservationId={selectedReservationId} />
-      </React.Fragment>
-    ) : (
-      ''
-    )}
-  </div>
-);
+}) => {
+  const renderMap = {
+    // TODO: make these render funcs
+    USER: () => ([
+      <UserProfile userId={selectedUserId} />,
+      <ReservationsList userId={selectedUserId} />,
+    ]),
+    RESERVATION: () => (
+      <ReservationDetail reservationId={selectedReservationId} />
+    ),
+    default: () => (
+      <div>Nothing...</div>
+    ),
+  };
+  return (
+    <div className="UserPane">
+      {(renderMap[detailViewType] || renderMap.default)()}
+    </div>
+  );
+};
 const mapStateToProps = (state) => {
   const { selectedChat } = state.chatApp;
   const {
