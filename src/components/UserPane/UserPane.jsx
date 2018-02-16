@@ -13,10 +13,12 @@ const UserPaneComponent = ({
 }) => {
   const renderMap = {
     // TODO: make these render funcs
-    USER: () => ([
-      <UserProfile userId={selectedUserId} />,
-      <ReservationsList userId={selectedUserId} />,
-    ]),
+    USER: () => (
+      <React.Fragment>
+        <UserProfile userId={selectedUserId} />
+        <ReservationsList userId={selectedUserId} />
+      </React.Fragment>
+    ),
     RESERVATION: () => (
       <ReservationDetail reservationId={selectedReservationId} />
     ),
