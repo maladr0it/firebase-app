@@ -11,6 +11,11 @@ export const createReservation = (userId, description) => {
     description,
   });
 };
+export const updateReservation = (reservationId, data) => {
+  db.collection('reservations').doc(reservationId).update({
+    ...data,
+  });
+};
 export const listenForReservations = (userId, callback) => {
   const unsubscribe = db.collection('reservations')
     .where('user', '==', userId).limit(10)
