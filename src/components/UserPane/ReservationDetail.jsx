@@ -14,13 +14,12 @@ import {
 } from '../../actions';
 
 // needs local state for input fields
-
 class ReservationDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       description: props.description,
-      reservationAt: moment(props.reservationAt),
+      reservationAt: props.reservationAt && moment(props.reservationAt),
     };
   }
   handleSubmit(e) {
@@ -104,6 +103,6 @@ ReservationDetailComponent.propTypes = {
   description: PropTypes.string,
 };
 ReservationDetailComponent.defaultProps = {
-  reservationAt: moment().toDate(),
+  reservationAt: null,
   description: '',
 };
