@@ -10,6 +10,7 @@ import moment from 'moment';
 import { getReservation } from '../../reducers/reservations';
 import {
   updateReservation,
+  userSelected,
 } from '../../actions';
 
 // needs local state for input fields
@@ -25,12 +26,12 @@ class ReservationDetailComponent extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     let formData = this.state;
-    // convert monent to date
+    // convert moment to date
     if (this.state.reservationAt) {
       formData = {
         ...formData,
         reservationAt: formData.reservationAt.toDate(),
-      }
+      };
     }
     console.log(formData);
     this.props.onUpdateReservation(
@@ -47,6 +48,10 @@ class ReservationDetailComponent extends React.Component {
   render() {
     return (
       <div>
+        <RaisedButton
+          label="<-"
+          onClick={() => this.props.onBack(this.props.chatId, this.props.userId)}
+        />
         <form
           onSubmit={e => this.handleSubmit(e)}
         >
@@ -70,11 +75,17 @@ class ReservationDetailComponent extends React.Component {
     );
   }
 }
-const mapStateToProps = (state, ownProps) => ({
-  ...getReservation(state.reservations, ownProps.reservationId),
-});
+const mapStateToProps = (state, ownProps) => {
+  const chatId = state.chatApp.selectedChat;
+  return {
+    userId: state.chatViews[chatId].selectedUserId,
+    chatId,
+    ...getReservation(state.reservations, ownProps.reservationId),
+  };
+};
 const mapDispatchToProps = {
   onUpdateReservation: updateReservation,
+  onBack: userSelected,
 };
 const ReservationDetail = connect(
   mapStateToProps,
@@ -84,13 +95,15 @@ export default ReservationDetail;
 
 ReservationDetailComponent.propTypes = {
   onUpdateReservation: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
+  chatId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
   reservationId: PropTypes.string.isRequired,
-  createdAt: PropTypes.instanceOf(Date),
+  createdAt: PropTypes.instanceOf(Date).isRequired,
   reservationAt: PropTypes.instanceOf(Date),
   description: PropTypes.string,
 };
 ReservationDetailComponent.defaultProps = {
-  createdAt: Date(),
-  reservationAt: Date(),
+  reservationAt: moment().toDate(),
   description: '',
 };
