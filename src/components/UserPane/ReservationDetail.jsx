@@ -49,7 +49,10 @@ class ReservationDetailComponent extends React.Component {
   render() {
     return (
       <div>
-        <IconButton onClick={() => this.props.onBack(this.props.chatId, this.props.userId)}>
+        <IconButton onClick={() => (
+            this.props.onBack(this.props.chatId, this.props.userId)
+          )}
+        >
           <ArrowBack />
         </IconButton>
         <form
@@ -110,6 +113,6 @@ ReservationDetailComponent.propTypes = {
   description: PropTypes.string,
 };
 ReservationDetailComponent.defaultProps = {
-  reservationAt: null,
+  reservationAt: undefined,
   description: '',
 };

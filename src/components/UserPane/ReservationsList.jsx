@@ -12,25 +12,31 @@ import {
 const ReservationListComponent = ({
   chatId, userId, reservations,
   onCreateReservation, onSelectReservation,
-}) => (
-  <div>
-    <p>reservations: </p>
-    <List>
-      {reservations.map(res => (
-        <ListItem
-          key={res.id}
-          primaryText={res.description}
-          onClick={() => onSelectReservation(chatId, res.id)}
-        />
-      ))}
-    </List>
-    <button
-      onClick={() => onCreateReservation(userId, 'DO THE THING')}
-    >
-      NEW_RESERVATION
-    </button>
-  </div>
-);
+}) => {
+  const orderedReservations = reservations.sort((a, b) => (
+    (a.reservationAt || 0) - (b.reservationAt || 0)
+  ));
+  console.log(orderedReservations);
+  return (
+    <div>
+      <p>reservations: </p>
+      <List>
+        {orderedReservations.map(res => (
+          <ListItem
+            key={res.id}
+            primaryText={res.description}
+            onClick={() => onSelectReservation(chatId, res.id)}
+          />
+        ))}
+      </List>
+      <button
+        onClick={() => onCreateReservation(userId, 'DO THE THING')}
+      >
+        NEW_RESERVATION
+      </button>
+    </div>
+  );
+};
 const mapStateToProps = (state, ownProps) => {
   const { reservationIds } = getUser(state.users, ownProps.userId);
   return {
