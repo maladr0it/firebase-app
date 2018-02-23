@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { List, ListItem } from 'material-ui/List';
 import { getUser } from '../../reducers/users';
 import { getReservations } from '../../reducers/reservations';
 import {
@@ -14,17 +15,15 @@ const ReservationListComponent = ({
 }) => (
   <div>
     <p>reservations: </p>
-    <ul>
+    <List>
       {reservations.map(res => (
-        <li
+        <ListItem
           key={res.id}
+          primaryText={res.description}
           onClick={() => onSelectReservation(chatId, res.id)}
-        >
-          ID: {res.id}
-          {res.description}
-        </li>
+        />
       ))}
-    </ul>
+    </List>
     <button
       onClick={() => onCreateReservation(userId, 'DO THE THING')}
     >
@@ -51,6 +50,7 @@ export default ReservationList;
 
 ReservationListComponent.propTypes = {
   userId: PropTypes.string.isRequired,
+  chatId: PropTypes.string.isRequired,
   reservations: PropTypes.arrayOf(PropTypes.object).isRequired,
   onCreateReservation: PropTypes.func.isRequired,
   onSelectReservation: PropTypes.func.isRequired,

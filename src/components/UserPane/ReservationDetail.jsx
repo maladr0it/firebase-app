@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
@@ -12,6 +14,8 @@ import {
   updateReservation,
   userSelected,
 } from '../../actions';
+
+import DateInput from '../DateInput';
 
 // needs local state for input fields
 class ReservationDetailComponent extends React.Component {
@@ -32,14 +36,12 @@ class ReservationDetailComponent extends React.Component {
         reservationAt: formData.reservationAt.toDate(),
       };
     }
-    console.log(formData);
     this.props.onUpdateReservation(
       this.props.reservationId,
       formData,
     );
   }
   handleChange(name, value) {
-    console.log(name, value);
     this.setState({
       [name]: value,
     });
@@ -47,22 +49,27 @@ class ReservationDetailComponent extends React.Component {
   render() {
     return (
       <div>
-        <RaisedButton
-          label="<-"
-          onClick={() => this.props.onBack(this.props.chatId, this.props.userId)}
-        />
+        <IconButton onClick={() => this.props.onBack(this.props.chatId, this.props.userId)}>
+          <ArrowBack />
+        </IconButton>
         <form
           onSubmit={e => this.handleSubmit(e)}
         >
+          <p>created At: {this.props.createdAt.toString()}</p>
           DESC: <TextField
             name="description"
             value={this.state.description}
             onChange={e => this.handleChange(e.target.name, e.target.value)}
           />
-          created At: {this.props.createdAt.toString()}
+          <br />
           WHEN: <ReactDatePicker
+            customInput={<DateInput />}
             selected={this.state.reservationAt}
             onChange={value => this.handleChange('reservationAt', value)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="ddd D MMM YYYY HH:mm"
           />
           <RaisedButton
             label="Submit"
