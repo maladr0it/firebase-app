@@ -18,9 +18,6 @@
 .Message {
   background: #B3E5FC;
   border-radius: 15px;
-  /* white-space: pre-wrap; */
-  /* margin: 1rem; */
-  /* allows multi-line messages to be displayed */
 }
 
 .TypingIndicator {

@@ -12,6 +12,7 @@ import moment from 'moment';
 import { getReservation } from '../../reducers/reservations';
 import {
   updateReservation,
+  deleteReservation,
   userSelected,
 } from '../../actions';
 
@@ -27,7 +28,7 @@ class ReservationDetailComponent extends React.Component {
       reservationAt: props.reservationAt && moment(props.reservationAt),
     };
   }
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
     let formData = this.state;
     // convert moment to date
@@ -37,10 +38,8 @@ class ReservationDetailComponent extends React.Component {
         reservationAt: formData.reservationAt.toDate(),
       };
     }
-    this.props.onUpdateReservation(
-      this.props.reservationId,
-      formData,
-    );
+    await this.props.onUpdateReservation(this.props.reservationId, formData);
+    this.props.onBack(this.props.chatId, this.props.userId);
   }
   handleChange(name, value) {
     this.setState({
@@ -74,7 +73,6 @@ class ReservationDetailComponent extends React.Component {
             value={this.state.address}
             onChange={e => this.handleChange(e.target.name, e.target.value)}
           />
-          <br />
           <ReactDatePicker
             customInput={<DateInput />}
             selected={this.state.reservationAt}
@@ -90,6 +88,10 @@ class ReservationDetailComponent extends React.Component {
             primary
           />
           <RaisedButton
+            onClick={async () => {
+              await this.props.onDeleteReservation(this.props.reservationId);
+              this.props.onBack(this.props.chatId, this.props.userId);
+            }}
             label="Delete"
             secondary
           />
@@ -108,6 +110,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 const mapDispatchToProps = {
   onUpdateReservation: updateReservation,
+  onDeleteReservation: deleteReservation,
   onBack: userSelected,
 };
 const ReservationDetail = connect(
@@ -118,6 +121,7 @@ export default ReservationDetail;
 
 ReservationDetailComponent.propTypes = {
   onUpdateReservation: PropTypes.func.isRequired,
+  onDeleteReservation: PropTypes.func.isRequired,
   onBack: PropTypes.func.isRequired,
   chatId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
@@ -128,7 +132,7 @@ ReservationDetailComponent.propTypes = {
   address: PropTypes.string,
 };
 ReservationDetailComponent.defaultProps = {
-  reservationAt: undefined,
+  reservationAt: null,
   description: '',
   address: '',
 };

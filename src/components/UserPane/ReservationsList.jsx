@@ -21,12 +21,11 @@ const ReservationListComponent = ({
   const orderedReservations = reservations.sort((a, b) => (
     (a.reservationAt || 0) - (b.reservationAt || 0)
   )).map(res => (
-    <React.Fragment>
+    <React.Fragment key={res.id}>
       <ListItem
-        key={res.id}
-        primaryText={res.description}
+        primaryText={res.description || 'New Reservation'}
         secondaryText={res.reservationAt ?
-          moment(res.reservationAt).format('ddd D MMM HH:mm') : 'None'
+          moment(res.reservationAt).format('ddd D MMM HH:mm') : 'No Date'
         }
         onClick={() => onSelectReservation(chatId, res.id)}
       />

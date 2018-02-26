@@ -78,9 +78,12 @@ export const createUser = username => async () => {
 export const createReservation = (userId, description) => () => {
   db.createReservation(userId, description);
 };
-export const updateReservation = (reservationId, data) => () => {
-  db.updateReservation(reservationId, data);
-};
+export const updateReservation = (reservationId, data) => async () => (
+  db.updateReservation(reservationId, data)
+);
+export const deleteReservation = reservationId => async () => (
+  db.deleteReservation(reservationId)
+);
 export const listenToChatForUsers = chatId => (dispatch) => {
   const callback = (changes, userIds) => {
     const newUsers = changes.filter(change => (change.type === 'added'));

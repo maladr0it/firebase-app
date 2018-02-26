@@ -11,16 +11,16 @@ export const createReservation = (userId, description) => {
     description,
   });
 };
-export const updateReservation = (reservationId, data) => {
+export const updateReservation = (reservationId, data) => (
   db.collection('reservations').doc(reservationId).update({
     ...data,
-  });
-};
+  })
+);
 // return the delete promise so the
 // front-end can await its completion
 // TODO: consider this pattern for all db operations
 export const deleteReservation = reservationId => (
-  db.collection('reservations').document(reservationId).delete()
+  db.collection('reservations').doc(reservationId).delete()
 );
 export const listenForReservations = (userId, callback) => {
   const unsubscribe = db.collection('reservations')
