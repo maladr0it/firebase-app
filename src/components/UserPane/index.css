@@ -1,6 +1,12 @@
 .UserPane {
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   width: 20rem;
+}
+
+.ReservationListContainer {
+  overflow-y: auto;
 }
 
 /* overwriting datePicker css due to bugs */

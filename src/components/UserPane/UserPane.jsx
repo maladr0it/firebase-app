@@ -23,7 +23,7 @@ const UserPaneComponent = ({
       <ReservationDetail reservationId={selectedReservationId} />
     ),
     default: () => (
-      <div>Nothing...</div>
+      <div />
     ),
   };
   return (

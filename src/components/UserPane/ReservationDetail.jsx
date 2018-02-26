@@ -23,6 +23,7 @@ class ReservationDetailComponent extends React.Component {
     super(props);
     this.state = {
       description: props.description,
+      address: props.address,
       reservationAt: props.reservationAt && moment(props.reservationAt),
     };
   }
@@ -59,13 +60,22 @@ class ReservationDetailComponent extends React.Component {
           onSubmit={e => this.handleSubmit(e)}
         >
           <p>created At: {this.props.createdAt.toString()}</p>
-          DESC: <TextField
+          <TextField
+            hintText="Description"
+            floatingLabelText="Description"
             name="description"
             value={this.state.description}
             onChange={e => this.handleChange(e.target.name, e.target.value)}
           />
+          <TextField
+            hintText="Address"
+            floatingLabelText="Address"
+            name="address"
+            value={this.state.address}
+            onChange={e => this.handleChange(e.target.name, e.target.value)}
+          />
           <br />
-          WHEN: <ReactDatePicker
+          <ReactDatePicker
             customInput={<DateInput />}
             selected={this.state.reservationAt}
             onChange={value => this.handleChange('reservationAt', value)}
@@ -78,6 +88,10 @@ class ReservationDetailComponent extends React.Component {
             label="Submit"
             type="submit"
             primary
+          />
+          <RaisedButton
+            label="Delete"
+            secondary
           />
         </form>
       </div>
@@ -111,8 +125,10 @@ ReservationDetailComponent.propTypes = {
   createdAt: PropTypes.instanceOf(Date).isRequired,
   reservationAt: PropTypes.instanceOf(Date),
   description: PropTypes.string,
+  address: PropTypes.string,
 };
 ReservationDetailComponent.defaultProps = {
   reservationAt: undefined,
   description: '',
+  address: '',
 };

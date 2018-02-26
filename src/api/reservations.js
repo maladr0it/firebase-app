@@ -16,9 +16,15 @@ export const updateReservation = (reservationId, data) => {
     ...data,
   });
 };
+// return the delete promise so the
+// front-end can await its completion
+// TODO: consider this pattern for all db operations
+export const deleteReservation = reservationId => (
+  db.collection('reservations').document(reservationId).delete()
+);
 export const listenForReservations = (userId, callback) => {
   const unsubscribe = db.collection('reservations')
-    .where('user', '==', userId).limit(10)
+    .where('user', '==', userId).limit(25)
     .onSnapshot((snapshot) => {
       const changes = snapshot.docChanges.map(change => ({
         type: change.type,

@@ -1,13 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import RaisedButton from 'material-ui/RaisedButton';
 import { getUser } from '../../reducers/users';
 import { getReservations } from '../../reducers/reservations';
 import {
   createReservation,
   reservationSelected,
 } from '../../actions';
+import './index.css';
 
 const ReservationListComponent = ({
   chatId, userId, reservations,
@@ -15,26 +20,33 @@ const ReservationListComponent = ({
 }) => {
   const orderedReservations = reservations.sort((a, b) => (
     (a.reservationAt || 0) - (b.reservationAt || 0)
+  )).map(res => (
+    <React.Fragment>
+      <ListItem
+        key={res.id}
+        primaryText={res.description}
+        secondaryText={res.reservationAt ?
+          moment(res.reservationAt).format('ddd D MMM HH:mm') : 'None'
+        }
+        onClick={() => onSelectReservation(chatId, res.id)}
+      />
+      <Divider />
+    </React.Fragment>
   ));
-  console.log(orderedReservations);
   return (
-    <div>
-      <p>reservations: </p>
-      <List>
-        {orderedReservations.map(res => (
-          <ListItem
-            key={res.id}
-            primaryText={res.description}
-            onClick={() => onSelectReservation(chatId, res.id)}
-          />
-        ))}
-      </List>
-      <button
-        onClick={() => onCreateReservation(userId, 'DO THE THING')}
-      >
-        NEW_RESERVATION
-      </button>
-    </div>
+    <React.Fragment>
+      <div className="ReservationListContainer">
+        <List>
+          <Subheader>Reservations</Subheader>
+          {orderedReservations}
+        </List>
+      </div>
+      <RaisedButton
+        label="New Reservation"
+        primary
+        onClick={() => onCreateReservation(userId, '')}
+      />
+    </React.Fragment>
   );
 };
 const mapStateToProps = (state, ownProps) => {

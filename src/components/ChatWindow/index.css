@@ -11,12 +11,12 @@
 
 .MessageListContainer {
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: #FEFEFE;
 }
 
 .Message {
-  background: #E3C567;
+  background: #B3E5FC;
   border-radius: 15px;
   /* white-space: pre-wrap; */
   /* margin: 1rem; */
