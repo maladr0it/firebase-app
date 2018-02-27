@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 import {
   selectInboxChat,
   listenToUserChats,
@@ -25,12 +26,14 @@ class InboxComponent extends React.Component {
       onSelectChat, userId, chatIds, selectedChat,
     } = this.props;
     const chats = chatIds.map(chatId => (
-      <ChatItem
-        key={chatId}
-        chatId={chatId}
-        handleSelectChat={() => onSelectChat(userId, chatId)}
-        isSelected={(chatId === selectedChat)}
-      />
+      <React.Fragment key={chatId}>
+        <ChatItem
+          chatId={chatId}
+          handleSelectChat={() => onSelectChat(userId, chatId)}
+          isSelected={(chatId === selectedChat)}
+        />
+        <Divider />
+      </React.Fragment>
     ));
     return (
       <List className="ChatList">

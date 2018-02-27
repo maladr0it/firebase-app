@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { debounce, throttle } from 'lodash';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import { getChatView } from '../../reducers/chatViews';
 import {
   sendMessage,
@@ -73,7 +73,7 @@ class MessageInputComponent extends React.Component {
           value={this.state.value}
           onChange={e => this.handleChange(e)}
         />
-        <FlatButton label="SEND" type="submit" />
+        <RaisedButton label="SEND" primary type="submit" />
       </form>
     );
   }

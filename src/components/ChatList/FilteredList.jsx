@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List } from 'material-ui/List';
 import Chip from 'material-ui/Chip';
+import Divider from 'material-ui/Divider';
 import {
   selectChat,
   listenToFilteredChats,
@@ -28,12 +29,14 @@ class FilteredListComponent extends React.Component {
       userId, chatIds, selectedChat, tagName,
     } = this.props;
     const chats = chatIds.map(chatId => (
-      <ChatItem
-        key={chatId}
-        chatId={chatId}
-        handleSelectChat={() => onSelectChat(userId, chatId)}
-        isSelected={(chatId === selectedChat)}
-      />
+      <React.Fragment key={chatId}>
+        <ChatItem
+          chatId={chatId}
+          handleSelectChat={() => onSelectChat(userId, chatId)}
+          isSelected={(chatId === selectedChat)}
+        />
+        <Divider />
+      </React.Fragment>
     ));
     return (
       <React.Fragment>
