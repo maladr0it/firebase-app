@@ -26,10 +26,3 @@ export const tagChat = (chatId, tagName) => () => {
 export const untagChat = (chatId, tagName) => () => {
   db.untagChat(chatId, tagName);
 };
-export const listenToChatForMeta = chatId => (dispatch) => {
-  const callback = (data) => {
-    dispatch(chatDataUpdated(chatId, data));
-  };
-  const unsubscribe = db.listenToChat(chatId, callback);
-  return unsubscribe;
-};

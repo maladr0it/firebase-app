@@ -9,14 +9,6 @@ const loggedIn = (userId, userData) => ({
 const loggedOut = () => ({
   type: 'LOGGED_OUT',
 });
-const userListenerOpened = userId => ({
-  type: 'LISTENER_OPENED',
-  payload: { resourceType: 'users', resourceId: userId },
-});
-const reservationsUpdated = (userId, reservationIds, changes) => ({
-  type: 'RESERVATIONS_UPDATED',
-  payload: { userId, reservationIds, changes },
-});
 const avatarUrlSet = (userId, url) => ({
   type: 'AVATAR_URL_SET',
   payload: { userId, url },
@@ -38,28 +30,15 @@ export const chatUsersUpdated = (chatId, userIds, changes) => ({
   type: 'CHAT_USERS_UPDATED',
   payload: { chatId, userIds, changes },
 });
+export const reservationsUpdated = (userId, reservationIds, changes) => ({
+  type: 'RESERVATIONS_UPDATED',
+  payload: { userId, reservationIds, changes },
+});
 
 // THUNKS
-const getAvatar = (userId, data) => async (dispatch) => {
+export const getAvatar = (userId, data) => async (dispatch) => {
   const url = await db.getAvatar(data.avatarName);
   dispatch(avatarUrlSet(userId, url));
-};
-// TODO: this is a bit gross, but should be the loose model
-// for how inbox and chats are listened to, also
-const listenToUser = userId => (dispatch, getState) => {
-  // only open listener if it does not yet exist
-  if (!getState().listeners.users[userId]) {
-    const userCallback = (data) => {
-      dispatch(userDataUpdated(userId, data));
-      dispatch(getAvatar(userId, data)); // TODO updates avatar even if it hasn't changed
-    };
-    const reservationCallback = (changes, reservationIds) => {
-      dispatch(reservationsUpdated(userId, reservationIds, changes));
-    };
-    dispatch(userListenerOpened(userId));
-    db.listenToUser(userId, userCallback);
-    db.listenForUserReservations(userId, reservationCallback);
-  }
 };
 export const login = username => async (dispatch) => {
   const user = await db.getUserByName(username);
@@ -91,18 +70,6 @@ export const updateReservation = (reservationId, data) => async () => (
 export const deleteReservation = reservationId => async () => (
   db.deleteReservation(reservationId)
 );
-export const listenToChatForUsers = chatId => (dispatch) => {
-  const callback = (changes, userIds) => {
-    const newUsers = changes.filter(change => (change.type === 'added'));
-    // open a listener to this user if they are new
-    if (newUsers.length > 0) {
-      newUsers.forEach(user => dispatch(listenToUser(user.id)));
-    }
-    dispatch(chatUsersUpdated(chatId, userIds, changes));
-  };
-  const unsubscribe = db.listenToChatForUsers(chatId, callback);
-  return unsubscribe;
-};
 
 // TODO: just for testing
 const allReservationsUpdated = (changes, reservationIds) => ({

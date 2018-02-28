@@ -71,7 +71,6 @@ export const listenToChatForUsers = (chatId, callback) => {
   return unsubscribe;
 };
 export const listenToUser = (userId, callback) => {
-  console.log(`listening to user ${userId} now`);
   let unsubscribe;
   try {
     unsubscribe = db.collection('users').doc(userId)

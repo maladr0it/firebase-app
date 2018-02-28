@@ -28,19 +28,3 @@ export const startTyping = (userId, chatId) => () => {
 export const stopTyping = (userId, chatId) => () => {
   db.setUserTypingStatus(userId, chatId, false);
 };
-// LISTENERS
-export const listenToChatForMessages = chatId => (dispatch) => {
-  const callback = (changes, messageIds) => {
-    const newMessages = changes.filter(change => (change.type === 'added'));
-    const updatedMessages = changes.filter(change => (change.type === 'modified'));
-
-    if (newMessages.length > 0) {
-      dispatch(messagesAdded(chatId, messageIds, newMessages));
-    }
-    if (updatedMessages.length > 0) {
-      dispatch(messagesUpdated(chatId, messageIds, updatedMessages));
-    }
-  };
-  const unsubscribe = db.listenToChatForMessages(chatId, callback);
-  return unsubscribe;
-};

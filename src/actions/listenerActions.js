@@ -8,14 +8,41 @@ import * as db from '../api';
 
 import { chatsAdded } from './chatListActions';
 import { messagesAdded } from './messageActions';
-import { chatUsersUpdated, userDataUpdated } from './userActions';
+import {
+  chatUsersUpdated,
+  userDataUpdated,
+  reservationsUpdated,
+  getAvatar,
+} from './userActions';
 
-const listenToUser = userId => (dispatch) => {
+const listenerOpened = (resourceType, resourceId) => ({
+  type: 'LISTENER_OPENED',
+  payload: { resourceType, resourceId },
+});
+
+// perform this at api level?
+const separateChangesByType = changes => ({
+  new: changes.filter(change => (change.type === 'added')),
+  updated: changes.filter(change => (change.type === 'modified')),
+  removed: changes.filter(change => (change.type === 'removed')),
+});
+
+const listenToUser = userId => (dispatch, getState) => {
+  if (getState().listeners.users[userId]) {
+    return;
+  }
   const onUserData = (data) => {
     dispatch(userDataUpdated(userId, data));
+    dispatch(getAvatar(userId, data));
+    // TODO updates avatar even if it hasn't changed
+  };
+  const onReservation = (changes, reservationIds) => {
+    dispatch(reservationsUpdated(userId, reservationIds, changes));
   };
   // const userReservation
+  dispatch(listenerOpened('users', userId));
   db.listenToUser(userId, onUserData);
+  db.listenForUserReservations(userId, onReservation);
 };
 
 // listen to chat meta, and messages,
@@ -23,10 +50,12 @@ const listenToUser = userId => (dispatch) => {
 const listenToChat = chatId => (dispatch) => {
   console.log(`listening to ${chatId} for messages`);
   const onMessage = (changes, messageIds) => {
-    dispatch(messagesAdded(chatId, messageIds, changes));
+    const { new: newMessages } = separateChangesByType(changes);
+    dispatch(messagesAdded(chatId, messageIds, newMessages));
   };
   const onUser = (changes, userIds) => {
-    dispatch(chatUsersUpdated(chatId, userIds, changes));
+    const { new: newUsers } = separateChangesByType(changes);
+    dispatch(chatUsersUpdated(chatId, userIds, newUsers));
     changes.forEach(user => dispatch(listenToUser(user.id)));
   };
   db.listenToChatForMessages(chatId, onMessage);
@@ -38,8 +67,9 @@ const listenToChat = chatId => (dispatch) => {
 export const listenToInbox = (userId, feedName) => (dispatch) => {
   console.log('listening to inbox for chats');
   const callback = (changes, ids) => {
-    dispatch(chatsAdded(changes, ids, feedName));
-    changes.forEach(chat => dispatch(listenToChat(chat.id)));
+    const { new: newChats } = separateChangesByType(changes);
+    dispatch(chatsAdded(newChats, ids, feedName));
+    newChats.forEach(chat => dispatch(listenToChat(chat.id)));
   };
   db.listenToUserChats(userId, callback);
 };
