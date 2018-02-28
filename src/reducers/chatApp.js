@@ -1,9 +1,8 @@
 const defaultState = {
   chatIdsByFeed: {
     inbox: [],
-    hasAgent: [],
   },
-  filters: ['isOpen'],
+  filters: [],
   selectedChat: undefined,
 };
 

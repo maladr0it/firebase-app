@@ -20,12 +20,12 @@ const App = ({
     <div className="App">
       <AccountControls isLoggedIn={isLoggedIn} />
       {(isLoggedIn) ? (
-        <ReservationViewer />
-        // <div className="ChatPaneContainer">
-        //   <ChatList />
-        //   <ChatWindow />
-        //   <UserPane />
-        // </div>
+        // <ReservationViewer />
+        <div className="ChatPaneContainer">
+          <ChatList />
+          <ChatWindow />
+          <UserPane />
+        </div>
       ) : (
         ''
       )}

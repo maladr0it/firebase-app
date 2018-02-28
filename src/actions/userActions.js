@@ -1,19 +1,13 @@
 import * as db from '../api';
 
+import { listenToInbox } from './listenerActions';
+
 const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
   payload: { userId, userData },
 });
 const loggedOut = () => ({
   type: 'LOGGED_OUT',
-});
-const chatUsersUpdated = (chatId, userIds, changes) => ({
-  type: 'CHAT_USERS_UPDATED',
-  payload: { chatId, userIds, changes },
-});
-const userDataUpdated = (userId, userData) => ({
-  type: 'USER_DATA_UPDATED',
-  payload: { userId, userData },
 });
 const userListenerOpened = userId => ({
   type: 'LISTENER_OPENED',
@@ -34,6 +28,15 @@ export const userSelected = (chatId, userId) => ({
 export const reservationSelected = (chatId, reservationId) => ({
   type: 'RESERVATION_SELECTED',
   payload: { chatId, reservationId },
+});
+// TODO: these are exported temporarily for listenerActions to use
+export const userDataUpdated = (userId, userData) => ({
+  type: 'USER_DATA_UPDATED',
+  payload: { userId, userData },
+});
+export const chatUsersUpdated = (chatId, userIds, changes) => ({
+  type: 'CHAT_USERS_UPDATED',
+  payload: { chatId, userIds, changes },
 });
 
 // THUNKS
@@ -63,6 +66,8 @@ export const login = username => async (dispatch) => {
   if (user) {
     console.log(`welcome ${user.data.username}`);
     dispatch(loggedIn(user.id, user.data));
+    // TODO: sloppy experimental
+    dispatch(listenToInbox(user.id, 'inbox'));
   }
 };
 export const logout = () => (dispatch) => {

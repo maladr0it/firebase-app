@@ -13,13 +13,13 @@ import './index.css';
 
 class InboxComponent extends React.Component {
   componentDidMount() {
-    this.chatUnsubscribe = this.props.onListen(
-      this.props.userId,
-      this.props.feedName,
-    );
+    // this.chatUnsubscribe = this.props.onListen(
+    //   this.props.userId,
+    //   this.props.feedName,
+    // );
   }
   componentWillUnmount() {
-    this.chatUnsubscribe();
+    // this.chatUnsubscribe();
   }
   render() {
     const {

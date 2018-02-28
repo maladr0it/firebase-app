@@ -14,16 +14,16 @@ import './index.css';
 
 class ChatItemComponent extends React.Component {
   componentDidMount() {
-    this.chatMetaUnsubscribe = this.props.chatMetaListener(this.props.chatId);
-    this.messageUnsubscribe = this.props.messageListener(
-      this.props.chatId,
-      this.props.userId,
-    );
-    this.userUnsubscribe = this.props.userListener(this.props.chatId);
+    // this.chatMetaUnsubscribe = this.props.chatMetaListener(this.props.chatId);
+    // this.messageUnsubscribe = this.props.messageListener(
+    //   this.props.chatId,
+    //   this.props.userId,
+    // );
+    // this.userUnsubscribe = this.props.userListener(this.props.chatId);
   }
   componentWillUnmount() {
-    this.chatMetaUnsubscribe();
-    this.messageUnsubscribe();
+    // this.chatMetaUnsubscribe();
+    // this.messageUnsubscribe();
   }
   chatMetaUnsubscribe = undefined;
   messageUnsubscribe = undefined;
