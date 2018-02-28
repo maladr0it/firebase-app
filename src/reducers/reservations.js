@@ -37,3 +37,6 @@ export const getReservations = (state, ids = []) => (
 export const getReservation = (state, id) => (
   state[id] || defaultReservation
 );
+export const getAllReservations = state => (
+  getReservations(state, Object.keys(state))
+);

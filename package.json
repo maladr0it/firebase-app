@@ -13,6 +13,7 @@
     "react-datepicker": "^1.2.1",
     "react-redux": "^5.0.7",
     "react-scripts": "^1.1.1",
+    "react-table": "^6.8.0",
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"

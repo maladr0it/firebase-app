@@ -7,6 +7,8 @@ import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
 import UserPane from './components/UserPane';
 
+import ReservationViewer from './components/ReservationViewer';
+
 import './App.css';
 
 const App = ({
@@ -18,11 +20,12 @@ const App = ({
     <div className="App">
       <AccountControls isLoggedIn={isLoggedIn} />
       {(isLoggedIn) ? (
-        <div className="ChatPaneContainer">
-          <ChatList />
-          <ChatWindow />
-          <UserPane />
-        </div>
+        <ReservationViewer />
+        // <div className="ChatPaneContainer">
+        //   <ChatList />
+        //   <ChatWindow />
+        //   <UserPane />
+        // </div>
       ) : (
         ''
       )}

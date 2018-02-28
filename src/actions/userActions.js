@@ -41,6 +41,8 @@ const getAvatar = (userId, data) => async (dispatch) => {
   const url = await db.getAvatar(data.avatarName);
   dispatch(avatarUrlSet(userId, url));
 };
+// TODO: this is a bit gross, but should be the loose model
+// for how inbox and chats are listened to, also
 const listenToUser = userId => (dispatch, getState) => {
   // only open listener if it does not yet exist
   if (!getState().listeners.users[userId]) {
@@ -53,7 +55,7 @@ const listenToUser = userId => (dispatch, getState) => {
     };
     dispatch(userListenerOpened(userId));
     db.listenToUser(userId, userCallback);
-    db.listenForReservations(userId, reservationCallback);
+    db.listenForUserReservations(userId, reservationCallback);
   }
 };
 export const login = username => async (dispatch) => {
@@ -95,4 +97,17 @@ export const listenToChatForUsers = chatId => (dispatch) => {
   };
   const unsubscribe = db.listenToChatForUsers(chatId, callback);
   return unsubscribe;
+};
+
+// TODO: just for testing
+const allReservationsUpdated = (changes, reservationIds) => ({
+  type: 'RESERVATIONS_UPDATED',
+  payload: { changes, reservationIds },
+});
+
+export const listenForAllReservations = () => (dispatch) => {
+  const callback = (changes, reservationIds) => {
+    dispatch(allReservationsUpdated(changes, reservationIds));
+  };
+  db.listenForAllReservations(callback);
 };
