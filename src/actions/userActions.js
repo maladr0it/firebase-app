@@ -1,6 +1,6 @@
 import * as db from '../api';
 
-import { listenToInbox } from './listenerActions';
+import { listenToInbox, listenToFilteredChats } from './listenerActions';
 
 const loggedIn = (userId, userData) => ({
   type: 'LOGGED_IN',
@@ -47,6 +47,7 @@ export const login = username => async (dispatch) => {
     dispatch(loggedIn(user.id, user.data));
     // TODO: sloppy experimental
     dispatch(listenToInbox(user.id, 'inbox'));
+    dispatch(listenToFilteredChats('isOpen', 'isOpen'));
   }
 };
 export const logout = () => (dispatch) => {

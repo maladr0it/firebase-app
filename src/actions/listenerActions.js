@@ -1,9 +1,6 @@
 // this is for all listener behaviour
 // let us first code a generic listener of resources
 // this will require rewriting of API functions, too however
-
-// for now, put all listeners in 1 place
-// start with listening to inbox messages
 import * as db from '../api';
 
 import { chatsAdded } from './chatListActions';
@@ -47,8 +44,10 @@ const listenToUser = userId => (dispatch, getState) => {
 
 // listen to chat meta, and messages,
 // IF chat is not already being listened to
-const listenToChat = chatId => (dispatch) => {
-  console.log(`listening to ${chatId} for messages`);
+const listenToChat = chatId => (dispatch, getState) => {
+  if (getState().listeners.chats[chatId]) {
+    return;
+  }
   const onMessage = (changes, messageIds) => {
     const { new: newMessages } = separateChangesByType(changes);
     dispatch(messagesAdded(chatId, messageIds, newMessages));
@@ -58,20 +57,28 @@ const listenToChat = chatId => (dispatch) => {
     dispatch(chatUsersUpdated(chatId, userIds, newUsers));
     changes.forEach(user => dispatch(listenToUser(user.id)));
   };
+  dispatch(listenerOpened('chats', chatId));
   db.listenToChatForMessages(chatId, onMessage);
   db.listenToChatForUsers(chatId, onUser);
 };
 
-
+// TODO: callbacks should be declared separately
 // listens for chats for an inbox
 export const listenToInbox = (userId, feedName) => (dispatch) => {
   console.log('listening to inbox for chats');
-  const callback = (changes, ids) => {
+  const onChat = (changes, ids) => {
     const { new: newChats } = separateChangesByType(changes);
     dispatch(chatsAdded(newChats, ids, feedName));
     newChats.forEach(chat => dispatch(listenToChat(chat.id)));
   };
-  db.listenToUserChats(userId, callback);
+  db.listenToUserChats(userId, onChat);
 };
-
-export const g = 5;
+export const listenToFilteredChats = (tagName, feedName) => (dispatch) => {
+  console.log('listening to feed for chats');
+  const onChat = (changes, ids) => {
+    const { new: newChats } = separateChangesByType(changes);
+    dispatch(chatsAdded(newChats, ids, feedName));
+    newChats.forEach(chat => dispatch(listenToChat(chat.id)));
+  };
+  db.listenToFilteredChats(tagName, onChat);
+};
