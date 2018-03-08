@@ -8,6 +8,7 @@ import ChatWindow from './components/ChatWindow';
 import UserPane from './components/UserPane';
 
 import ReservationViewer from './components/ReservationViewer';
+import FlightSearch from './components/FlightSearch';
 
 import './App.css';
 
@@ -17,19 +18,20 @@ const App = ({
   const isLoggedIn = Boolean(currentUserId);
 
   return (
-    <div className="App">
-      <AccountControls isLoggedIn={isLoggedIn} />
-      {(isLoggedIn) ? (
-        // <ReservationViewer />
-        <div className="ChatPaneContainer">
-          <ChatList />
-          <ChatWindow />
-          <UserPane />
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
+    <FlightSearch />
+    // <div className="App">
+    //   <AccountControls isLoggedIn={isLoggedIn} />
+    //   {(isLoggedIn) ? (
+    //     // <ReservationViewer />
+    //     <div className="ChatPaneContainer">
+    //       <ChatList />
+    //       <ChatWindow />
+    //       <UserPane />
+    //     </div>
+    //   ) : (
+    //     ''
+    //   )}
+    // </div>
   );
 };
 const mapStateToProps = state => ({

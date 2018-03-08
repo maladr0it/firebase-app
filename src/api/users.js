@@ -82,3 +82,21 @@ export const listenToUser = (userId, callback) => {
   }
   return unsubscribe;
 };
+
+// TODO: remove callback, use promise instead
+export const listenToUserFilters = (userId, callback) => (
+  db.collection(`users/${userId}/tags`)
+    .onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges.reduce((acc, change) => {
+        acc[change.type] = acc[change.type].concat({
+          id: change.doc.id,
+          data: change.doc.data(),
+        });
+        return acc;
+      }, {});
+      callback(changes);
+    })
+);
+export const addUserFilter = (userId, filterName) => {
+
+};

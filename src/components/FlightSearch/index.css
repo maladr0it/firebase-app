@@ -1,0 +1,30 @@
+.FlightGroup {
+  /* display: flex; */
+  /* width: 100%; */
+}
+
+.FlightItem {
+  text-align: center;
+}
+
+.FlightItem .ArriveDepartPanes {
+  display: flex;
+}
+
+.FlightItem .ArriveDepartPanes .Duration {
+  text-align: center;
+  flex-grow: 0;
+  min-width: 5rem;
+}
+
+.FlightItem .ArriveDepartPanes .LeftPane {
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: right;
+}
+
+.FlightItem .ArriveDepartPanes .RightPane {
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: left;
+}
