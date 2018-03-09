@@ -7,6 +7,7 @@ import chatViews from './chatViews';
 import messages from './messages';
 import reservations from './reservations';
 import listeners from './listeners';
+import flightSearchResults from './flightSearchResults';
 
 const app = combineReducers({
   user,
@@ -17,6 +18,7 @@ const app = combineReducers({
   messages,
   reservations,
   listeners,
+  flightSearchResults,
 });
 
 export default app;

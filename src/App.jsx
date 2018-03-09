@@ -18,20 +18,20 @@ const App = ({
   const isLoggedIn = Boolean(currentUserId);
 
   return (
-    <FlightSearch />
-    // <div className="App">
-    //   <AccountControls isLoggedIn={isLoggedIn} />
-    //   {(isLoggedIn) ? (
-    //     // <ReservationViewer />
-    //     <div className="ChatPaneContainer">
-    //       <ChatList />
-    //       <ChatWindow />
-    //       <UserPane />
-    //     </div>
-    //   ) : (
-    //     ''
-    //   )}
-    // </div>
+    <div className="App">
+      <FlightSearch />
+      {/* <AccountControls isLoggedIn={isLoggedIn} />
+      {(isLoggedIn) ? (
+        // <ReservationViewer />
+        <div className="ChatPaneContainer">
+          <ChatList />
+          <ChatWindow />
+          <UserPane />
+        </div>
+      ) : (
+        ''
+      )} */}
+    </div>
   );
 };
 const mapStateToProps = state => ({

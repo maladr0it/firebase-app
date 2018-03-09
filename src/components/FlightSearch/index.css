@@ -1,28 +1,40 @@
+.FlightCombinations {
+  display: flex;  
+  overflow-y: auto;
+}
+.FlightCombinations .DeparturesColumn {
+  width: 50%;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.FlightCombinations .ReturnsColumn {
+  width: 50%;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
 .FlightGroup {
-  /* display: flex; */
-  /* width: 100%; */
+  padding: 20px;
 }
 
 .FlightItem {
   text-align: center;
 }
-
 .FlightItem .ArriveDepartPanes {
   display: flex;
 }
-
 .FlightItem .ArriveDepartPanes .Duration {
   text-align: center;
   flex-grow: 0;
   min-width: 5rem;
 }
-
 .FlightItem .ArriveDepartPanes .LeftPane {
   flex-basis: 0;
   flex-grow: 1;
   text-align: right;
 }
-
 .FlightItem .ArriveDepartPanes .RightPane {
   flex-basis: 0;
   flex-grow: 1;
