@@ -13,24 +13,24 @@ const formatDuration = (duration) => {
 
 const FlightItemComponent = (props) => {
   const layover = (props.layover)
-    && <div>--- Layover: {formatDuration(props.layover)} ---</div>;
+    && <div>--- Layover: {props.layover} ---</div>;
   return (
     <div className="FlightItem">
       {layover}
       <p>{props.airlineName} {props.flightNo}</p>
       <div className="ArriveDepartPanes">
         <div className="LeftPane">
-          <p>{props.departAirportCode} {props.departDateTime.format('HH:mm')}</p>
-          <p>{props.departDateTime.format('ddd, D MMM')}</p>
+          <p>{props.departAirportCode} {props.departDateTime}</p>
+          <p>{props.departDateTime}</p>
           <p>Terminal {props.departTerminal}, {props.departAirport}, {props.departLocation}
           </p>
         </div>
         <div className="Duration">
-          <p>{formatDuration(props.duration)}</p>
+          <p>{props.duration}</p>
         </div>
         <div className="RightPane">
-          <p>{props.arriveAirportCode} {props.arriveDateTime.format('HH:mm')}</p>
-          <p>{props.arriveDateTime.format('ddd, D MMM')}</p>
+          <p>{props.arriveAirportCode} {props.arriveDateTime}</p>
+          <p>{props.arriveDateTime}</p>
           <p>Terminal {props.arriveTerminal}, {props.arriveAirport}, {props.arriveLocation}
           </p>
         </div>

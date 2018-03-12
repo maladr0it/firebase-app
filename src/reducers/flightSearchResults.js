@@ -38,17 +38,6 @@ const defaultState = {
           arriveTerminal: '1',
           arriveDateTime: '2018-03-25 05:00',
           duration: '7h5m',
-        }, {
-          airlineName: 'Cathay Pacific',
-          flightNo: 'CX 746',
-          departAirportCode: 'HKG',
-          departTerminal: '1',
-          departDateTime: '2018-03-26 00:30',
-          arriveAirportCode: 'SFO',
-          arriveTerminal: '1',
-          arriveDateTime: '2018-03-25 21:45',
-          duration: '12h15m',
-          layover: '19h30m',
         },
       ],
     },
@@ -108,15 +97,27 @@ const flightSearchResults = (state = defaultState, action) => {
 };
 export default flightSearchResults;
 
-export const getFlightGroups = (state, searchId, departingIds, returningIds) => {
-  const departingFlightGroups = departingIds.map(id => (
-    state[searchId].departingFlightGroups[id]
-  ));
-  const returningFlightGroups = returningIds.map(id => (
-    state[searchId].arrivingFlightGroups[id]
-  ));
-  return {
-    departingFlightGroups,
-    returningFlightGroups,
-  };
+export const getRecommendation = (state, searchId, id) => (
+  state[searchId] && state[searchId].recommendations[id]
+);
+export const getFlightGroup = (state, searchId, type, id) => {
+  if (type === 'departing') {
+    return state[searchId] && state[searchId].departingFlightGroups[id];
+  } else if (type === 'returning') {
+    return state[searchId] && state[searchId].returningFlightGroups[id];
+  }
+  return null;
 };
+
+// export const getFlightGroups = (state, searchId, departingIds, returningIds) => {
+//   const departingFlightGroups = departingIds.map(id => (
+//     state[searchId].departingFlightGroups[id]
+//   ));
+//   const returningFlightGroups = returningIds.map(id => (
+//     state[searchId].arrivingFlightGroups[id]
+//   ));
+//   return {
+//     departingFlightGroups,
+//     returningFlightGroups,
+//   };
+// };

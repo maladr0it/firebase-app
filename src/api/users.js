@@ -98,5 +98,5 @@ export const listenToUserFilters = (userId, callback) => (
     })
 );
 export const addUserFilter = (userId, filterName) => {
-
+ // TODO HERE: add filter collections per user
 };

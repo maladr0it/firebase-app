@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import Recommendation from './Recommendation';
 
 const RecommendationListComponent = ({
-  recommendationIds,
+  searchId, recommendationIds,
 }) => (
-  <ul>
+  <div className="RecommendationList">
     {recommendationIds.map(id => (
-      <Recommendation key={id} id={id} />
+      <Recommendation key={id} searchId={searchId} recId={id} />
     ))}
-  </ul>
+  </div>
 );
-const mapStateToProps = state => ({
-  recommendationIds: []
+const mapStateToProps = () => ({
+  recommendationIds: ['1', '2'],
 });
 const RecommendationList = connect(
   mapStateToProps,
@@ -22,5 +22,6 @@ const RecommendationList = connect(
 export default RecommendationList;
 
 RecommendationListComponent.propTypes = {
-  recommendationIds: PropTypes.arrayOf(string).isRequired,
+  searchId: PropTypes.string.isRequired,
+  recommendationIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

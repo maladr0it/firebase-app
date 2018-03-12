@@ -1,6 +1,11 @@
+.RecommendationList {
+  overflow-y: auto;
+}
+
+
 .FlightCombinations {
   display: flex;  
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 .FlightCombinations .DeparturesColumn {
   width: 50%;
