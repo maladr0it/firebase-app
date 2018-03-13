@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { flightGroupSelected } from '../../actions';
+import { selectFlightGroup } from '../../actions';
 import { getRecommendation } from '../../reducers/flightSearchResults';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import FlightGroup from './FlightGroup';
@@ -15,28 +15,34 @@ const RecommendationComponent = ({
 }) => {
   const validDepartures = validDeparturesByReturn[selectedReturn] || departureIds;
   const validReturns = validReturnsByDeparture[selectedDeparture] || returnIds;
-  const departing = departureIds.map(id => (
-    <FlightGroup
-      key={id}
-      type="departing"
-      searchId={searchId}
-      id={id}
-      handleSelect={() => onSelectFlightGroup(searchId, recId, 'departing', id)}
-      isSelected={id === selectedDeparture}
-      isInvalid={!validDepartures.includes(id)}
-    />
-  ));
-  const returning = returnIds.map(id => (
-    <FlightGroup
-      key={id}
-      type="returning"
-      searchId={searchId}
-      id={id}
-      handleSelect={() => onSelectFlightGroup(searchId, recId, 'returning', id)}
-      isSelected={id === selectedReturn}
-      isInvalid={!validReturns.includes(id)}
-    />
-  ));
+  const departing = departureIds.map((id) => {
+    const isInvalid = !validDepartures.includes(id);
+    return (
+      <FlightGroup
+        key={id}
+        type="departing"
+        searchId={searchId}
+        id={id}
+        handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'departure', isInvalid)}
+        isSelected={id === selectedDeparture}
+        isInvalid={isInvalid}
+      />
+    );
+  });
+  const returning = returnIds.map((id) => {
+    const isInvalid = !validReturns.includes(id);
+    return (
+      <FlightGroup
+        key={id}
+        type="returning"
+        searchId={searchId}
+        id={id}
+        handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'return', isInvalid)}
+        isSelected={id === selectedReturn}
+        isInvalid={!validReturns.includes(id)}
+      />
+    );
+  });
   return (
     <div className="FlightCombinations">
       {price}
@@ -62,7 +68,7 @@ const mapStateToProps = (state, ownProps) => ({
   ),
 });
 const mapDispatchToProps = {
-  onSelectFlightGroup: flightGroupSelected,
+  onSelectFlightGroup: selectFlightGroup,
 };
 const Recommendation = connect(
   mapStateToProps,
