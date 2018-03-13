@@ -25,7 +25,11 @@ const chatViews = (state = defaultState, action) => {
       const { chatId, scrollPos, atBottom } = action.payload;
       return {
         ...state,
-        [chatId]: { ...state[chatId], scrollPos, atBottom },
+        [chatId]: {
+          ...state[chatId],
+          scrollPos,
+          atBottom,
+        },
       };
     }
     case 'DRAFT_TEXT_UPDATED': {

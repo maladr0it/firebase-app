@@ -21,7 +21,12 @@
 }
 
 .FlightGroup {
-  padding: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border: 1px solid black;
+}
+.FlightGroup.Selected {
+  background:#04A777;
 }
 
 .FlightItem {

@@ -44,7 +44,6 @@ const defaultState = {
     returningFlightGroups: {
       1: [
         {
-          airlineName: 'Cathay Pacific',
           flightNo: 'CX 879',
           departAirportCode: 'SFO',
           departTerminal: '1',
@@ -54,7 +53,6 @@ const defaultState = {
           arriveDateTime: '2018-03-29 18:55',
           duration: '14h50m',
         }, {
-          airlineName: 'Cathay Pacific',
           flightNo: 'CX 745',
           departAirportCode: 'HKG',
           departTerminal: '1',

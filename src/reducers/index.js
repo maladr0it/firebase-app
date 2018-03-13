@@ -8,6 +8,7 @@ import messages from './messages';
 import reservations from './reservations';
 import listeners from './listeners';
 import flightSearchResults from './flightSearchResults';
+import flightSearchViews from './flightSearchViews';
 
 const app = combineReducers({
   user,
@@ -19,6 +20,7 @@ const app = combineReducers({
   reservations,
   listeners,
   flightSearchResults,
+  flightSearchViews,
 });
 
 export default app;

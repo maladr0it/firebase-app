@@ -6,15 +6,21 @@ import FlightItem from './FlightItem';
 
 import { getFlightGroup } from '../../reducers/flightSearchResults';
 
-const FlightGroupComponent = (props) => {
-  return (
-    <Paper className="FlightGroup">
-      {props.flights.map(flight => (
-        <FlightItem key={flight.flightNo} {...flight} />
-      ))}
-    </Paper>
-  );
-};
+const FlightGroupComponent = ({
+  flights, isSelected,
+  handleSelect,
+}) => (
+  // surrounding div to apply colors
+  <div
+    role="button"
+    className={`FlightGroup ${(isSelected) ? 'Selected' : ''}`}
+    onClick={() => handleSelect()} 
+  >
+    {flights.map(flight => (
+      <FlightItem key={flight.flightNo} {...flight} />
+    ))}
+  </div>
+);
 const mapStateToProps = (state, ownProps) => ({
   flights: getFlightGroup(
     state.flightSearchResults,
@@ -31,4 +37,6 @@ export default FlightGroup;
 
 FlightGroupComponent.propTypes = {
   flights: PropTypes.arrayOf(Object).isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  handleSelect: PropTypes.func.isRequired,
 };
