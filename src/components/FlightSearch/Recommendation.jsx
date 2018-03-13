@@ -8,28 +8,33 @@ import FlightGroup from './FlightGroup';
 
 const RecommendationComponent = ({
   searchId, recId, price,
-  departingFlightGroups, returningFlightGroups,
-  selectedDepartingFlightGroup, selectedReturningFlightGroup,
+  departureIds, returnIds,
+  selectedDeparture, selectedReturn,
+  validDeparturesByReturn, validReturnsByDeparture,
   onSelectFlightGroup,
 }) => {
-  const departing = departingFlightGroups.map(id => (
+  const validDepartures = validDeparturesByReturn[selectedReturn] || departureIds;
+  const validReturns = validReturnsByDeparture[selectedDeparture] || returnIds;
+  const departing = departureIds.map(id => (
     <FlightGroup
       key={id}
       type="departing"
       searchId={searchId}
       id={id}
       handleSelect={() => onSelectFlightGroup(searchId, recId, 'departing', id)}
-      isSelected={id === selectedDepartingFlightGroup}
+      isSelected={id === selectedDeparture}
+      isInvalid={!validDepartures.includes(id)}
     />
   ));
-  const returning = returningFlightGroups.map(id => (
+  const returning = returnIds.map(id => (
     <FlightGroup
       key={id}
       type="returning"
       searchId={searchId}
       id={id}
       handleSelect={() => onSelectFlightGroup(searchId, recId, 'returning', id)}
-      isSelected={id === selectedReturningFlightGroup}
+      isSelected={id === selectedReturn}
+      isInvalid={!validReturns.includes(id)}
     />
   ));
   return (
@@ -69,13 +74,15 @@ RecommendationComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
-  departingFlightGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
-  returningFlightGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedDepartingFlightGroup: PropTypes.string,
-  selectedReturningFlightGroup: PropTypes.string,
+  departureIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  returnIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedDeparture: PropTypes.string,
+  selectedReturn: PropTypes.string,
+  validDeparturesByReturn: PropTypes.objectOf(PropTypes.array).isRequired,
+  validReturnsByDeparture: PropTypes.objectOf(PropTypes.array).isRequired,
   onSelectFlightGroup: PropTypes.func.isRequired,
 };
 RecommendationComponent.defaultProps = {
-  selectedDepartingFlightGroup: '',
-  selectedReturningFlightGroup: '',
+  selectedDeparture: '',
+  selectedReturn: '',
 };

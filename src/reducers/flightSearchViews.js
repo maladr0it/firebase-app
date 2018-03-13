@@ -10,7 +10,7 @@ const flightSearchViews = (state = defaultState, action) => {
           ...state[searchId],
           [recId]: {
             ...(state[searchId] && state[searchId][recId]),
-            selectedDepartingFlightGroup: id,
+            selectedDeparture: id,
           },
         },
       };
@@ -23,7 +23,7 @@ const flightSearchViews = (state = defaultState, action) => {
           ...state[searchId],
           [recId]: {
             ...(state[searchId] && state[searchId][recId]),
-            selectedReturningFlightGroup: id,
+            selectedReturn: id,
           },
         },
       };

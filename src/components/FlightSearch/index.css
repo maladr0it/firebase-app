@@ -29,6 +29,10 @@
   background:#04A777;
 }
 
+.FlightGroup.Invalid {
+  background: grey;
+}
+
 .FlightItem {
   text-align: center;
 }
