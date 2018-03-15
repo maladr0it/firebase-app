@@ -10,13 +10,16 @@ const returnSelected = (searchId, recId, id) => ({
   type: 'RETURN_SELECTED',
   payload: { searchId, recId, id },
 });
+export const flightSearchResultAdded = (searchId, searchData) => ({
+  type: 'FLIGHT_SEARCH_RESULT_ADDED',
+  payload: { searchId, searchData },
+});
 
 // thunks
 export const selectFlightGroup = (
   searchId, recId, id,
   type, isInvalid,
 ) => (dispatch) => {
-  console.log(type);
   if (isInvalid) {
     dispatch(flightGroupsDeselected(searchId, recId));
   }
@@ -26,5 +29,4 @@ export const selectFlightGroup = (
     dispatch(returnSelected(searchId, recId, id));
   }
 };
-export const a = 5;
-
+export const a = 5; // stop

@@ -39,7 +39,7 @@ const RecommendationComponent = ({
         id={id}
         handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'return', isInvalid)}
         isSelected={id === selectedReturn}
-        isInvalid={!validReturns.includes(id)}
+        isInvalid={isInvalid}
       />
     );
   });

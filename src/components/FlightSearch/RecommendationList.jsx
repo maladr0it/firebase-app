@@ -6,14 +6,14 @@ import Recommendation from './Recommendation';
 const RecommendationListComponent = ({
   searchId, recommendationIds,
 }) => (
-  <div className="RecommendationList">
+  <div>
     {recommendationIds.map(id => (
       <Recommendation key={id} searchId={searchId} recId={id} />
     ))}
   </div>
 );
-const mapStateToProps = () => ({
-  recommendationIds: ['1', '2'],
+const mapStateToProps = (state, ownProps) => ({
+  recommendationIds: Object.keys(state.flightSearchResults[ownProps.searchId].recommendations),
 });
 const RecommendationList = connect(
   mapStateToProps,

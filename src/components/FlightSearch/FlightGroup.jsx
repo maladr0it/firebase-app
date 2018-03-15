@@ -12,7 +12,6 @@ const FlightGroupComponent = ({
   flights, isSelected, isInvalid,
   handleSelect,
 }) => (
-  // surrounding div to apply colors
   <div
     className={`FlightGroup ${isSelected ? ' Selected' : ''} ${isInvalid ? ' Invalid' : ' '}`}
     onClick={() => handleSelect()}

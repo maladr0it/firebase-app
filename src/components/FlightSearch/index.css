@@ -1,10 +1,9 @@
-.RecommendationList {
+.SearchResults {
   overflow-y: auto;
 }
 
-
 .FlightCombinations {
-  display: flex;  
+  display: flex;
   /* overflow-y: auto; */
 }
 .FlightCombinations .DeparturesColumn {

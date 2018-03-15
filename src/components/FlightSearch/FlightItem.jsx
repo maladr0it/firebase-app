@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 
 import './index.css';
 
-const formatDuration = (duration) => {
-  const hours = duration.get('hours') ?
-    `${duration.get('hours')}h` : '';
-  const minutes = duration.get('minutes') ?
-    ` ${duration.get('minutes')}m` : '';
-  return hours + minutes;
-};
-
 const FlightItemComponent = (props) => {
   const layover = (props.layover)
     && <div>--- Layover: {props.layover} ---</div>;
@@ -59,7 +51,7 @@ FlightItemComponent.propTypes = {
 };
 FlightItemComponent.defaultProps = {
   airlineName: 'AIRLINE_NAME',
-  layover: undefined,
+  layover: null,
   departAirport: 'DEPART_AIRPORT',
   departLocation: 'DEPART_LOCATION',
   arriveAirport: 'ARRIVE_AIRPORT',
