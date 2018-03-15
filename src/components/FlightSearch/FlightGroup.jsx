@@ -5,24 +5,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FlightItem from './FlightItem';
-
 import { getFlightGroup } from '../../reducers/flightSearchResults';
 
 const FlightGroupComponent = ({
-  flights, isSelected, isInvalid,
+  flightGroup, isSelected, isInvalid,
   handleSelect,
 }) => (
   <div
     className={`FlightGroup ${isSelected ? ' Selected' : ''} ${isInvalid ? ' Invalid' : ' '}`}
     onClick={() => handleSelect()}
   >
-    {flights.map(flight => (
+    {flightGroup.map(flight => (
       <FlightItem key={flight.flightNo} {...flight} />
     ))}
   </div>
 );
 const mapStateToProps = (state, ownProps) => ({
-  flights: getFlightGroup(
+  flightGroup: getFlightGroup(
     state.flightSearchResults,
     ownProps.searchId,
     ownProps.type,
@@ -36,7 +35,7 @@ const FlightGroup = connect(
 export default FlightGroup;
 
 FlightGroupComponent.propTypes = {
-  flights: PropTypes.arrayOf(Object).isRequired,
+  flightGroup: PropTypes.arrayOf(PropTypes.object).isRequired,
   isSelected: PropTypes.bool.isRequired,
   isInvalid: PropTypes.bool.isRequired,
   handleSelect: PropTypes.func.isRequired,

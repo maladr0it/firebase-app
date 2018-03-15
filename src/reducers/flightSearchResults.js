@@ -19,11 +19,10 @@ export const getRecommendation = (state, searchId, id) => (
   state[searchId] && state[searchId].recommendations[id]
 );
 export const getFlightGroup = (state, searchId, type, id) => {
-  if (type === 'departing') {
+  if (type === 'departure') {
     return state[searchId] && state[searchId].departures[id];
-  } else if (type === 'returning') {
+  } else if (type === 'return') {
     return state[searchId] && state[searchId].returns[id];
   }
   return null;
 };
-

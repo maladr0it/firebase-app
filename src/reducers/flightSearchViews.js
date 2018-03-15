@@ -3,7 +3,19 @@ const defaultState = {};
 const flightSearchViews = (state = defaultState, action) => {
   switch (action.type) {
     case 'FLIGHT_SEARCH_RESULT_ADDED': {
-      return state;
+      const { searchId, searchData } = action.payload;
+      const defaultView = Object.entries(searchData.recommendations)
+        .reduce((acc, entry) => {
+          const [recId, rec] = entry;
+          const selectedDeparture = rec.departureIds[0];
+          const selectedReturn = rec.validReturnsByDeparture[selectedDeparture][0];
+          acc[recId] = { selectedDeparture, selectedReturn };
+          return acc;
+        }, {});
+      return {
+        ...state,
+        [searchId]: defaultView,
+      };
     }
     case 'DEPARTURE_SELECTED': {
       const { searchId, recId, id } = action.payload;

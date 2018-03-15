@@ -2,6 +2,21 @@
   overflow-y: auto;
 }
 
+.RecSummary .ArriveDepartPanes {
+  display: flex;
+  background: orange;
+}
+.RecSummary .ArriveDepartPanes .LeftPane {
+  width: 50%;
+  background: yellow;
+}
+.RecSummary .ArriveDepartPanes .RightPane {
+  width: 50%;
+  background: green;
+}
+
+
+
 .FlightCombinations {
   display: flex;
   /* overflow-y: auto; */

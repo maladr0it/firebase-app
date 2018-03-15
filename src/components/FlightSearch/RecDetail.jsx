@@ -6,7 +6,7 @@ import { getRecommendation } from '../../reducers/flightSearchResults';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import FlightGroup from './FlightGroup';
 
-const RecommendationComponent = ({
+const RecDetailComponent = ({
   searchId, recId, price,
   departureIds, returnIds,
   selectedDeparture, selectedReturn,
@@ -20,7 +20,7 @@ const RecommendationComponent = ({
     return (
       <FlightGroup
         key={id}
-        type="departing"
+        type="departure"
         searchId={searchId}
         id={id}
         handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'departure', isInvalid)}
@@ -34,7 +34,7 @@ const RecommendationComponent = ({
     return (
       <FlightGroup
         key={id}
-        type="returning"
+        type="return"
         searchId={searchId}
         id={id}
         handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'return', isInvalid)}
@@ -70,13 +70,13 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
   onSelectFlightGroup: selectFlightGroup,
 };
-const Recommendation = connect(
+const RecDetail = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecommendationComponent);
-export default Recommendation;
+)(RecDetailComponent);
+export default RecDetail;
 
-RecommendationComponent.propTypes = {
+RecDetailComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -88,7 +88,7 @@ RecommendationComponent.propTypes = {
   validReturnsByDeparture: PropTypes.objectOf(PropTypes.array).isRequired,
   onSelectFlightGroup: PropTypes.func.isRequired,
 };
-RecommendationComponent.defaultProps = {
+RecDetailComponent.defaultProps = {
   selectedDeparture: '',
   selectedReturn: '',
 };

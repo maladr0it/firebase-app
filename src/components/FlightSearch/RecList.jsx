@@ -1,27 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Recommendation from './Recommendation';
+import RecSummary from './RecSummary';
 
-const RecommendationListComponent = ({
+const RecListComponent = ({
   searchId, recommendationIds,
 }) => (
   <div>
     {recommendationIds.map(id => (
-      <Recommendation key={id} searchId={searchId} recId={id} />
+      <RecSummary key={id} searchId={searchId} recId={id} />
     ))}
   </div>
 );
 const mapStateToProps = (state, ownProps) => ({
   recommendationIds: Object.keys(state.flightSearchResults[ownProps.searchId].recommendations),
 });
-const RecommendationList = connect(
+const RecList = connect(
   mapStateToProps,
   null,
-)(RecommendationListComponent);
-export default RecommendationList;
+)(RecListComponent);
+export default RecList;
 
-RecommendationListComponent.propTypes = {
+RecListComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recommendationIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

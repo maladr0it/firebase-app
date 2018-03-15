@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import RecommendationList from './RecommendationList';
+import RecList from './RecList';
 import { flightSearchResultAdded } from '../../actions';
 
 const searchData = {
@@ -126,7 +126,7 @@ const FlightSearchComponent = ({ searchIds, onSearch }) => (
       SEARCH
     </button>
     {searchIds.map(id => (
-      <RecommendationList
+      <RecList
         key={id}
         searchId={id}
       />
