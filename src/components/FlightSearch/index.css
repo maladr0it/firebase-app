@@ -2,20 +2,33 @@
   overflow-y: auto;
 }
 
-.RecSummary .ArriveDepartPanes {
+.Rec .ArriveDepartPanes {
   display: flex;
-  background: orange;
 }
-.RecSummary .ArriveDepartPanes .LeftPane {
+.Rec .ArriveDepartPanes .LeftPane {
   width: 50%;
-  background: yellow;
+  background: #EEEEEE;
 }
-.RecSummary .ArriveDepartPanes .RightPane {
+.Rec .ArriveDepartPanes .RightPane {
   width: 50%;
-  background: green;
+  background: #EEEEEE;
 }
 
-
+.FlightGroupSummary .Flights {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 2rem;
+}
+.FlightGroupSummary .Stops {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 2rem;
+}
+.FlightGroupSummary .Layovers {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 2rem;
+}
 
 .FlightCombinations {
   display: flex;
@@ -33,6 +46,15 @@
   display: flex;
   flex-direction: column;
 }
+.FlightCombinations * .Selected {
+  background: #04A777;
+}
+.FlightCombinations * .Invalid {
+  background: grey;
+}
+
+
+
 
 .FlightGroup {
   margin-top: 2px;

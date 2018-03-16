@@ -3,29 +3,29 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import { getRecommendation } from '../../reducers/flightSearchResults';
-import FlightGroupSummary from './FlightGroupSummary';
+import FlightGroup from './FlightGroup';
 
 import './index.css';
 
 // a concise render of a recommendation
-const RecSummaryComponent = ({
+const RecComponent = ({
   searchId, selectedDeparture, selectedReturn,
   price,
 }) => {
   console.log(selectedDeparture);
   return (
-    <div className="RecSummary">
+    <div className="Rec">
       PRICE: {price}
       <div className="ArriveDepartPanes">
         <div className="LeftPane">
-          <FlightGroupSummary
+          <FlightGroup
             type="departure"
             searchId={searchId}
             id={selectedDeparture}
           />
         </div>
         <div className="RightPane">
-          <FlightGroupSummary
+          <FlightGroup
             type="return"
             searchId={searchId}
             id={selectedReturn}
@@ -47,15 +47,19 @@ const mapStateToProps = (state, ownProps) => ({
     ownProps.recId,
   ),
 });
-const RecSummary = connect(
+const Rec = connect(
   mapStateToProps,
   null,
-)(RecSummaryComponent);
-export default RecSummary;
+)(RecComponent);
+export default Rec;
 
-RecSummaryComponent.propTypes = {
+RecComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
-  selectedDeparture: PropTypes.string.isRequired,
-  selectedReturn: PropTypes.string.isRequired,
+  selectedDeparture: PropTypes.string,
+  selectedReturn: PropTypes.string,
+};
+RecComponent.defaultProps = {
+  selectedDeparture: '',
+  selectedReturn: '',
 };

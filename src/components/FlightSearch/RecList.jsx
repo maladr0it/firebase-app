@@ -1,14 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import RecSummary from './RecSummary';
+import Rec from './Rec';
+import RecDetail from './RecDetail';
 
 const RecListComponent = ({
   searchId, recommendationIds,
 }) => (
   <div>
     {recommendationIds.map(id => (
-      <RecSummary key={id} searchId={searchId} recId={id} />
+      <React.Fragment key={id}>
+        <Rec searchId={searchId} recId={id} />
+        <RecDetail searchId={searchId} recId={id} />
+      </React.Fragment>
     ))}
   </div>
 );

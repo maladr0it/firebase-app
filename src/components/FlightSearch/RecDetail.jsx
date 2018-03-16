@@ -5,6 +5,7 @@ import { selectFlightGroup } from '../../actions';
 import { getRecommendation } from '../../reducers/flightSearchResults';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import FlightGroup from './FlightGroup';
+import Selectable from './Selectable';
 
 const RecDetailComponent = ({
   searchId, recId, price,
@@ -18,29 +19,35 @@ const RecDetailComponent = ({
   const departing = departureIds.map((id) => {
     const isInvalid = !validDepartures.includes(id);
     return (
-      <FlightGroup
+      <Selectable
         key={id}
-        type="departure"
-        searchId={searchId}
-        id={id}
         handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'departure', isInvalid)}
         isSelected={id === selectedDeparture}
         isInvalid={isInvalid}
-      />
+      >
+        <FlightGroup
+          type="departure"
+          searchId={searchId}
+          id={id}
+        />
+      </Selectable>
     );
   });
   const returning = returnIds.map((id) => {
     const isInvalid = !validReturns.includes(id);
     return (
-      <FlightGroup
+      <Selectable
         key={id}
-        type="return"
-        searchId={searchId}
-        id={id}
         handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'return', isInvalid)}
         isSelected={id === selectedReturn}
         isInvalid={isInvalid}
-      />
+      >
+        <FlightGroup
+          type="return"
+          searchId={searchId}
+          id={id}
+        />
+      </Selectable>
     );
   });
   return (
