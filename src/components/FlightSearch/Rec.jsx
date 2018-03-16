@@ -7,7 +7,6 @@ import FlightGroup from './FlightGroup';
 
 import './index.css';
 
-// a concise render of a recommendation
 const RecComponent = ({
   searchId, selectedDeparture, selectedReturn,
   price,

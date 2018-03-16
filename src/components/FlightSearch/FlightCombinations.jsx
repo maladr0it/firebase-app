@@ -7,7 +7,7 @@ import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import FlightGroup from './FlightGroup';
 import Selectable from './Selectable';
 
-const RecDetailComponent = ({
+const FlightCombinationsComponent = ({
   searchId, recId, price,
   departureIds, returnIds,
   selectedDeparture, selectedReturn,
@@ -77,13 +77,13 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
   onSelectFlightGroup: selectFlightGroup,
 };
-const RecDetail = connect(
+const FlightCombinations = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecDetailComponent);
-export default RecDetail;
+)(FlightCombinationsComponent);
+export default FlightCombinations;
 
-RecDetailComponent.propTypes = {
+FlightCombinationsComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -95,7 +95,7 @@ RecDetailComponent.propTypes = {
   validReturnsByDeparture: PropTypes.objectOf(PropTypes.array).isRequired,
   onSelectFlightGroup: PropTypes.func.isRequired,
 };
-RecDetailComponent.defaultProps = {
+FlightCombinationsComponent.defaultProps = {
   selectedDeparture: '',
   selectedReturn: '',
 };
