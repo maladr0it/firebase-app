@@ -12,6 +12,7 @@ const searchData = {
       {
         carrierCode: 'CX',
         flightNo: 'CX 746',
+        baggageAllowance: 5,
         departAirportCode: 'DBX',
         departTerminal: '3',
         departDateTime: '2018-03-24 17:55',
@@ -83,6 +84,24 @@ const searchData = {
       },
     ],
   },
+  baggageAllowances: {
+    '1_1': {
+      departing: '8 kg',
+      returning: '10 kg',
+    },
+    '1_2': {
+      departing: '10 kg',
+      returning: '12 kg',
+    },
+    '2_2': {
+      departing: '12 kg',
+      returning: '12 kg',
+    },
+    '2_1': {
+      departing: '8 kg',
+      returning: '8 kg',
+    },
+  },
   recommendations: {
     1: {
       price: '$850',
@@ -96,12 +115,6 @@ const searchData = {
         1: ['1'],
         2: ['1', '2'],
       },
-      // not necessary? use for baggage?
-      baggageDetails: {
-        '1_1': '20kg',
-        '1_2': '15kg',
-        '2_2': '30kg',
-      },
     },
     2: {
       price: '$900',
@@ -112,9 +125,6 @@ const searchData = {
       },
       validDeparturesByReturn: {
         1: ['2'],
-      },
-      baggageDetails: {
-        '2_1': '30kg',
       },
     },
   },

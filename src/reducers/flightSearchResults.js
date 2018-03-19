@@ -26,3 +26,13 @@ export const getFlightGroup = (state, searchId, type, id) => {
   }
   return null;
 };
+// TODO: setting defaults this way is inflexible
+export const getBaggageAllowances = (state, searchId, departureId, returnId) => (
+  (
+    state[searchId] &&
+    state[searchId].baggageAllowances[`${departureId}_${returnId}`]
+  ) || {
+    departing: null,
+    returning: null,
+  }
+);

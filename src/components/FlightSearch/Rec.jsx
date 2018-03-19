@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
-import { getRecommendation } from '../../reducers/flightSearchResults';
+import {
+  getRecommendation,
+  getBaggageAllowances,
+} from '../../reducers/flightSearchResults';
 import FlightGroup from './FlightGroup';
 import FlightGroupDetail from './FlightGroupDetail';
 import FlightCombinations from './FlightCombinations';
@@ -22,8 +25,8 @@ class RecComponent extends React.Component {
     const {
       searchId, recId, price,
       selectedDeparture, selectedReturn,
+      baggageAllowances,
     } = this.props;
-
     const flightGroups = (this.state.expanded) ? (
       <React.Fragment>
         <FlightCombinations searchId={searchId} recId={recId} />
@@ -33,6 +36,7 @@ class RecComponent extends React.Component {
               type="departure"
               searchId={searchId}
               id={selectedDeparture}
+              baggageAllowance={baggageAllowances.departing}
             />
           </div>
           <div className="RightPane">
@@ -40,6 +44,7 @@ class RecComponent extends React.Component {
               type="return"
               searchId={searchId}
               id={selectedReturn}
+              baggageAllowance={baggageAllowances.returning}
             />
           </div>
         </div>
@@ -73,18 +78,30 @@ class RecComponent extends React.Component {
     );
   }
 }
-const mapStateToProps = (state, ownProps) => ({
-  ...getRecommendation(
+const mapStateToProps = (state, ownProps) => {
+  const recommendation = getRecommendation(
     state.flightSearchResults,
     ownProps.searchId,
     ownProps.recId,
-  ),
-  ...getSelectedFlightGroups(
+  );
+  const { selectedDeparture, selectedReturn } = getSelectedFlightGroups(
     state.flightSearchViews,
     ownProps.searchId,
     ownProps.recId,
-  ),
-});
+  );
+  const baggageAllowances = getBaggageAllowances(
+    state.flightSearchResults,
+    ownProps.searchId,
+    selectedDeparture,
+    selectedReturn,
+  );
+  return ({
+    ...recommendation,
+    selectedDeparture,
+    selectedReturn,
+    baggageAllowances,
+  });
+};
 const Rec = connect(
   mapStateToProps,
   null,
@@ -97,6 +114,7 @@ RecComponent.propTypes = {
   price: PropTypes.string.isRequired,
   selectedDeparture: PropTypes.string,
   selectedReturn: PropTypes.string,
+  baggageAllowances: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 RecComponent.defaultProps = {
   selectedDeparture: '',

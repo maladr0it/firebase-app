@@ -5,7 +5,7 @@ import FlightItem from './FlightItem';
 import { getFlightGroup } from '../../reducers/flightSearchResults';
 
 const FlightGroupComponent = ({
-  flightGroup,
+  flightGroup, baggageAllowance,
 }) => {
   if (!flightGroup) {
     return (
@@ -14,6 +14,7 @@ const FlightGroupComponent = ({
   }
   return (
     <div className="FlightGroup">
+      BAGGAGE ALLOWANCE: {baggageAllowance || 'unknown'}
       {flightGroup.map((flight, i) => (
         <FlightItem key={i} {...flight} />
       ))}
@@ -36,7 +37,9 @@ export default FlightGroup;
 
 FlightGroupComponent.propTypes = {
   flightGroup: PropTypes.arrayOf(PropTypes.object),
+  baggageAllowance: PropTypes.string,
 };
 FlightGroupComponent.defaultProps = {
   flightGroup: null,
+  baggageAllowance: '',
 };
