@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
+import { flightSuggestionAdded } from '../../actions';
 import {
   getRecommendation,
   getBaggageAllowances,
@@ -23,9 +24,10 @@ class RecComponent extends React.Component {
   };
   render() {
     const {
-      searchId, recId, price,
+      searchId, recId, price, cancellationPolicy,
       selectedDeparture, selectedReturn,
       baggageAllowances,
+      handleAdd,
     } = this.props;
     const flightGroups = (this.state.expanded) ? (
       <React.Fragment>
@@ -48,6 +50,7 @@ class RecComponent extends React.Component {
             />
           </div>
         </div>
+        <div>Cancellation Policy: {cancellationPolicy}</div>
       </React.Fragment>
     ) : (
       <div className="DepartReturnPanes">
@@ -72,6 +75,14 @@ class RecComponent extends React.Component {
         <h3>{price}</h3>
         <button onClick={() => this.toggleExpand()}>
           EXP
+        </button>
+        <button
+          onClick={() => handleAdd(
+            searchId, recId,
+            selectedDeparture, selectedReturn,
+          )}
+        >
+          ADD
         </button>
         {flightGroups}
       </div>
@@ -102,9 +113,12 @@ const mapStateToProps = (state, ownProps) => {
     baggageAllowances,
   });
 };
+const mapDispatchToProps = {
+  handleAdd: flightSuggestionAdded,
+};
 const Rec = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(RecComponent);
 export default Rec;
 
@@ -112,9 +126,11 @@ RecComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
+  cancellationPolicy: PropTypes.string.isRequired,
   selectedDeparture: PropTypes.string,
   selectedReturn: PropTypes.string,
   baggageAllowances: PropTypes.objectOf(PropTypes.string).isRequired,
+  handleAdd: PropTypes.func.isRequired,
 };
 RecComponent.defaultProps = {
   selectedDeparture: '',

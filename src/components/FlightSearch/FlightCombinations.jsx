@@ -52,10 +52,10 @@ const FlightCombinationsComponent = ({
   });
   return (
     <div className="FlightCombinations">
-      <div className="DeparturesColumn">
+      <div className="Column">
         {departing}
       </div>
-      <div className="ReturnsColumn">
+      <div className="Column">
         {returning}
       </div>
     </div>

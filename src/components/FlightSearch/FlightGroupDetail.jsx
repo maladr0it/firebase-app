@@ -4,16 +4,20 @@ import { connect } from 'react-redux';
 import FlightItem from './FlightItem';
 import { getFlightGroup } from '../../reducers/flightSearchResults';
 
+import './index.css';
+
 const FlightGroupComponent = ({
   flightGroup, baggageAllowance,
 }) => {
   if (!flightGroup) {
     return (
-      <div>Please select a valid flight.</div>
+      <div className="FlightGroup">
+        Please select a valid flight.
+      </div>
     );
   }
   return (
-    <div className="FlightGroup">
+    <div className="FlightGroupDetail">
       BAGGAGE ALLOWANCE: {baggageAllowance || 'unknown'}
       {flightGroup.map((flight, i) => (
         <FlightItem key={i} {...flight} />

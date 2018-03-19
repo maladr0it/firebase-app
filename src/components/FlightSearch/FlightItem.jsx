@@ -12,7 +12,7 @@ const FlightItemComponent = (props) => {
       <p>{props.airlineName} {props.flightNo}</p>
       <div className="DepartArrivePanes">
         <div className="LeftPane">
-          <p>{props.departAirportCode} {props.departDateTime}</p>
+          <p>{props.departAirportCode}</p>
           <p>{props.departDateTime}</p>
           <p>Terminal {props.departTerminal}, {props.departAirport}, {props.departLocation}
           </p>
@@ -21,7 +21,7 @@ const FlightItemComponent = (props) => {
           <p>{props.duration}</p>
         </div>
         <div className="RightPane">
-          <p>{props.arriveAirportCode} {props.arriveDateTime}</p>
+          <p>{props.arriveAirportCode}</p>
           <p>{props.arriveDateTime}</p>
           <p>Terminal {props.arriveTerminal}, {props.arriveAirport}, {props.arriveLocation}
           </p>

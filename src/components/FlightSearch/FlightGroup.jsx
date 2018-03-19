@@ -11,7 +11,9 @@ import './index.css';
 const FlightGroupComponent = ({ flightGroup }) => {
   if (!flightGroup) {
     return (
-      <div>Please select a valid flight.</div>
+      <div className="FlightGroup">
+        Please select a valid flight.
+      </div>
     );
   }
   const departAt = flightGroup[0] &&
@@ -42,19 +44,19 @@ const FlightGroupComponent = ({ flightGroup }) => {
 
   return (
     <div className="FlightGroup">
-      <div className="Times">
-        <div>
-          <h3>{departAt.format('hh:mm')}</h3>
-          <p>{departAt.format('ddd, MMM Do')}</p>
-        </div>
-        <div>
-          <h3>{arriveAt.format('hh:mm')}</h3>
-          <p>{arriveAt.format('ddd, MMM Do')}</p>
-        </div>
+      <div>
+        <h3>{departAt.format('hh:mm')}</h3>
+        <p>{departAt.format('ddd, MMM D')}</p>
       </div>
-      <div className="Flights">{flights}</div>
-      <div className="Layovers">{layovers}</div>
-      <div className="Stops">{stops}</div>
+      <div className="FlightInfo">
+        <div className="Flights">{flights}</div>
+        <div className="Layovers">{layovers}</div>
+        <div className="Stops">{stops}</div>
+      </div>
+      <div>
+        <h3>{arriveAt.format('hh:mm')}</h3>
+        <p>{arriveAt.format('ddd, MMM D')}</p>
+      </div>
     </div>
   );
 };

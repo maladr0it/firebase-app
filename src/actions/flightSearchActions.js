@@ -14,6 +14,18 @@ export const flightSearchResultAdded = (searchId, searchData) => ({
   type: 'FLIGHT_SEARCH_RESULT_ADDED',
   payload: { searchId, searchData },
 });
+export const flightSuggestionAdded = (
+  searchId, recId,
+  departingId, returningId,
+) => ({
+  type: 'FLIGHT_SUGGESTION_ADDED',
+  payload: {
+    searchId,
+    recId,
+    departingId,
+    returningId,
+  },
+});
 
 // thunks
 export const selectFlightGroup = (

@@ -105,6 +105,7 @@ const searchData = {
   recommendations: {
     1: {
       price: '$850',
+      cancellationPolicy: '¥8600 penalty',
       departureIds: ['1', '2'],
       returnIds: ['1', '2'],
       validReturnsByDeparture: {
@@ -118,6 +119,7 @@ const searchData = {
     },
     2: {
       price: '$900',
+      cancellationPolicy: 'no refund',
       departureIds: ['2'],
       returnIds: ['1'],
       validReturnsByDeparture: {
