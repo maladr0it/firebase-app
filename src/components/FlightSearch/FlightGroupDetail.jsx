@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -8,18 +5,21 @@ import FlightItem from './FlightItem';
 import { getFlightGroup } from '../../reducers/flightSearchResults';
 
 const FlightGroupComponent = ({
-  flightGroup, isSelected, isInvalid,
-  handleSelect,
-}) => (
-  <div
-    className={`FlightGroup ${isSelected ? ' Selected' : ''} ${isInvalid ? ' Invalid' : ' '}`}
-    onClick={() => handleSelect()}
-  >
-    {flightGroup.map(flight => (
-      <FlightItem key={flight.flightNo} {...flight} />
-    ))}
-  </div>
-);
+  flightGroup,
+}) => {
+  if (!flightGroup) {
+    return (
+      <div>Please select a valid flight.</div>
+    );
+  }
+  return (
+    <div className="FlightGroup">
+      {flightGroup.map((flight, i) => (
+        <FlightItem key={i} {...flight} />
+      ))}
+    </div>
+  );
+};
 const mapStateToProps = (state, ownProps) => ({
   flightGroup: getFlightGroup(
     state.flightSearchResults,
@@ -35,8 +35,8 @@ const FlightGroup = connect(
 export default FlightGroup;
 
 FlightGroupComponent.propTypes = {
-  flightGroup: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  isInvalid: PropTypes.bool.isRequired,
-  handleSelect: PropTypes.func.isRequired,
+  flightGroup: PropTypes.arrayOf(PropTypes.object),
+};
+FlightGroupComponent.defaultProps = {
+  flightGroup: null,
 };

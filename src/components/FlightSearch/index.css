@@ -1,33 +1,50 @@
+/* * {
+  outline: 1px solid red;
+} */
+
 .SearchResults {
   overflow-y: auto;
 }
 
-.Rec .ArriveDepartPanes {
+.Rec .DepartReturnPanes {
   display: flex;
 }
-.Rec .ArriveDepartPanes .LeftPane {
+.Rec .DepartReturnPanes > .LeftPane {
   width: 50%;
   background: #EEEEEE;
+  border: 1px solid black;
 }
-.Rec .ArriveDepartPanes .RightPane {
+.Rec .DepartReturnPanes > .RightPane {
   width: 50%;
   background: #EEEEEE;
+  border: 1px solid black;
 }
 
-.FlightGroupSummary .Flights {
-  display: flex;
-  justify-content: space-evenly;
-  min-height: 2rem;
+.FlightGroup {
+  padding: 5px;
 }
-.FlightGroupSummary .Stops {
+.FlightGroup .Times {
   display: flex;
-  justify-content: space-evenly;
-  min-height: 2rem;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
 }
-.FlightGroupSummary .Layovers {
+.FlightGroup .Flights {
   display: flex;
+  align-items: center;
   justify-content: space-evenly;
-  min-height: 2rem;
+  min-height: 1.5rem;
+}
+.FlightGroup .Stops {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 1.5rem;
+}
+.FlightGroup .Layovers {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 1.5rem;
 }
 
 .FlightCombinations {
@@ -54,38 +71,23 @@
 }
 
 
-
-
-.FlightGroup {
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: 1px solid black;
-}
-.FlightGroup.Selected {
-  background:#04A777;
-}
-
-.FlightGroup.Invalid {
-  background: grey;
-}
-
 .FlightItem {
   text-align: center;
 }
-.FlightItem .ArriveDepartPanes {
+.FlightItem .DepartArrivePanes {
   display: flex;
 }
-.FlightItem .ArriveDepartPanes .Duration {
+.FlightItem .DepartArrivePanes .Duration {
   text-align: center;
   flex-grow: 0;
   min-width: 5rem;
 }
-.FlightItem .ArriveDepartPanes .LeftPane {
+.FlightItem .DepartArrivePanes > .LeftPane {
   flex-basis: 0;
   flex-grow: 1;
   text-align: right;
 }
-.FlightItem .ArriveDepartPanes .RightPane {
+.FlightItem .DepartArrivePanes > .RightPane {
   flex-basis: 0;
   flex-grow: 1;
   text-align: left;

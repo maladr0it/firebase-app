@@ -10,7 +10,7 @@ const FlightItemComponent = (props) => {
     <div className="FlightItem">
       {layover}
       <p>{props.airlineName} {props.flightNo}</p>
-      <div className="ArriveDepartPanes">
+      <div className="DepartArrivePanes">
         <div className="LeftPane">
           <p>{props.departAirportCode} {props.departDateTime}</p>
           <p>{props.departDateTime}</p>

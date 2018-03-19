@@ -1,32 +1,33 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { getFlightGroup } from '../../reducers/flightSearchResults';
-
-// make this a dumb component
 
 import './index.css';
 // summary of flight for the list-view
 // TODO: consider renderProps for FlightGroupSummary and FlightGroup
 const FlightGroupComponent = ({ flightGroup }) => {
-  // logic here to summarise
   if (!flightGroup) {
     return (
       <div>Please select a valid flight.</div>
     );
   }
-  const departAt = flightGroup[0] && flightGroup[0].departDateTime;
-  const arriveAt = flightGroup[flightGroup.length - 1].arriveDateTime;
+  const departAt = flightGroup[0] &&
+    moment(flightGroup[0].departDateTime);
+  const arriveAt = flightGroup[flightGroup.length - 1] &&
+    moment(flightGroup[flightGroup.length - 1].arriveDateTime);
 
-  const flights = flightGroup.map(flight => (
-    <div key={flight.flightNo}>
+  const flights = flightGroup.map((flight, i) => (
+    <div key={i}>
       {flight.flightNo}
     </div>
   ));
   const stops = flightGroup.map(flight => flight.departAirportCode)
     .concat(flightGroup[flightGroup.length - 1].arriveAirportCode)
-    .map(stop => (
-      <div key={stop}>
+    .map((stop, i) => (
+      <div key={i}>
         {stop}
       </div>
     ));
@@ -40,11 +41,20 @@ const FlightGroupComponent = ({ flightGroup }) => {
   ));
 
   return (
-    <div className="FlightGroupSummary">
-      <p>LEAVE: {departAt} ARRIVE: {arriveAt}</p>
+    <div className="FlightGroup">
+      <div className="Times">
+        <div>
+          <h3>{departAt.format('hh:mm')}</h3>
+          <p>{departAt.format('ddd, MMM Do')}</p>
+        </div>
+        <div>
+          <h3>{arriveAt.format('hh:mm')}</h3>
+          <p>{arriveAt.format('ddd, MMM Do')}</p>
+        </div>
+      </div>
       <div className="Flights">{flights}</div>
-      <div className="Stops">{stops}</div>
       <div className="Layovers">{layovers}</div>
+      <div className="Stops">{stops}</div>
     </div>
   );
 };

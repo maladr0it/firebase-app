@@ -97,10 +97,10 @@ const searchData = {
         2: ['1', '2'],
       },
       // not necessary? use for baggage?
-      validCombinations: {
-        '1_1': true,
-        '1_2': true,
-        '2_2': true,
+      baggageDetails: {
+        '1_1': '20kg',
+        '1_2': '15kg',
+        '2_2': '30kg',
       },
     },
     2: {
@@ -113,8 +113,8 @@ const searchData = {
       validDeparturesByReturn: {
         1: ['2'],
       },
-      validCombinations: {
-        '2_1': true,
+      baggageDetails: {
+        '2_1': '30kg',
       },
     },
   },

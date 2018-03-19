@@ -52,7 +52,6 @@ const FlightCombinationsComponent = ({
   });
   return (
     <div className="FlightCombinations">
-      {price}
       <div className="DeparturesColumn">
         {departing}
       </div>
