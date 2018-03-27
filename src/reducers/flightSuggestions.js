@@ -4,12 +4,12 @@ const defaultState = {};
 //   SEARCHID1: [
 //     {
 //       recId: 1,
-//       departing: 1,
-//       returning: 1,
+//       departingId: 1,
+//       returningId: 1,
 //     }, {
 //       recId: 1,
-//       departing: 2,
-//       returning: 1,
+//       departingId: 2,
+//       returningId: 1,
 //     },
 //   ],
 // };

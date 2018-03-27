@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tabs, Tab } from 'material-ui/Tabs';
+
 import RecList from './RecList';
+import SuggestionList from './SuggestionList';
 import { flightSearchResultAdded } from '../../actions';
 
 const searchData = {
@@ -132,19 +135,40 @@ const searchData = {
   },
 };
 
-const FlightSearchComponent = ({ searchIds, onSearch }) => (
-  <div className="SearchResults">
-    <button onClick={() => onSearch('SEARCHID1', searchData)}>
-      SEARCH
-    </button>
-    {searchIds.map(id => (
-      <RecList
-        key={id}
-        searchId={id}
-      />
-    ))}
-  </div>
-);
+class FlightSearchComponent extends React.Component {
+  state = {
+    selectedTab: 'results',
+  };
+  handleSelectTab = (selectedTab) => {
+    this.setState({
+      selectedTab,
+    });
+  }
+  render() {
+    const { searchIds, onSearch } = this.props;
+    return (
+      <React.Fragment>
+        <button onClick={() => onSearch('SEARCHID1', searchData)}>
+          SEARCH
+        </button>
+        {searchIds.map(id => (
+          <Tabs
+            key={id}
+            value={this.state.selectedTab}
+            onChange={this.handleSelectTab}
+          >
+            <Tab label="RESULTS" value="results">
+              <RecList searchId={id} />
+            </Tab>
+            <Tab label="SUGGESTIONS" value="suggestions">
+              <SuggestionList searchId={id} />
+            </Tab>
+          </Tabs>
+        ))}
+      </React.Fragment>
+    );
+  }
+}
 const mapStateToProps = state => ({
   searchIds: Object.keys(state.flightSearchResults),
 });

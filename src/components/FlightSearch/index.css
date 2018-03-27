@@ -6,15 +6,15 @@
   overflow-y: auto;
 }
 
-.Rec .DepartReturnPanes {
+.DepartReturnPanes {
   display: flex;
 }
-.Rec .DepartReturnPanes > .LeftPane {
+.DepartReturnPanes > .LeftPane {
   width: 50%;
   background: #EEEEEE;
   border: 1px solid black;
 }
-.Rec .DepartReturnPanes > .RightPane {
+.DepartReturnPanes > .RightPane {
   width: 50%;
   background: #EEEEEE;
   border: 1px solid black;

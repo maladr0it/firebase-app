@@ -129,10 +129,12 @@ RecComponent.propTypes = {
   cancellationPolicy: PropTypes.string.isRequired,
   selectedDeparture: PropTypes.string,
   selectedReturn: PropTypes.string,
-  baggageAllowances: PropTypes.objectOf(PropTypes.string).isRequired,
+  baggageAllowances: PropTypes.objectOf(PropTypes.string),
   handleAdd: PropTypes.func.isRequired,
 };
 RecComponent.defaultProps = {
   selectedDeparture: '',
   selectedReturn: '',
+  // should a default object shape be set here?
+  baggageAllowances: { departing: null, arriving: null },
 };
