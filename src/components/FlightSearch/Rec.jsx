@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import RaisedButton from 'material-ui/RaisedButton';
 import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import { flightSuggestionAdded } from '../../actions';
 import {
@@ -71,21 +72,23 @@ class RecComponent extends React.Component {
       </div>
     );
     return (
-      <div className="Rec">
+      <React.Fragment>
         <h3>{price}</h3>
-        <button onClick={() => this.toggleExpand()}>
-          EXP
-        </button>
-        <button
+        <RaisedButton
+          label={(this.state.expanded ? 'Less' : 'More')}
+          primary
+          onClick={() => this.toggleExpand()}
+        />
+        <RaisedButton
+          label="Add"
+          disabled={(!selectedDeparture || !selectedReturn)}
           onClick={() => handleAdd(
             searchId, recId,
             selectedDeparture, selectedReturn,
           )}
-        >
-          ADD
-        </button>
+        />
         {flightGroups}
-      </div>
+      </React.Fragment>
     );
   }
 }

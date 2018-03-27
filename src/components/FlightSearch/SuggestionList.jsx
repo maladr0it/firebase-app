@@ -7,18 +7,24 @@ import Suggestion from './Suggestion';
 
 const SuggestionListComponent = ({
   searchId, suggestions,
-}) => (
-  <React.Fragment>
-    SUGGESTIONS:
-    {suggestions.map((sug, i) => (
-      <Suggestion
-        key={i}
-        searchId={searchId}
-        {...sug}
-      />
-    ))}
-  </React.Fragment>
-);
+}) => {
+  if (suggestions.length === 0) {
+    return (
+      <div>Add some suggestions</div>
+    );
+  }
+  return (
+    <React.Fragment>
+      {suggestions.map((sug, i) => (
+        <Suggestion
+          key={i}
+          searchId={searchId}
+          {...sug}
+        />
+      ))}
+    </React.Fragment>
+  );
+};
 const mapStateToProps = (state, ownProps) => ({
   suggestions: state.flightSuggestions[ownProps.searchId],
 });
