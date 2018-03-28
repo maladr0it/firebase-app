@@ -21,7 +21,10 @@ const FlightCombinationsComponent = ({
     return (
       <Selectable
         key={id}
-        handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'departure', isInvalid)}
+        handleSelect={() => onSelectFlightGroup(
+          searchId, recId, id,
+          'departure', isInvalid,
+        )}
         isSelected={id === selectedDeparture}
         isInvalid={isInvalid}
       >
@@ -38,7 +41,10 @@ const FlightCombinationsComponent = ({
     return (
       <Selectable
         key={id}
-        handleSelect={() => onSelectFlightGroup(searchId, recId, id, 'return', isInvalid)}
+        handleSelect={() => onSelectFlightGroup(
+          searchId, recId, id,
+          'return', isInvalid,
+        )}
         isSelected={id === selectedReturn}
         isInvalid={isInvalid}
       >

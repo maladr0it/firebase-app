@@ -31,7 +31,7 @@ export const getBaggageAllowances = (state, searchId, departureId, returnId) => 
   state[searchId] &&
   state[searchId].baggageAllowances[`${departureId}_${returnId}`]
 );
-  //   (
+//   (
 //     state[searchId] &&
 //     state[searchId].baggageAllowances[`${departureId}_${returnId}`]
 //   ) || {

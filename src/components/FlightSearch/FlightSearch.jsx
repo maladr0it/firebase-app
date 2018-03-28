@@ -13,6 +13,7 @@ import './index.css';
 const searchData1 = {
   origin: 'Tokyo',
   destination: 'Melbourne',
+  oneWay: false,
   departures: {
     1: [
       {
@@ -441,6 +442,7 @@ const searchData1 = {
 const searchData2 = {
   origin: 'San Francisco',
   destination: 'Osaka',
+  oneWay: false,
   departures: {
     1: [
       {
@@ -688,7 +690,7 @@ const searchData2 = {
     },
     2: {
       price: '¥49,583',
-      cancellationPolicy: '',
+      cancellationPolicy: 'Refundable',
       departureIds: ['1', '2', '3', '4'],
       returnIds: ['2', '3'],
       validReturnsByDeparture: {
@@ -701,6 +703,161 @@ const searchData2 = {
         2: ['1', '2', '3', '4'],
         3: ['1', '2', '3', '4'],
       },
+    },
+  },
+};
+
+const searchData3 = {
+  origin: 'Osaka',
+  destination: 'Tokyo',
+  oneWay: true,
+  departures: {
+    1: [
+      {
+        carrierCode: 'GK',
+        flightNo: 'GK 200',
+        departAirportCode: 'KIX',
+        departTerminal: 'D',
+        departDateTime: '2018-05-24 07:35',
+        arriveAirportCode: 'NRT',
+        arriveTerminal: '3',
+        arriveDateTime: '2018-05-24 08:55',
+        duration: '1h20m',
+      },
+    ],
+    2: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 220',
+        departAirportCode: 'KIX',
+        departTerminal: '1',
+        departDateTime: '2018-05-24 06:40',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 07:40',
+        duration: '1h',
+      },
+    ],
+    3: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 102',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 07:10',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 08:15',
+        duration: '1h5m',
+      },
+    ],
+    4: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 104',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 07:30',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 08:40',
+        duration: '1h10m',
+      },
+    ],
+    5: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 114',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 11:30',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 12:40',
+        duration: '1h10m',
+      },
+    ],
+    6: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 116',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 12:30',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 13:40',
+        duration: '1h10m',
+      },
+    ],
+    7: [
+      {
+        carrierCode: 'JL',
+        flightNo: 'JL 118',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 13:30',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D1',
+        arriveDateTime: '2018-05-24 14:40',
+        duration: '1h10m',
+      },
+    ],
+    8: [
+      {
+        carrierCode: 'NH',
+        flightNo: 'NH 18',
+        departAirportCode: 'ITM',
+        departTerminal: '',
+        departDateTime: '2018-05-24 09:00',
+        arriveAirportCode: 'HND',
+        arriveTerminal: 'D2',
+        arriveDateTime: '2018-05-24 10:10',
+        duration: '1h10m',
+      },
+    ],
+  },
+  baggageAllowances: {
+    '1_': {
+      departure: '7kg',
+    },
+    '2_': {
+      departure: '2pc 7kg',
+    },
+    '3_': {
+      departure: '2pc 7kg',
+    },
+    '4_': {
+      departure: '2pc 7kg',
+    },
+    '5_': {
+      departure: '2pc 7kg',
+    },
+    '6_': {
+      departure: '2pc 7kg',
+    },
+    '7_': {
+      departure: '2pc 7kg',
+    },
+    '8_': {
+      departure: '20kg 7kg',
+    },
+  },
+  recommendations: {
+    1: {
+      price: '¥3,197',
+      cancellationPolicy: 'Non Refundable',
+      departureIds: ['1'],
+    },
+    2: {
+      price: '¥10,563',
+      cancellationPolicy: 'Refundable',
+      departureIds: ['2', '3', '4', '5', '6', '7'],
+    },
+    3: {
+      price: '¥10,563',
+      cancellationPolicy: 'Refundable',
+      departureIds: ['8'],
     },
   },
 };
@@ -718,7 +875,7 @@ class FlightSearchComponent extends React.Component {
     const { searchIds, onSearch } = this.props;
     return (
       <div className="FlightSearch">
-        <button onClick={() => onSearch('SEARCHID1', searchData2)}>
+        <button onClick={() => onSearch('SEARCHID1', searchData3)}>
           SEARCH
         </button>
         {searchIds.map(id => (

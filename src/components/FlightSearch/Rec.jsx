@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
-import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import { flightSuggestionAdded } from '../../actions';
+import { getSelectedFlightGroups } from '../../reducers/flightSearchViews';
 import {
   getRecommendation,
   getBaggageAllowances,
@@ -29,48 +29,38 @@ class RecComponent extends React.Component {
       selectedDeparture, selectedReturn,
       baggageAllowances,
       handleAdd,
+
+      oneWay,
     } = this.props;
-    const flightGroups = (this.state.expanded) ? (
-      <React.Fragment>
-        <FlightCombinations searchId={searchId} recId={recId} />
-        <div className="DepartReturnPanes">
-          <div className="LeftPane">
-            <FlightGroupDetail
-              type="departure"
-              searchId={searchId}
-              id={selectedDeparture}
-              baggageAllowance={baggageAllowances.departing}
-            />
-          </div>
-          <div className="RightPane">
-            <FlightGroupDetail
-              type="return"
-              searchId={searchId}
-              id={selectedReturn}
-              baggageAllowance={baggageAllowances.returning}
-            />
-          </div>
-        </div>
-        <div>Cancellation Policy: {cancellationPolicy}</div>
-      </React.Fragment>
+
+    const departing = this.state.expanded ? (
+      <FlightGroupDetail
+        type="departure"
+        searchId={searchId}
+        id={selectedDeparture}
+        baggageAllowance={baggageAllowances.departing}
+      />
     ) : (
-      <div className="DepartReturnPanes">
-        <div className="LeftPane">
-          <FlightGroup
-            type="departure"
-            searchId={searchId}
-            id={selectedDeparture}
-          />
-        </div>
-        <div className="RightPane">
-          <FlightGroup
-            type="return"
-            searchId={searchId}
-            id={selectedReturn}
-          />
-        </div>
-      </div>
+      <FlightGroup
+        type="departure"
+        searchId={searchId}
+        id={selectedDeparture}
+      />
     );
+    const returning = (!oneWay) && (this.state.expanded ? (
+      <FlightGroupDetail
+        type="return"
+        searchId={searchId}
+        id={selectedReturn}
+        baggageAllowance={baggageAllowances.returning}
+      />
+    ) : (
+      <FlightGroup
+        type="return"
+        searchId={searchId}
+        id={selectedReturn}
+      />
+    ));
     return (
       <React.Fragment>
         <h3>{price}</h3>
@@ -81,13 +71,21 @@ class RecComponent extends React.Component {
         />
         <RaisedButton
           label="Add"
-          disabled={(!selectedDeparture || !selectedReturn)}
+          disabled={(!oneWay && (!selectedDeparture || !selectedReturn))}
           onClick={() => handleAdd(
             searchId, recId,
             selectedDeparture, selectedReturn,
           )}
         />
-        {flightGroups}
+        {(this.state.expanded) && <FlightCombinations searchId={searchId} recId={recId} />}
+        <div className="DepartReturnPanes">
+          <div className="LeftPane">
+            {departing}
+          </div>
+          <div className="RightPane">
+            {returning}
+          </div>
+        </div>
       </React.Fragment>
     );
   }
@@ -141,3 +139,46 @@ RecComponent.defaultProps = {
   // should a default object shape be set here?
   baggageAllowances: { departing: null, arriving: null },
 };
+
+
+// const flightGroups = (this.state.expanded) ? (
+//   <React.Fragment>
+//     <FlightCombinations searchId={searchId} recId={recId} />
+//     <div className="DepartReturnPanes">
+//       <div className="LeftPane">
+//         <FlightGroupDetail
+//           type="departure"
+//           searchId={searchId}
+//           id={selectedDeparture}
+//           baggageAllowance={baggageAllowances.departing}
+//         />
+//       </div>
+//       <div className="RightPane">
+//         <FlightGroupDetail
+//           type="return"
+//           searchId={searchId}
+//           id={selectedReturn}
+//           baggageAllowance={baggageAllowances.returning}
+//         />
+//       </div>
+//     </div>
+//     <div>Cancellation Policy: {cancellationPolicy}</div>
+//   </React.Fragment>
+// ) : (
+//   <div className="DepartReturnPanes">
+//     <div className="LeftPane">
+//       <FlightGroup
+//         type="departure"
+//         searchId={searchId}
+//         id={selectedDeparture}
+//       />
+//     </div>
+//     <div className="RightPane">
+//       <FlightGroup
+//         type="return"
+//         searchId={searchId}
+//         id={selectedReturn}
+//       />
+//     </div>
+//   </div>
+// );
