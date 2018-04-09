@@ -8,8 +8,8 @@ import FlightGroup from './FlightGroup';
 import Selectable from './Selectable';
 
 const FlightCombinationsComponent = ({
-  searchId, recId, price,
-  departureIds, returnIds,
+  searchId, recId,
+  departureIds, returnIds, oneWay,
   selectedDeparture, selectedReturn,
   validDeparturesByReturn, validReturnsByDeparture,
   onSelectFlightGroup,
@@ -36,7 +36,7 @@ const FlightCombinationsComponent = ({
       </Selectable>
     );
   });
-  const returning = returnIds.map((id) => {
+  const returning = (!oneWay) && returnIds.map((id) => {
     const isInvalid = !validReturns.includes(id);
     return (
       <Selectable
@@ -91,16 +91,19 @@ export default FlightCombinations;
 FlightCombinationsComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-  departureIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  returnIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  departureIds: PropTypes.arrayOf(PropTypes.string),
+  returnIds: PropTypes.arrayOf(PropTypes.string),
   selectedDeparture: PropTypes.string,
   selectedReturn: PropTypes.string,
-  validDeparturesByReturn: PropTypes.objectOf(PropTypes.array).isRequired,
-  validReturnsByDeparture: PropTypes.objectOf(PropTypes.array).isRequired,
+  validDeparturesByReturn: PropTypes.objectOf(PropTypes.array),
+  validReturnsByDeparture: PropTypes.objectOf(PropTypes.array),
   onSelectFlightGroup: PropTypes.func.isRequired,
 };
 FlightCombinationsComponent.defaultProps = {
   selectedDeparture: '',
   selectedReturn: '',
+  departureIds: [],
+  returnIds: [],
+  validDeparturesByReturn: {},
+  validReturnsByDeparture: {},
 };

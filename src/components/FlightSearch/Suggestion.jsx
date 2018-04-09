@@ -5,9 +5,11 @@ import './index.css';
 
 import FlightGroup from './FlightGroup';
 
+
+// make this expandable to see more detail
 // recId is in props here, use it to get price etc
-const SuggestionComponent = ({
-  searchId, departingId, returningId,
+const Suggestion = ({
+  searchId, departingId, returningId, oneWay,
 }) => (
   <div className="DepartReturnPanes">
     <div className="LeftPane">
@@ -18,18 +20,21 @@ const SuggestionComponent = ({
       />
     </div>
     <div className="RightPane">
+      {(!oneWay) &&
       <FlightGroup
         type="return"
         searchId={searchId}
         id={returningId}
       />
+      }
     </div>
   </div>
 );
-export default SuggestionComponent;
+export default Suggestion;
 
-SuggestionComponent.propTypes = {
+Suggestion.propTypes = {
   searchId: PropTypes.string.isRequired,
+  oneWay: PropTypes.bool.isRequired,
   departingId: PropTypes.string.isRequired,
   returningId: PropTypes.string.isRequired,
 };

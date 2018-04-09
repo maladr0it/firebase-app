@@ -27,5 +27,6 @@ export default RecList;
 
 RecListComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
+  oneWay: PropTypes.bool.isRequired,
   recommendationIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

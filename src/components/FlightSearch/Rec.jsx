@@ -9,7 +9,6 @@ import {
   getBaggageAllowances,
 } from '../../reducers/flightSearchResults';
 import FlightGroup from './FlightGroup';
-import FlightGroupDetail from './FlightGroupDetail';
 import FlightCombinations from './FlightCombinations';
 
 import './index.css';
@@ -29,38 +28,27 @@ class RecComponent extends React.Component {
       selectedDeparture, selectedReturn,
       baggageAllowances,
       handleAdd,
-
       oneWay,
     } = this.props;
 
-    const departing = this.state.expanded ? (
-      <FlightGroupDetail
+    const departing = (
+      <FlightGroup
         type="departure"
         searchId={searchId}
         id={selectedDeparture}
         baggageAllowance={baggageAllowances.departing}
-      />
-    ) : (
-      <FlightGroup
-        type="departure"
-        searchId={searchId}
-        id={selectedDeparture}
+        detail={this.state.expanded}
       />
     );
-    const returning = (!oneWay) && (this.state.expanded ? (
-      <FlightGroupDetail
+    const returning = (!oneWay) && (
+      <FlightGroup
         type="return"
         searchId={searchId}
         id={selectedReturn}
         baggageAllowance={baggageAllowances.returning}
+        detail={this.state.expanded}
       />
-    ) : (
-      <FlightGroup
-        type="return"
-        searchId={searchId}
-        id={selectedReturn}
-      />
-    ));
+    );
     return (
       <React.Fragment>
         <h3>{price}</h3>
@@ -77,7 +65,6 @@ class RecComponent extends React.Component {
             selectedDeparture, selectedReturn,
           )}
         />
-        {(this.state.expanded) && <FlightCombinations searchId={searchId} recId={recId} />}
         <div className="DepartReturnPanes">
           <div className="LeftPane">
             {departing}
@@ -86,6 +73,14 @@ class RecComponent extends React.Component {
             {returning}
           </div>
         </div>
+        {(this.state.expanded) &&
+          <FlightCombinations
+            searchId={searchId}
+            recId={recId}
+            oneWay={oneWay}
+          />
+        }
+        {cancellationPolicy}
       </React.Fragment>
     );
   }
@@ -139,46 +134,3 @@ RecComponent.defaultProps = {
   // should a default object shape be set here?
   baggageAllowances: { departing: null, arriving: null },
 };
-
-
-// const flightGroups = (this.state.expanded) ? (
-//   <React.Fragment>
-//     <FlightCombinations searchId={searchId} recId={recId} />
-//     <div className="DepartReturnPanes">
-//       <div className="LeftPane">
-//         <FlightGroupDetail
-//           type="departure"
-//           searchId={searchId}
-//           id={selectedDeparture}
-//           baggageAllowance={baggageAllowances.departing}
-//         />
-//       </div>
-//       <div className="RightPane">
-//         <FlightGroupDetail
-//           type="return"
-//           searchId={searchId}
-//           id={selectedReturn}
-//           baggageAllowance={baggageAllowances.returning}
-//         />
-//       </div>
-//     </div>
-//     <div>Cancellation Policy: {cancellationPolicy}</div>
-//   </React.Fragment>
-// ) : (
-//   <div className="DepartReturnPanes">
-//     <div className="LeftPane">
-//       <FlightGroup
-//         type="departure"
-//         searchId={searchId}
-//         id={selectedDeparture}
-//       />
-//     </div>
-//     <div className="RightPane">
-//       <FlightGroup
-//         type="return"
-//         searchId={searchId}
-//         id={selectedReturn}
-//       />
-//     </div>
-//   </div>
-// );
