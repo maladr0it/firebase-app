@@ -24,11 +24,11 @@ class RecComponent extends React.Component {
   };
   render() {
     const {
-      searchId, recId, price, cancellationPolicy,
+      searchId, recId,
+      oneWay, price, cancellationPolicy,
       selectedDeparture, selectedReturn,
       baggageAllowances,
       handleAdd,
-      oneWay,
     } = this.props;
 
     const departing = (
@@ -121,6 +121,7 @@ export default Rec;
 RecComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
   recId: PropTypes.string.isRequired,
+  oneWay: PropTypes.bool.isRequired,
   price: PropTypes.string.isRequired,
   cancellationPolicy: PropTypes.string.isRequired,
   selectedDeparture: PropTypes.string,
