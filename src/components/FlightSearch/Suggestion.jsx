@@ -5,7 +5,6 @@ import './index.css';
 
 import FlightGroup from './FlightGroup';
 
-
 // make this expandable to see more detail
 // add button to remove suggestion
 // recId is in props here, use it to get price etc

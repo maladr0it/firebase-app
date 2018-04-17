@@ -53,7 +53,11 @@ export default FlightGroup;
 
 FlightGroupComponent.propTypes = {
   flightGroup: PropTypes.arrayOf(PropTypes.object),
+  baggageAllowance: PropTypes.string,
+  detail: PropTypes.bool,
 };
 FlightGroupComponent.defaultProps = {
   flightGroup: null,
+  baggageAllowance: '',
+  detail: false,
 };

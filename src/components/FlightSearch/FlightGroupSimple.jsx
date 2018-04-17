@@ -15,13 +15,26 @@ const FlightGroupSimple = ({
       {flight.flightNo}
     </div>
   ));
-  const stops = flightGroup.map(flight => flight.departAirportCode)
+  const stops2 = flightGroup.map(flight => flight.departAirportCode)
     .concat(flightGroup[flightGroup.length - 1].arriveAirportCode)
     .map((stop, i) => (
       <div key={i}>
         {stop}
       </div>
     ));
+
+
+  const stops = flightGroup.map((flight, i) => (
+    <div>
+      {flight.layover && <div>{flight.layover}</div>}
+      <div>{flight.departAirportCode}</div>
+    </div>
+  )).concat(<div>LAST</div>);
+  // how to generate:
+  // <div>
+  //  <div>layover</div>
+  //  <div>stop_name</div>
+  // </div>
   const layovers = flightGroup.reduce((acc, flight) => {
     if (flight.layover) {
       acc.push(flight.layover);
@@ -38,7 +51,7 @@ const FlightGroupSimple = ({
       </div>
       <div className="FlightInfo">
         <div className="Flights">{flights}</div>
-        <div className="Layovers">{layovers}</div>
+        {/* <div className="Layovers">{layovers}</div> */}
         <div className="Stops">{stops}</div>
       </div>
       <div>

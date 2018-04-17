@@ -29,10 +29,11 @@
 }
 .FlightGroup .FlightInfo {
   flex-grow: 1;
+  text-align: center;
 }
 .FlightGroup .FlightInfo > * {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-evenly;
   min-height: 1.5rem;
 }

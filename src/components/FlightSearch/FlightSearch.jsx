@@ -604,7 +604,7 @@ const searchData2 = {
       }, {
         carrierCode: 'MU',
         flightNo: 'MU 748',
-        departAirportCode: 'KIX',
+        departAirportCode: 'PVG',
         departTerminal: '1',
         departDateTime: '2018-05-11 21:05',
         arriveAirportCode: 'KMG',
@@ -819,28 +819,28 @@ const searchData3 = {
   },
   baggageAllowances: {
     '1_': {
-      departure: '7kg',
+      departing: '7kg',
     },
     '2_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '3_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '4_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '5_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '6_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '7_': {
-      departure: '2pc 7kg',
+      departing: '2pc 7kg',
     },
     '8_': {
-      departure: '20kg 7kg',
+      departing: '20kg 7kg',
     },
   },
   recommendations: {
@@ -875,7 +875,7 @@ class FlightSearchComponent extends React.Component {
     const { searchIds, onSearch } = this.props;
     return (
       <div className="FlightSearch">
-        <button onClick={() => onSearch('SEARCHID1', searchData3)}>
+        <button onClick={() => onSearch('SEARCHID1', searchData2)}>
           SEARCH
         </button>
         {searchIds.map(id => (
