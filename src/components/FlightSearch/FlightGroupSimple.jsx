@@ -15,34 +15,16 @@ const FlightGroupSimple = ({
       {flight.flightNo}
     </div>
   ));
-  const stops2 = flightGroup.map(flight => flight.departAirportCode)
-    .concat(flightGroup[flightGroup.length - 1].arriveAirportCode)
-    .map((stop, i) => (
-      <div key={i}>
-        {stop}
-      </div>
-    ));
-
-
   const stops = flightGroup.map((flight, i) => (
     <div>
       {flight.layover && <div>{flight.layover}</div>}
       <div>{flight.departAirportCode}</div>
     </div>
-  )).concat(<div>LAST</div>);
-  // how to generate:
-  // <div>
-  //  <div>layover</div>
-  //  <div>stop_name</div>
-  // </div>
-  const layovers = flightGroup.reduce((acc, flight) => {
-    if (flight.layover) {
-      acc.push(flight.layover);
-    }
-    return acc;
-  }, []).map((layover, i) => (
-    <div key={i}>{layover}</div>
-  ));
+  )).concat([
+    <div>
+      {flightGroup[flightGroup.length - 1].arriveAirportCode}
+    </div>,
+  ]);
   return (
     <div className="FlightGroup">
       <div>
@@ -50,8 +32,9 @@ const FlightGroupSimple = ({
         <p>{departAt.format('ddd, MMM D')}</p>
       </div>
       <div className="FlightInfo">
-        <div className="Flights">{flights}</div>
-        {/* <div className="Layovers">{layovers}</div> */}
+        {/* insert non-breaking space as a dummy to
+        correctly align flights and stops */}
+        <div className="Flights">&nbsp;{flights}&nbsp;</div>
         <div className="Stops">{stops}</div>
       </div>
       <div>
