@@ -26,6 +26,10 @@ export const flightSuggestionAdded = (
     returningId,
   },
 });
+export const flightSuggestionRemoved = (searchId, index) => ({
+  type: 'FLIGHT_SUGGESTION_REMOVED',
+  payload: { searchId, index },
+});
 
 // thunks
 export const selectFlightGroup = (

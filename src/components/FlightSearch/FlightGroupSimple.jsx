@@ -15,13 +15,15 @@ const FlightGroupSimple = ({
       {flight.flightNo}
     </div>
   ));
+  // add the departing locations for all flights,
+  // as well as the arriving location for the last flight
   const stops = flightGroup.map((flight, i) => (
-    <div>
+    <div key={i}>
       {flight.layover && <div>{flight.layover}</div>}
       <div>{flight.departAirportCode}</div>
     </div>
   )).concat([
-    <div>
+    <div key={flightGroup.length}>
       {flightGroup[flightGroup.length - 1].arriveAirportCode}
     </div>,
   ]);
@@ -32,7 +34,7 @@ const FlightGroupSimple = ({
         <p>{departAt.format('ddd, MMM D')}</p>
       </div>
       <div className="FlightInfo">
-        {/* insert non-breaking space as a dummy to
+        {/* insert non-breaking spaces as a dummy to
         correctly align flights and stops */}
         <div className="Flights">&nbsp;{flights}&nbsp;</div>
         <div className="Stops">{stops}</div>
@@ -45,3 +47,7 @@ const FlightGroupSimple = ({
   );
 };
 export default FlightGroupSimple;
+
+FlightGroupSimple.propTypes = {
+  flightGroup: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

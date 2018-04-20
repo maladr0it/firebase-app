@@ -6,6 +6,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import RecList from './RecList';
 import SuggestionList from './SuggestionList';
 import { flightSearchResultAdded } from '../../actions';
+import { getNumSuggestions } from '../../reducers/flightSuggestions';
 
 import './index.css';
 
@@ -871,11 +872,14 @@ class FlightSearchComponent extends React.Component {
       selectedTab,
     });
   }
+  // the views associated with the tabs are very deeply nested
+  // due to material-ui's tab structure
+  // potential issue for react developer tools readability
   render() {
-    const { searchIds, onSearch } = this.props;
+    const { searchIds, onSearch, numSuggestions } = this.props;
     return (
       <div className="FlightSearch">
-        <button onClick={() => onSearch('SEARCHID1', searchData2)}>
+        <button onClick={() => onSearch('SEARCHID1', searchData1)}>
           SEARCH
         </button>
         {searchIds.map(id => (
@@ -887,7 +891,7 @@ class FlightSearchComponent extends React.Component {
             <Tab label="RESULTS" value="results">
               <RecList searchId={id} />
             </Tab>
-            <Tab label="SUGGESTIONS" value="suggestions">
+            <Tab label={`SUGGESTIONS (${numSuggestions})`} value="suggestions">
               <SuggestionList searchId={id} />
             </Tab>
           </Tabs>
@@ -898,6 +902,7 @@ class FlightSearchComponent extends React.Component {
 }
 const mapStateToProps = state => ({
   searchIds: Object.keys(state.flightSearchResults),
+  numSuggestions: getNumSuggestions(state.flightSuggestions, 'SEARCHID1'),
 });
 const mapDispatchToProps = {
   onSearch: flightSearchResultAdded,
@@ -911,4 +916,5 @@ export default FlightSearch;
 FlightSearchComponent.propTypes = {
   searchIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSearch: PropTypes.func.isRequired,
+  numSuggestions: PropTypes.number.isRequired,
 };

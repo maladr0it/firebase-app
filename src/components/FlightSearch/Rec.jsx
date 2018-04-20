@@ -107,6 +107,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedDeparture,
     selectedReturn,
     baggageAllowances,
+    oneWay: state.flightSearchResults[ownProps.searchId].oneWay,
   });
 };
 const mapDispatchToProps = {

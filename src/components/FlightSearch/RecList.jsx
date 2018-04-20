@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import Rec from './Rec';
 
 const RecListComponent = ({
-  searchId, recommendationIds, oneWay,
+  searchId, recommendationIds,
 }) => {
   const recommendations = recommendationIds.map(id => (
-    <Rec key={id} searchId={searchId} recId={id} oneWay={oneWay} />
+    <Rec key={id} searchId={searchId} recId={id} />
   ));
   return (
     <React.Fragment>
@@ -17,7 +17,6 @@ const RecListComponent = ({
 };
 const mapStateToProps = (state, ownProps) => ({
   recommendationIds: Object.keys(state.flightSearchResults[ownProps.searchId].recommendations),
-  oneWay: state.flightSearchResults[ownProps.searchId].oneWay,
 });
 const RecList = connect(
   mapStateToProps,
@@ -27,6 +26,5 @@ export default RecList;
 
 RecListComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
-  oneWay: PropTypes.bool.isRequired,
   recommendationIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

@@ -18,7 +18,8 @@ const SuggestionListComponent = ({
     <React.Fragment>
       {suggestions.map((sug, i) => (
         <Suggestion
-          key={i}
+          key={sug.uniqueId} // TODO HERE: this is not re-rendering??
+          index={i}
           searchId={searchId}
           oneWay={oneWay}
           {...sug}
