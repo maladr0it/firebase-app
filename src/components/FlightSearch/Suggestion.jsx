@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import { flightSuggestionRemoved } from '../../actions';
 import {
   getRecommendation,
   getBaggageAllowances,
@@ -11,8 +10,9 @@ import {
 import FlightGroup from './FlightGroup';
 import './index.css';
 
-// copy 'REC' structure closely
-
+// TODO: this is a near duplicate of Rec
+// consider a prop to conditionally change
+// the behaviour
 
 class SuggestionComponent extends React.Component {
   state = {
@@ -22,16 +22,17 @@ class SuggestionComponent extends React.Component {
     this.setState({
       expanded: !this.state.expanded,
     });
-  }
+  };
   render() {
-    console.log(this.props.index);
-    
     const {
-      searchId, recId, index,
-      oneWay, price, cancellationPolicy,
-      departingId, returningId,
+      searchId, // recId, <- accessible
+      oneWay,
+      price,
+      cancellationPolicy,
+      departingId,
+      returningId,
       baggageAllowances,
-      handleRemove
+      handleRemove,
     } = this.props;
 
     const departing = (
@@ -43,7 +44,7 @@ class SuggestionComponent extends React.Component {
         detail={this.state.expanded}
       />
     );
-    const returning = (!oneWay) && (
+    const returning = !oneWay && (
       <FlightGroup
         type="return"
         searchId={searchId}
@@ -54,28 +55,18 @@ class SuggestionComponent extends React.Component {
     );
     return (
       <React.Fragment>
+        <h3>{price}</h3>
         <RaisedButton
-          label={(this.state.expanded ? 'Less' : 'More')}
+          label={this.state.expanded ? 'Less' : 'More'}
           primary
           onClick={() => this.toggleExpand()}
         />
-        <RaisedButton
-          label="Remove"
-          secondary
-          onClick={() => {
-            console.log('handle remove');
-            console.log(index);
-            handleRemove(searchId, index);
-          }}
-        />
+        <RaisedButton label="Remove" secondary onClick={() => handleRemove()} />
         <div className="DepartReturnPanes">
-          <div className="LeftPane">
-            {departing}
-          </div>
-          <div className="RightPane">
-            {returning}
-          </div>
+          <div className="LeftPane">{departing}</div>
+          <div className="RightPane">{returning}</div>
         </div>
+        <p>{cancellationPolicy}</p>
       </React.Fragment>
     );
   }
@@ -98,19 +89,22 @@ const mapStateToProps = (state, ownProps) => {
     oneWay: state.flightSearchResults[ownProps.searchId].oneWay,
   };
 };
-const mapDispatchToProps = ({
-  handleRemove: flightSuggestionRemoved,
-});
-const Suggestion = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SuggestionComponent);
+const Suggestion = connect(mapStateToProps, null)(SuggestionComponent);
 
 export default Suggestion;
 
-Suggestion.propTypes = {
+SuggestionComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
+  recId: PropTypes.string.isRequired,
   oneWay: PropTypes.bool.isRequired,
+  price: PropTypes.string.isRequired,
+  cancellationPolicy: PropTypes.string.isRequired,
   departingId: PropTypes.string.isRequired,
   returningId: PropTypes.string.isRequired,
+  baggageAllowances: PropTypes.objectOf(PropTypes.string),
+  handleRemove: PropTypes.func.isRequired,
+};
+SuggestionComponent.defaultProps = {
+  // should a default object shape be set here?
+  baggageAllowances: { departing: null, arriving: null },
 };

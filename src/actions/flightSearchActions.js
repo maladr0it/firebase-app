@@ -14,10 +14,7 @@ export const flightSearchResultAdded = (searchId, searchData) => ({
   type: 'FLIGHT_SEARCH_RESULT_ADDED',
   payload: { searchId, searchData },
 });
-export const flightSuggestionAdded = (
-  searchId, recId,
-  departingId, returningId,
-) => ({
+export const flightSuggestionAdded = (searchId, recId, departingId, returningId) => ({
   type: 'FLIGHT_SUGGESTION_ADDED',
   payload: {
     searchId,
@@ -32,10 +29,7 @@ export const flightSuggestionRemoved = (searchId, index) => ({
 });
 
 // thunks
-export const selectFlightGroup = (
-  searchId, recId, id,
-  type, isInvalid,
-) => (dispatch) => {
+export const selectFlightGroup = (searchId, recId, id, type, isInvalid) => (dispatch) => {
   if (isInvalid) {
     dispatch(flightGroupsDeselected(searchId, recId));
   }

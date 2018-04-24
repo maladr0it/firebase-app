@@ -39,9 +39,7 @@ const flightSuggestions = (state = defaultState, action) => {
       console.log(index);
       return {
         ...state,
-        [searchId]: (state[searchId] || []).filter((sug, i) => (
-          (index !== i)
-        )),
+        [searchId]: (state[searchId] || []).filter((sug, i) => index !== i),
       };
     }
     default:
@@ -50,6 +48,4 @@ const flightSuggestions = (state = defaultState, action) => {
 };
 export default flightSuggestions;
 
-export const getNumSuggestions = (state, searchId) => (
-  (state[searchId] || []).length
-);
+export const getNumSuggestions = (state, searchId) => (state[searchId] || []).length;

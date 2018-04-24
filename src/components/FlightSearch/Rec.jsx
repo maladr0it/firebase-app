@@ -80,7 +80,7 @@ class RecComponent extends React.Component {
             oneWay={oneWay}
           />
         }
-        {cancellationPolicy}
+        <p>{cancellationPolicy}</p>
       </React.Fragment>
     );
   }
