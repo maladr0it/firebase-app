@@ -1,13 +1,16 @@
-import firebase from './firebase';
+import firebase, { firestore as db } from './firebase';
 
-const db = firebase.firestore();
+// eslint-disable-next-line import/no-named-as-default-member
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 const addChatToUser = async (userId, chatId) => {
   try {
-    await db.collection(`users/${userId}/chats`).doc(`${chatId}`).set({
-      lastUpdated: timestamp,
-    });
+    await db
+      .collection(`users/${userId}/chats`)
+      .doc(`${chatId}`)
+      .set({
+        lastUpdated: timestamp,
+      });
   } catch (e) {
     console.log(e);
   }
@@ -25,10 +28,13 @@ const removeChatFromUser = async (userId, chatId) => {
 };
 const addUserToChat = (chatId, userId) => {
   try {
-    db.collection(`chats/${chatId}/users`).doc(userId).set({
-      isJoined: true,
-      joinedAt: timestamp,
-    });
+    db
+      .collection(`chats/${chatId}/users`)
+      .doc(userId)
+      .set({
+        isJoined: true,
+        joinedAt: timestamp,
+      });
   } catch (e) {
     console.log(e);
   }
@@ -36,9 +42,12 @@ const addUserToChat = (chatId, userId) => {
 };
 const removeUserFromChat = (chatId, userId) => {
   try {
-    db.collection(`chats/${chatId}/users`).doc(userId).update({
-      isJoined: false,
-    });
+    db
+      .collection(`chats/${chatId}/users`)
+      .doc(userId)
+      .update({
+        isJoined: false,
+      });
   } catch (e) {
     console.log(e);
   }
@@ -48,9 +57,12 @@ const removeUserFromChat = (chatId, userId) => {
 // should globally tagging a chat be called 'flagging'?
 export const tagChat = (chatId, tagName) => {
   try {
-    db.collection('chats').doc(chatId).update({
-      [`tags.${tagName}`]: true,
-    });
+    db
+      .collection('chats')
+      .doc(chatId)
+      .update({
+        [`tags.${tagName}`]: true,
+      });
     console.log(`${chatId} tagged with ${tagName}`);
   } catch (e) {
     console.log(e);
@@ -58,9 +70,12 @@ export const tagChat = (chatId, tagName) => {
 };
 export const untagChat = (chatId, tagName) => {
   try {
-    db.collection('chats').doc(chatId).update({
-      [`tags.${tagName}`]: firebase.firestore.FieldValue.delete(),
-    });
+    db
+      .collection('chats')
+      .doc(chatId)
+      .update({
+        [`tags.${tagName}`]: db.FieldValue.delete(),
+      });
     console.log(`${chatId}'s tag ${tagName} removed`);
   } catch (e) {
     console.log(e);
@@ -84,11 +99,10 @@ export const removeChatParticipant = (chatId, userId) => {
   }
 };
 export const createChat = async () => {
-  const chatRef = await db.collection('chats')
-    .add({
-      createdAt: timestamp,
-      lastUpdated: timestamp,
-    });
+  const chatRef = await db.collection('chats').add({
+    createdAt: timestamp,
+    lastUpdated: timestamp,
+  });
   const chatSnapshot = await chatRef.get();
   console.log(`db: created new chat ${chatRef.id}`);
   return {
@@ -97,7 +111,9 @@ export const createChat = async () => {
   };
 };
 export const listenToChat = (chatId, callback) => {
-  const unsubscribe = db.collection('chats').doc(chatId)
+  const unsubscribe = db
+    .collection('chats')
+    .doc(chatId)
     .onSnapshot((doc) => {
       callback(doc.data());
     });

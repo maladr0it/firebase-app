@@ -4,17 +4,19 @@ import PropTypes from 'prop-types';
 import './index.css';
 
 const FlightItemComponent = (props) => {
-  const layover = (props.layover)
-    && <div>--- Layover: {props.layover} ---</div>;
+  const layover = props.layover && <div>--- Layover: {props.layover} ---</div>;
   return (
     <div className="FlightItem">
       {layover}
-      <p>{props.airlineName} {props.flightNo}</p>
+      <p>
+        {props.airlineName} {props.flightNo}
+      </p>
       <div className="DepartArrivePanes">
         <div className="LeftPane">
           <p>{props.departAirportCode}</p>
           <p>{props.departDateTime}</p>
-          <p>Terminal {props.departTerminal}, {props.departAirport}, {props.departLocation}
+          <p>
+            Terminal {props.departTerminal}, {props.departAirport}, {props.departLocation}
           </p>
         </div>
         <div className="Duration">
@@ -23,7 +25,8 @@ const FlightItemComponent = (props) => {
         <div className="RightPane">
           <p>{props.arriveAirportCode}</p>
           <p>{props.arriveDateTime}</p>
-          <p>Terminal {props.arriveTerminal}, {props.arriveAirport}, {props.arriveLocation}
+          <p>
+            Terminal {props.arriveTerminal}, {props.arriveAirport}, {props.arriveLocation}
           </p>
         </div>
       </div>
@@ -47,7 +50,6 @@ FlightItemComponent.propTypes = {
   arriveDateTime: PropTypes.string.isRequired,
   duration: PropTypes.string.isRequired,
   layover: PropTypes.string,
-
 };
 FlightItemComponent.defaultProps = {
   airlineName: 'AIRLINE_NAME',

@@ -1,17 +1,18 @@
-import firebase from './firebase';
+import firebase, { firestore as db } from './firebase';
 
-const db = firebase.firestore();
 const storage = firebase.storage();
+// eslint-disable-next-line import/no-named-as-default-member
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 // experimenting with storage
-export const getAvatar = async filename => (
-  storage.ref(filename).getDownloadURL()
-);
+export const getAvatar = async filename => storage.ref(filename).getDownloadURL();
 export const getUser = async (userId) => {
   let userData = {};
   try {
-    const userDoc = await db.collection('users').doc(userId).get();
+    const userDoc = await db
+      .collection('users')
+      .doc(userId)
+      .get();
     userData = userDoc.data();
   } catch (e) {
     console.log(e);
@@ -20,8 +21,10 @@ export const getUser = async (userId) => {
 };
 export const getUserByName = async (username) => {
   try {
-    const snapshot = await db.collection('users')
-      .where('username', '==', username).limit(1)
+    const snapshot = await db
+      .collection('users')
+      .where('username', '==', username)
+      .limit(1)
       .get();
     const { id } = snapshot.docs[0];
     const data = snapshot.docs[0].data();
@@ -34,8 +37,10 @@ export const getUserByName = async (username) => {
 export const getUserIdByName = async (username) => {
   let userId = '';
   try {
-    const snapshot = await db.collection('users')
-      .where('username', '==', username).limit(1)
+    const snapshot = await db
+      .collection('users')
+      .where('username', '==', username)
+      .limit(1)
       .get();
     userId = snapshot.docs[0].id;
   } catch (e) {
@@ -43,21 +48,23 @@ export const getUserIdByName = async (username) => {
   }
   return userId;
 };
-export const createUser = username => (
+export const createUser = username =>
   db.collection('users').add({
     username,
     joinedAt: timestamp,
-  })
-);
+  });
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
-  db.collection(`chats/${chatId}/users`).doc(`${userId}`)
+  db
+    .collection(`chats/${chatId}/users`)
+    .doc(`${userId}`)
     .update({
       isTyping,
     });
 };
 export const listenToChatForUsers = (chatId, callback) => {
   console.log(`chat ${chatId} is listening for users now`);
-  const unsubscribe = db.collection(`chats/${chatId}/users`)
+  const unsubscribe = db
+    .collection(`chats/${chatId}/users`)
     .orderBy('joinedAt', 'desc')
     .onSnapshot((snapshot) => {
       const changes = snapshot.docChanges.map(change => ({
@@ -73,7 +80,9 @@ export const listenToChatForUsers = (chatId, callback) => {
 export const listenToUser = (userId, callback) => {
   let unsubscribe;
   try {
-    unsubscribe = db.collection('users').doc(userId)
+    unsubscribe = db
+      .collection('users')
+      .doc(userId)
       .onSnapshot((doc) => {
         callback(doc.data());
       });
@@ -84,19 +93,17 @@ export const listenToUser = (userId, callback) => {
 };
 
 // TODO: remove callback, use promise instead
-export const listenToUserFilters = (userId, callback) => (
-  db.collection(`users/${userId}/tags`)
-    .onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges.reduce((acc, change) => {
-        acc[change.type] = acc[change.type].concat({
-          id: change.doc.id,
-          data: change.doc.data(),
-        });
-        return acc;
-      }, {});
-      callback(changes);
-    })
-);
+export const listenToUserFilters = (userId, callback) =>
+  db.collection(`users/${userId}/tags`).onSnapshot((snapshot) => {
+    const changes = snapshot.docChanges.reduce((acc, change) => {
+      acc[change.type] = acc[change.type].concat({
+        id: change.doc.id,
+        data: change.doc.data(),
+      });
+      return acc;
+    }, {});
+    callback(changes);
+  });
 export const addUserFilter = (userId, filterName) => {
- // TODO HERE: add filter collections per user
+  // TODO HERE: add filter collections per user
 };

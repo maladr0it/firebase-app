@@ -1,11 +1,12 @@
-import firebase from './firebase';
+import { firestore as db } from './firebase';
 
-const db = firebase.firestore();
 // const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 export const listenToUserChats = (userId, callback) => {
-  const unsubscribe = db.collection(`users/${userId}/chats`)
-    .orderBy('lastUpdated', 'desc').limit(10)
+  const unsubscribe = db
+    .collection(`users/${userId}/chats`)
+    .orderBy('lastUpdated', 'desc')
+    .limit(10)
     .onSnapshot((snapshot) => {
       const changes = snapshot.docChanges.map(change => ({
         type: change.type,
@@ -18,9 +19,11 @@ export const listenToUserChats = (userId, callback) => {
   return unsubscribe;
 };
 export const listenToFilteredChats = (tagName, callback) => {
-  const unsubscribe = db.collection('chats')
+  const unsubscribe = db
+    .collection('chats')
     .where(`tags.${tagName}`, '==', true)
-    .orderBy('lastUpdated', 'desc').limit(10)
+    .orderBy('lastUpdated', 'desc')
+    .limit(10)
     .onSnapshot((snapshot) => {
       const changes = snapshot.docChanges.map(change => ({
         type: change.type,

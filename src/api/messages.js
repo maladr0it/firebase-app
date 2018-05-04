@@ -1,6 +1,6 @@
-import firebase from './firebase';
+import firebase, { firestore as db } from './firebase';
 
-const db = firebase.firestore();
+// eslint-disable-next-line import/no-named-as-default-member
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 const getChatUserIds = async (chatId) => {
@@ -35,14 +35,18 @@ const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
 // here is where we should set the read status
 const updateUserChat = async (userId, chatId) => {
   console.log(`updating ${userId}'s inbox`);
-  db.collection(`users/${userId}/chats`).doc(`${chatId}`)
+  db
+    .collection(`users/${userId}/chats`)
+    .doc(`${chatId}`)
     .update({
       lastUpdated: timestamp,
     });
 };
 const updateChat = (chatId) => {
   try {
-    db.collection('chats').doc(chatId)
+    db
+      .collection('chats')
+      .doc(chatId)
       .update({
         lastUpdated: timestamp,
       });
@@ -72,12 +76,15 @@ export const sendMessage = async (chatId, userId, text) => {
   return messagePayload;
 };
 export const markMessagesAsRead = async (chatId, userId) => {
-  const messagesSnapshot = await db.collection(`chats/${chatId}/messages`)
+  const messagesSnapshot = await db
+    .collection(`chats/${chatId}/messages`)
     .where(`readStatus.${userId}`, '==', null)
     .get();
   messagesSnapshot.forEach((snap) => {
     console.log('marking message as read');
-    db.collection(`chats/${chatId}/messages`).doc(`${snap.id}`)
+    db
+      .collection(`chats/${chatId}/messages`)
+      .doc(`${snap.id}`)
       .update({
         [`readStatus.${userId}`]: timestamp,
       });
@@ -85,8 +92,10 @@ export const markMessagesAsRead = async (chatId, userId) => {
 };
 export const listenToChatForMessages = (chatId, callback) => {
   // console.log(`db: creating listener for messages of chat ${chatId}`);
-  const unsubscribe = db.collection(`chats/${chatId}/messages`)
-    .orderBy('createdAt', 'desc').limit(50)
+  const unsubscribe = db
+    .collection(`chats/${chatId}/messages`)
+    .orderBy('createdAt', 'desc')
+    .limit(50)
     .onSnapshot((snapshot) => {
       const changes = snapshot.docChanges.map(change => ({
         type: change.type,
@@ -102,4 +111,3 @@ export const listenToChatForMessages = (chatId, callback) => {
     });
   return unsubscribe;
 };
-

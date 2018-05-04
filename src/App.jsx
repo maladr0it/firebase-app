@@ -12,25 +12,21 @@ import FlightSearch from './components/FlightSearch';
 
 import './App.css';
 
-const App = ({
-  currentUserId,
-}) => {
+const App = ({ currentUserId }) => {
   const isLoggedIn = Boolean(currentUserId);
 
   return (
     <div className="App">
-      <FlightSearch />
-      {/* <AccountControls isLoggedIn={isLoggedIn} />
-      {(isLoggedIn) ? (
+      {/* <FlightSearch /> */}
+      <AccountControls isLoggedIn={isLoggedIn} />
+      {isLoggedIn && (
         // <ReservationViewer />
         <div className="ChatPaneContainer">
           <ChatList />
           <ChatWindow />
           <UserPane />
         </div>
-      ) : (
-        ''
-      )} */}
+      )}
     </div>
   );
 };

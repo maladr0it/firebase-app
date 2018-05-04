@@ -53,24 +53,21 @@ export const login = username => async (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch(loggedOut());
 };
+// HERE
 export const createUser = username => async () => {
-  try {
-    const userDoc = await db.createUser(username);
-    console.log(`created user ${userDoc.id}`);
-  } catch (e) {
-    console.log(e);
-  }
+  const userDoc = await db.createUser(username);
+  console.log(`created user ${userDoc.id}`);
+};
+export const loginWithGoogle = () => {
+  // wait
 };
 // TODO: some of these reservation functions don't belong here
 export const createReservation = (userId, description) => () => {
   db.createReservation(userId, description);
 };
-export const updateReservation = (reservationId, data) => async () => (
-  db.updateReservation(reservationId, data)
-);
-export const deleteReservation = reservationId => async () => (
-  db.deleteReservation(reservationId)
-);
+export const updateReservation = (reservationId, data) => async () =>
+  db.updateReservation(reservationId, data);
+export const deleteReservation = reservationId => async () => db.deleteReservation(reservationId);
 
 // TODO: just for testing
 const allReservationsUpdated = (changes, reservationIds) => ({

@@ -10,9 +10,9 @@ class InputForm extends React.Component {
     this.setState({ value: e.target.value });
   }
   handleSubmit(e) {
+    e.preventDefault();
     this.props.handleSubmit(this.state.value);
     this.setState({ value: '' });
-    e.preventDefault();
   }
   render() {
     return (

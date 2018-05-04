@@ -5,12 +5,7 @@ import { debounce, throttle } from 'lodash';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { getChatView } from '../../reducers/chatViews';
-import {
-  sendMessage,
-  draftTextUpdated,
-  startTyping,
-  stopTyping,
-} from '../../actions';
+import { sendMessage, draftTextUpdated, startTyping, stopTyping } from '../../actions';
 import './index.css';
 
 class MessageInputComponent extends React.Component {
@@ -92,10 +87,7 @@ const mapDispatchToProps = {
   onStartTyping: startTyping,
   onStopTyping: stopTyping,
 };
-const MessageInput = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MessageInputComponent);
+const MessageInput = connect(mapStateToProps, mapDispatchToProps)(MessageInputComponent);
 
 export default MessageInput;
 

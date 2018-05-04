@@ -2,10 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {
-  getRecommendation,
-  getBaggageAllowances,
-} from '../../reducers/flightSearchResults';
+import { getRecommendation, getBaggageAllowances } from '../../reducers/flightSearchResults';
 
 import FlightGroup from './FlightGroup';
 import './index.css';
@@ -95,7 +92,6 @@ export default Suggestion;
 
 SuggestionComponent.propTypes = {
   searchId: PropTypes.string.isRequired,
-  recId: PropTypes.string.isRequired,
   oneWay: PropTypes.bool.isRequired,
   price: PropTypes.string.isRequired,
   cancellationPolicy: PropTypes.string.isRequired,
