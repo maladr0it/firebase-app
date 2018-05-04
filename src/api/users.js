@@ -6,17 +6,14 @@ const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 // experimenting with storage
 export const getAvatar = async filename => storage.ref(filename).getDownloadURL();
+
+// returns undefined if there is no user with this id
 export const getUser = async (userId) => {
-  let userData = {};
-  try {
-    const userDoc = await db
-      .collection('users')
-      .doc(userId)
-      .get();
-    userData = userDoc.data();
-  } catch (e) {
-    console.log(e);
-  }
+  const userDoc = await db
+    .collection('users')
+    .doc(userId)
+    .get();
+  const userData = userDoc.data();
   return userData;
 };
 export const getUserByName = async (username) => {
@@ -48,11 +45,22 @@ export const getUserIdByName = async (username) => {
   }
   return userId;
 };
-export const createUser = username =>
-  db.collection('users').add({
-    username,
-    joinedAt: timestamp,
-  });
+export const createUser = (id, displayName, photoURL) => {
+  db
+    .collection('users')
+    .doc(id)
+    .set({
+      displayName,
+      photoURL,
+      createdAt: timestamp,
+    });
+};
+
+// export const createUser_OLD = username =>
+//   db.collection('users').add({
+//     username,
+//     joinedAt: timestamp,
+//   });
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
   db
     .collection(`chats/${chatId}/users`)

@@ -1,0 +1,63 @@
+{
+  "user": {
+    "uid": "kWodunnVlLOiOT1fDtNHNQKw3Hg2",
+    "displayName": "Lachlan Bradford",
+    "photoURL":
+      "https://lh6.googleusercontent.com/-ZXBQ4cvNwXc/AAAAAAAAAAI/AAAAAAAACIY/sUoJBptbVjw/photo.jpg",
+    "email": "bradford.lachlan@gmail.com",
+    "emailVerified": true,
+    "phoneNumber": null,
+    "isAnonymous": false,
+    "providerData": [
+      {
+        "uid": "104540095882102818957",
+        "displayName": "Lachlan Bradford",
+        "photoURL":
+          "https://lh6.googleusercontent.com/-ZXBQ4cvNwXc/AAAAAAAAAAI/AAAAAAAACIY/sUoJBptbVjw/photo.jpg",
+        "email": "bradford.lachlan@gmail.com",
+        "phoneNumber": null,
+        "providerId": "google.com"
+      }
+    ],
+    "apiKey": "AIzaSyB-ceRToox5Crm6gkLbmHr75HVylUYAqy4",
+    "appName": "[DEFAULT]",
+    "authDomain": "chat-app-fd7b4.firebaseapp.com",
+    "stsTokenManager": {
+      "apiKey": "AIzaSyB-ceRToox5Crm6gkLbmHr75HVylUYAqy4",
+      "refreshToken":
+        "AK2wQ-wQnlgPhqkreveuwa_dZqqPRnU2bNRopAV32-luPqMsU0YkmRovFqlcO9Jzq_3jytOjItEmgDiHdY4mtqK71okPCLFkQxbygPWONVSdOtwcfeCokzfRKPT8-ynHFzL-D-buFuGBiTFA6kbzjWuNUdo0B-C3xVYl0nbhcMHx-U32307q_oAWZ_5c_5e6H5bDOU91TyL9FQANBqQzJaelb6XMip4Cq7wxVYDk8EdpGCcOoPdpCY4aC078BoNn1Y47Rei-Nm4ANHiIBPiqDt-KLvtaa3t2GvWdxZ8sreyA9l9p8MwSMlDUriNmQrTHt1yHeytzzxvy2XjLYTePlAt6zeWfRhVcyIPajgX8iCGy11hFXlKB5aqx1izEmB5nBzPwu1psCRT0",
+      "accessToken":
+        "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ5NGQ1ZjMyZTE4NmRjMWUxNjA0MjhiZDdhODE1NDI2ZjI3NDg4MmIifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY2hhdC1hcHAtZmQ3YjQiLCJuYW1lIjoiTGFjaGxhbiBCcmFkZm9yZCIsInBpY3R1cmUiOiJodHRwczovL2xoNi5nb29nbGV1c2VyY29udGVudC5jb20vLVpYQlE0Y3ZOd1hjL0FBQUFBQUFBQUFJL0FBQUFBQUFBQ0lZL3NVb0pCcHRiVmp3L3Bob3RvLmpwZyIsImF1ZCI6ImNoYXQtYXBwLWZkN2I0IiwiYXV0aF90aW1lIjoxNTI1NDA0MDM1LCJ1c2VyX2lkIjoia1dvZHVublZsTE9pT1QxZkR0TkhOUUt3M0hnMiIsInN1YiI6ImtXb2R1bm5WbExPaU9UMWZEdE5ITlFLdzNIZzIiLCJpYXQiOjE1MjU0MDQwMzUsImV4cCI6MTUyNTQwNzYzNSwiZW1haWwiOiJicmFkZm9yZC5sYWNobGFuQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTA0NTQwMDk1ODgyMTAyODE4OTU3Il0sImVtYWlsIjpbImJyYWRmb3JkLmxhY2hsYW5AZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.tA66GQoHx3V7YgwRl-pjI0eMRrOjl0xm0HMzOH64k5pobj3WGLdcKOHb7IypkKuUzX0YlPYwoxezbbnN5qInHQij33WptmLRTdzu8mmGin58suCABYpsY7RXtTo-NFN69E4Y2erXEah_-tJJBnJG-vgoMiUORrc_q22OKPKUcfnJmt1GJMn-UJuSkW66BMfFHCGFc6CaUCzvzhvT025OGBodaYQe2ZRegOA5dIRf_U5Jz_Kif3l3_61_PMCEESAH3Pr_gLPfXA3K2griGqmm94UUJuhBibI4msoREvb1E9XZ5KwYqlerzWE_CfkntKnO42LfiL1x4yVC4ERpY5ZfIQ",
+      "expirationTime": 1525407635484
+    },
+    "redirectEventId": null,
+    "lastLoginAt": "1525404035000",
+    "createdAt": "1524720605000"
+  },
+  "credential": {
+    "idToken":
+      "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmM2VmOWM3ODAzY2QwYjhkNzUyNDdlZTBkMzFmZGQ1YzJjZjM4MTIifQ.eyJhenAiOiIxMDM1MjAxMjUxMjE3LXYxanNybHViYW01Y3BlbjJnZWtpbmJsbnVhMDg2am8zLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTAzNTIwMTI1MTIxNy12MWpzcmx1YmFtNWNwZW4yZ2VraW5ibG51YTA4NmpvMy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwNDU0MDA5NTg4MjEwMjgxODk1NyIsImVtYWlsIjoiYnJhZGZvcmQubGFjaGxhbkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Im5IS0k0bGxjMUllakxOX0UzbHBqMGciLCJleHAiOjE1MjU0MDc2MzQsImlzcyI6ImFjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE1MjU0MDQwMzR9.u6SN8J_E5WZohncSfh67J5xvCCvX0GctqIjkIf3_72ORVQRQMjHFRaKZNA87YlOZcXxWLf11XQBQxdRk5Ol2aKZ0_ljf1jVR0yIUMeiyeoXiXx4G0vjMcCSQonpKoAtDog9pGSzV5hoAnPiWyCQwATLGCqAq16IRNjvWUHakQQbS57uhDUyOP7WKtCILi19lvtRKv2sK9Jpf0oFJLn8q9ok0DKBFR8Na40s0CuCmAn5BET_OkV7qRGDec88zsxgOtGWB4MraSSpV6_Ll7Z5OTefUAzOTVobSYfEurJ56NR6u13aeWqtfruEfQRN_Ogzg3idyqJP9RllPjmA2GaUkig",
+    "accessToken":
+      "ya29.GlyxBU99oI4yayDYnrv_0GTt2GhkhLpW6raIH-azSzHxXxF4eYUwO4zhxLbvcAhCUhrIOWibptwzierFl0wbK5jmFj1epUIf4kJUTFNUalb8wqk6dp-_oJGqP92bmQ",
+    "providerId": "google.com",
+    "signInMethod": "google.com"
+  },
+  "additionalUserInfo": {
+    "providerId": "google.com",
+    "isNewUser": false,
+    "profile": {
+      "gender": "male",
+      "name": "Lachlan Bradford",
+      "link": "https://plus.google.com/+LachlanBradford",
+      "id": "104540095882102818957",
+      "verified_email": true,
+      "given_name": "Lachlan",
+      "locale": "en",
+      "family_name": "Bradford",
+      "email": "bradford.lachlan@gmail.com",
+      "picture":
+        "https://lh6.googleusercontent.com/-ZXBQ4cvNwXc/AAAAAAAAAAI/AAAAAAAACIY/sUoJBptbVjw/photo.jpg"
+    }
+  },
+  "operationType": "signIn"
+}

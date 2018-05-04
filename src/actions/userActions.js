@@ -40,26 +40,42 @@ export const getAvatar = (userId, data) => async (dispatch) => {
   const url = await db.getAvatar(data.avatarName);
   dispatch(avatarUrlSet(userId, url));
 };
-export const login = username => async (dispatch) => {
-  const user = await db.getUserByName(username);
-  if (user) {
-    console.log(`welcome ${user.data.username}`);
-    dispatch(loggedIn(user.id, user.data));
-    // TODO: sloppy experimental
-    dispatch(listenToInbox(user.id, 'inbox'));
-    dispatch(listenToFilteredChats('isOpen', 'isOpen'));
-  }
+// export const login_OLD = username => async (dispatch) => {
+//   const user = await db.getUserByName(username);
+//   if (user) {
+//     console.log(`welcome ${user.data.username}`);
+//     dispatch(loggedIn(user.id, user.data));
+//     // TODO: sloppy experimental
+//     dispatch(listenToInbox(user.id, 'inbox'));
+//     dispatch(listenToFilteredChats('isOpen', 'isOpen'));
+//   }
+// };
+// export const createUser_OLD = username => async () => {
+//   const userDoc = await db.createUser(username);
+//   console.log(`created user ${userDoc.id}`);
+// };
+export const login = id => async (dispatch) => {
+  const userData = await db.getUser(id);
+  dispatch(loggedIn(id, userData));
+  dispatch(listenToInbox(id, 'inbox'));
+  dispatch(listenToFilteredChats('isOpen', 'isOpen'));
 };
 export const logout = () => (dispatch) => {
   dispatch(loggedOut());
 };
-// HERE
-export const createUser = username => async () => {
-  const userDoc = await db.createUser(username);
-  console.log(`created user ${userDoc.id}`);
+
+export const createUser = userData => async () => {
+  await db.createUser(userData);
 };
-export const loginWithGoogle = () => {
-  // wait
+
+export const loginWithGoogle = () => async (dispatch) => {
+  const userData = await db.loginWithGoogle();
+  if (!userData.isNewUser) {
+    dispatch(login(userData.id));
+  } else {
+    // HERE: pass appropriate args to createuser
+    dispatch(createUser(userData));
+  }
 };
 // TODO: some of these reservation functions don't belong here
 export const createReservation = (userId, description) => () => {

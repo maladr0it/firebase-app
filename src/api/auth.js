@@ -7,11 +7,16 @@ const auth = firebase.auth();
 // with a key?
 
 // get user info from google
-export const loginWithGoogle = () => {
+export const loginWithGoogle = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
-  return auth.signInWithPopup(provider);
+  const response = await auth.signInWithPopup(provider);
+  const { uid: id, displayName, photoURL } = response.user;
+  return {
+    id,
+    displayName,
+    photoURL,
+    isNewUser: response.additionalUserInfo.isNewUser,
+  };
 };
 
-// export const createGoogleUser = async () => {
-//   const
-// };
+export const a = 5;
