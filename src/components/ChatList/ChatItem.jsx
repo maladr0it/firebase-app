@@ -8,13 +8,10 @@ import { getUsers } from '../../reducers/users';
 import './index.css';
 
 const ChatItemComponent = ({
-  handleSelectChat,
-  chatId, users, isSelected,
+  handleSelectChat, chatId, users, isSelected,
 }) => {
-  const selectedStatus = (isSelected) ? 'Selected' : '';
-  const userList = users.map(user => (
-    <span key={user.id}>{user.username} </span>
-  ));
+  const selectedStatus = isSelected ? 'Selected' : '';
+  const userList = users.map(user => <span key={user.id}>{user.displayName} </span>);
   return (
     // HAX: List within a containing div to override MUI's backgroundColor
     <div className={`${selectedStatus}`}>
@@ -33,10 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     users: getUsers(state.users, userIds),
   };
 };
-const ChatItem = connect(
-  mapStateToProps,
-  null,
-)(ChatItemComponent);
+const ChatItem = connect(mapStateToProps, null)(ChatItemComponent);
 export default ChatItem;
 
 ChatItemComponent.propTypes = {

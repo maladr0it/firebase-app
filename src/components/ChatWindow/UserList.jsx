@@ -6,19 +6,14 @@ import Chip from 'material-ui/Chip';
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
 
-import {
-  addUserToChat,
-  removeUserFromChat,
-  userSelected,
-} from '../../actions';
+import { addUserToChat, removeUserFromChat, userSelected } from '../../actions';
 import { getJoinedUserIds } from '../../reducers/chats';
 import { getUsers } from '../../reducers/users';
 
 import InputForm from '../InputForm';
 
 const UserListComponent = ({
-  onAddUser, onRemoveUser, onSelectUser,
-  chatId, users,
+  onAddUser, onRemoveUser, onSelectUser, chatId, users,
 }) => {
   const userChips = users.map(user => (
     <Chip
@@ -26,18 +21,22 @@ const UserListComponent = ({
       onClick={() => onSelectUser(chatId, user.id)}
       onRequestDelete={() => onRemoveUser(chatId, user.id)}
     >
-      {user.username}
+      {user.displayName}
     </Chip>
   ));
   const addForm = (
     <IconMenu
-      iconButtonElement={<IconButton><AddIcon /></IconButton>}
+      iconButtonElement={
+        <IconButton>
+          <AddIcon />
+        </IconButton>
+      }
       anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}
       targetOrigin={{ horizontal: 'middle', vertical: 'top' }}
     >
       <InputForm
         label="ADD USER: "
-        handleSubmit={username => onAddUser(chatId, username)}
+        handleSubmit={displayName => onAddUser(chatId, displayName)}
         autoFocus
       />
     </IconMenu>
@@ -57,15 +56,12 @@ const mapStateToProps = (state, ownProps) => {
     users: getUsers(state.users, userIds),
   };
 };
-const mapDispatchToProps = ({
+const mapDispatchToProps = {
   onAddUser: addUserToChat,
   onRemoveUser: removeUserFromChat,
   onSelectUser: userSelected,
-});
-const UserList = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(UserListComponent);
+};
+const UserList = connect(mapStateToProps, mapDispatchToProps)(UserListComponent);
 export default UserList;
 
 UserListComponent.propTypes = {

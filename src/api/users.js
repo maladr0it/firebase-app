@@ -16,27 +16,12 @@ export const getUser = async (userId) => {
   const userData = userDoc.data();
   return userData;
 };
-export const getUserByName = async (username) => {
-  try {
-    const snapshot = await db
-      .collection('users')
-      .where('username', '==', username)
-      .limit(1)
-      .get();
-    const { id } = snapshot.docs[0];
-    const data = snapshot.docs[0].data();
-    return { id, data };
-  } catch (e) {
-    console.log(e);
-  }
-  return undefined;
-};
-export const getUserIdByName = async (username) => {
+export const getUserIdByName = async (displayName) => {
   let userId = '';
   try {
     const snapshot = await db
       .collection('users')
-      .where('username', '==', username)
+      .where('displayName', '==', displayName)
       .limit(1)
       .get();
     userId = snapshot.docs[0].id;
@@ -45,7 +30,8 @@ export const getUserIdByName = async (username) => {
   }
   return userId;
 };
-export const createUser = (id, displayName, photoURL) => {
+export const createUser = (userData) => {
+  const { id, displayName, photoURL } = userData;
   db
     .collection('users')
     .doc(id)
@@ -55,12 +41,6 @@ export const createUser = (id, displayName, photoURL) => {
       createdAt: timestamp,
     });
 };
-
-// export const createUser_OLD = username =>
-//   db.collection('users').add({
-//     username,
-//     joinedAt: timestamp,
-//   });
 export const setUserTypingStatus = (userId, chatId, isTyping) => {
   db
     .collection(`chats/${chatId}/users`)

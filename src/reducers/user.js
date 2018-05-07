@@ -1,6 +1,6 @@
 const defaultState = {
   userId: undefined,
-  username: undefined,
+  displayName: undefined,
 };
 
 const user = (state = defaultState, action) => {
@@ -10,7 +10,7 @@ const user = (state = defaultState, action) => {
       return {
         ...state,
         userId,
-        username: userData.username,
+        displayName: userData.displayName,
       };
     }
     case 'LOGGED_OUT': {

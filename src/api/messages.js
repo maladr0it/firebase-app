@@ -14,22 +14,17 @@ const getChatUserIds = async (chatId) => {
   }
   return userIds;
 };
-const addMessageToChat = async (chatId, userId, chatUserIds, text) => {
-  let messageRef;
+const addMessageToChat = async (chatId, author, chatUserIds, text) => {
   const readStatus = {};
   chatUserIds.forEach((id) => {
     readStatus[id] = null;
   });
-  try {
-    messageRef = await db.collection(`chats/${chatId}/messages`).add({
-      author: userId,
-      createdAt: timestamp,
-      readStatus,
-      text,
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  const messageRef = await db.collection(`chats/${chatId}/messages`).add({
+    author,
+    createdAt: timestamp,
+    readStatus,
+    text,
+  });
   return messageRef;
 };
 // here is where we should set the read status
@@ -43,36 +38,27 @@ const updateUserChat = async (userId, chatId) => {
     });
 };
 const updateChat = (chatId) => {
-  try {
-    db
-      .collection('chats')
-      .doc(chatId)
-      .update({
-        lastUpdated: timestamp,
-      });
-  } catch (e) {
-    console.log(e);
-  }
+  db
+    .collection('chats')
+    .doc(chatId)
+    .update({
+      lastUpdated: timestamp,
+    });
 };
 
 // EXPORTS
 export const sendMessage = async (chatId, userId, text) => {
-  let messagePayload = {};
-  try {
-    const chatUserIds = await getChatUserIds(chatId);
-    const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
-    updateChat(chatId);
-    chatUserIds.forEach(id => updateUserChat(id, chatId));
+  const chatUserIds = await getChatUserIds(chatId);
+  const messageRef = await addMessageToChat(chatId, userId, chatUserIds, text);
+  updateChat(chatId); // bump the chat
+  chatUserIds.forEach(id => updateUserChat(id, chatId));
 
-    const messageSnapshot = await messageRef.get();
-    // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
-    messagePayload = {
-      messageId: messageRef.id,
-      messageData: messageSnapshot.data(),
-    };
-  } catch (e) {
-    console.log(e);
-  }
+  const messageSnapshot = await messageRef.get();
+  // console.log(`user ${userId} sent message '${text}' to chat ${chatId}`);
+  const messagePayload = {
+    messageId: messageRef.id,
+    messageData: messageSnapshot.data(),
+  };
   return messagePayload;
 };
 export const markMessagesAsRead = async (chatId, userId) => {

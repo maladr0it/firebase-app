@@ -1,7 +1,7 @@
 // example
 // users = {
-//   usr19194: { username: 'sam', avatarURL: 'http://...' },
-//   usr19857: { username: 'bill', avatarURL: 'http://...' },
+//   usr19194: { displayName: 'sam', avatarURL: 'http://...' },
+//   usr19857: { displayName: 'bill', avatarURL: 'http://...' },
 // };
 
 const defaultState = {};
@@ -37,15 +37,12 @@ const users = (state = defaultState, action) => {
 };
 export default users;
 
-export const getUsers = (state, ids = []) => (
+export const getUsers = (state, ids = []) =>
   ids.map(id => ({
     id,
-    ...state[id] || defaultUser,
-  }))
-);
-export const getUser = (state, id) => (
-  state[id] || defaultUser
-);
+    ...(state[id] || defaultUser),
+  }));
+export const getUser = (state, id) => state[id] || defaultUser;
 export const getReadUsers = (state, readStatus) => {
   const userIds = Object.keys(readStatus).filter(id => readStatus[id] != null);
   return getUsers(state, userIds);
